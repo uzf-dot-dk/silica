@@ -35,22 +35,7 @@ std::ostream &operator<<(std::ostream &os, std::vector<T> &a) {
     return os;
 }
 
-template <typename T>
-std::ostream &operator<<(std::ostream &os, std::set<T> &s) {
-    os << "(";
-    int i = 0;
-    for(auto element : s)
-    {
-        if(i > 0)
-        {
-            os << ", ";
-        }
-        i++;
-        os << element;
-    }
-    os << ")";
-    return os;
-}
+
 
 
 

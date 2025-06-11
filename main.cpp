@@ -1,22 +1,15 @@
 #include <kjut/Array.h>
 
-// Function taking reference to Array<T>
-template <typename T>
-void foo(Kjut::Array<T>& l) {
-    //l.dump();
-}
-
 int main() {
-    Kjut::Array<int, 15> fifteenFixed;
-    Kjut::Array<int> dynamic; // List<int, 0>
-    for (int i = 0; i < 17; ++i) {
-        fifteenFixed.append(i);
-        dynamic.append(i);
-    }
+    Kjut::Array<int> a;
+    a.append(11);
+    a.append(22);
+    a.append(33);
+    a.append(44);
 
-    foo(fifteenFixed);
-    foo(dynamic);
-
+    std::cout << a[2] << std::endl;
+    a[2] = 66;
+    std::cout << a[2] << std::endl;
     return 0;
 }
 

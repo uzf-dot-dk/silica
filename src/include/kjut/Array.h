@@ -180,6 +180,10 @@ protected:
 
         ~Private()
         {
+            for(size_t i = 0 ; i < size; i++)
+            {
+                data[i].~T();
+            }
             if(mayGrow)
             {
                 free(data);

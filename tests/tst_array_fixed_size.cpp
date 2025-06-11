@@ -258,7 +258,9 @@ class DeletableInteger
 public:
     DeletableInteger() { value = 0; };
     DeletableInteger(int i) { value = i; };
-    ~DeletableInteger() { DeletableInteger::deletedIntvalues.insert(this->value);}
+    ~DeletableInteger() {
+        DeletableInteger::deletedIntvalues.insert(this->value);
+    }
 
 public:
     static std::set<int> deletedIntvalues;
@@ -273,7 +275,6 @@ std::ostream &operator<<(std::ostream &os, DeletableInteger &i) {
 
 TEST(suiteName, test_removal_causes_deletion)
 {
-    DeletableInteger::deletedIntvalues.clear();
     Kjut::Array<DeletableInteger> ints;
 
     ints.append(1);
@@ -282,5 +283,43 @@ TEST(suiteName, test_removal_causes_deletion)
     DeletableInteger::deletedIntvalues.clear();
     ints.remove(1);
     ASSERT_EQ(std::set<int>{2}, DeletableInteger::deletedIntvalues);
+}
+
+
+TEST(suiteName, test_removal_of_pointers_works)
+{
+    DeletableInteger::deletedIntvalues.clear();
+    Kjut::Array<DeletableInteger*> ints;
+
+    DeletableInteger *one, *two, *three;
+
+    ints.append(one = new DeletableInteger(1));
+    ints.append(two = new DeletableInteger(2));
+    ints.append(three = new DeletableInteger(3));
+    DeletableInteger::deletedIntvalues.clear();
+    ints.remove(1);
+    ASSERT_EQ(std::set<int>{}, DeletableInteger::deletedIntvalues);
+
+    delete one;
+    delete two;
+    delete three;
 
 }
+
+TEST(suiteName, test_deletion_deletes_content)
+{
+    {
+
+        Kjut::Array<DeletableInteger> ints;
+        ints.append(1);
+        ints.append(2);
+        ints.append(3);
+        DeletableInteger::deletedIntvalues.clear();
+    }
+    const int expectedDeletions = 3 // the three elements in the array
+                                + 1; //For the `outOfBoundElement`
+    ASSERT_EQ(expectedDeletions, DeletableInteger::deletedIntvalues.size());
+
+
+}
+
