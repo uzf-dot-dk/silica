@@ -1,22 +1,23 @@
 #include <iostream>
-
 #include <stdio.h>
 
 #include <kjut/Debug.h>
 
-#define ContainerWarning(message, ...) createLogEntry(__LINE__, __FILE__, message, __VA_ARGS__)
+#define ContainerWarning(message, ...) createLogEntry(__LINE__, __FILE__, message, ##__VA_ARGS__)
 
 
 #ifndef KJUT_ARRAY_INITIAL_CAPACITY
 #define KJUT_ARRAY_INITIAL_CAPACITY 10
 #endif
 
+
+namespace Kjut {  template <typename T, size_t S = 0> class Array; }
+template <typename T> std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) ;
+
 namespace Kjut
 {
 
-// Forward declare Array<T>
-template <typename T, size_t S = 0>
-class Array;
+
 
 // Array<T> is the base class — Array<T, 0> inherits from Array<T>
 template <typename T>
@@ -38,6 +39,41 @@ public:
         return d.capacity;
     }
 
+    bool insert(size_t index, const T &element)
+    {
+        if(index == d.size)
+        {
+            return append(element);
+        }
+        else if(index > d.size)
+        {
+            ContainerWarning("bool Array<T>::insert(size_t index, const T &element) beyond size is not supported.");
+            return false;
+        }
+
+        if(d.size >= d.capacity)
+        {
+            if(d.mayGrow)
+            {
+                growCapacity();
+            }
+            else
+            {
+                ContainerWarning("bool Array<T>::insert(size_t index, const T &element) full and array cannot grow.");
+                return false;
+            }
+        }
+
+        T* destination = d.data+(index+1);
+        T* source = d.data+index;
+        const size_t count = d.size - index;
+        memmove(destination, source, count*sizeof(T));
+        d.data[index] = element;
+        d.size++;
+        return true;
+    }
+
+
     bool append(const T &element)
     {
         if(d.size >= d.capacity)
@@ -48,7 +84,7 @@ public:
             }
             else
             {
-                ContainerWarning("bool List<T>::append(const T& element) out of bound. List cannot grow.", 2);
+                ContainerWarning("bool List<T>::append(const T& element) out of bound. List cannot grow.");
                 return false;
             }
         }
@@ -57,11 +93,11 @@ public:
         return true;
     }
 
-    T at(size_t index)
+    T at(size_t index) const
     {
         if(index >= d.size)
         {
-            ContainerWarning("T List<T>::at(size_t) out of bound", 0);
+            ContainerWarning("T List<T>::at(size_t) out of bound");
             return d.outOfBoundElement;
         }
 
@@ -72,11 +108,23 @@ public:
     {
         if(index >= d.size)
         {
-            ContainerWarning("T& List<T>::operator[](size_t) out of bound", 0);
+            ContainerWarning("T& List<T>::operator[](size_t) out of bound");
             return d.outOfBoundElement;
         }
         return d.data[index];
     }
+
+    const T& front() const;
+    const T& back() const;
+
+    void push(const T& element);
+    void pop();
+
+    const T& take(size_t index);
+
+
+
+
 
 protected:
 
@@ -141,4 +189,20 @@ public:
 
     T data[S];
 };
+}
+
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) {
+    os << "[";
+    for(size_t i = 0; i < a.size(); i++)
+    {
+        if(i > 0)
+        {
+            os << ", ";
+        }
+        os << a[i];
+    }
+    os << "]";
+    return os;
 }

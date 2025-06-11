@@ -27,3 +27,4 @@ macro( create_test FILENAME)
 endmacro()
 
 create_test( tst_array_fixed_size )
+create_test( tst_array_fixed_size_dynamic_size_interchangability )
