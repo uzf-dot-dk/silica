@@ -199,3 +199,88 @@ TEST(suiteName, test_insertion)
     #undef CREATE_ARRAY
 }
 
+
+
+TEST(suiteName, test_removal)
+{
+
+#define CREATE_ARRAY(name) \
+    constexpr size_t CAPACITY = 8; \
+        Kjut::Array<int, CAPACITY> name; \
+        for(size_t i = 0; i < CAPACITY; i++) \
+    { \
+            name.append( 1+i ); \
+    }
+
+    registerMockLogEntryHandler();
+
+    std::vector<std::vector<int>> cases = {
+        {2,3,4,5,6,7,8},
+        {1,3,4,5,6,7,8},
+        {1,2,4,5,6,7,8},
+        {1,2,3,5,6,7,8},
+        {1,2,3,4,6,7,8},
+        {1,2,3,4,5,7,8},
+        {1,2,3,4,5,6,8},
+        {1,2,3,4,5,6,7},
+        //Beyond end
+        {1,2,3,4,5,6,7,8},
+        {1,2,3,4,5,6,7,8},
+        {1,2,3,4,5,6,7,8},
+        {1,2,3,4,5,6,7,8},
+        {1,2,3,4,5,6,7,8},
+        {1,2,3,4,5,6,7,8},
+
+    };
+
+    for(size_t i = 0; i < cases.size(); i++)
+    {
+
+        CREATE_ARRAY(array);
+
+        resetMockLogEntryCount();
+
+        const bool shouldExpectTrue = (cases[i].size() < CAPACITY);
+        const bool wasRemovalSuccesful = array.remove(i);
+        const int expectedLogEntries = shouldExpectTrue ? 0 : 1;
+
+        ASSERT_EQ(shouldExpectTrue, wasRemovalSuccesful);
+        ASSERT_EQ(expectedLogEntries, mockLogEntryHandlerInvocationCount());
+        ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(array, cases[i])
+    }
+
+#undef CREATE_ARRAY
+}
+
+
+class DeletableInteger
+{
+public:
+    DeletableInteger() { value = 0; };
+    DeletableInteger(int i) { value = i; };
+    ~DeletableInteger() { DeletableInteger::deletedIntvalues.insert(this->value);}
+
+public:
+    static std::set<int> deletedIntvalues;
+    int value;
+};
+std::set<int> DeletableInteger::deletedIntvalues;
+
+std::ostream &operator<<(std::ostream &os, DeletableInteger &i) {
+    os << "I" << i.value;
+    return os;
+}
+
+TEST(suiteName, test_removal_causes_deletion)
+{
+    DeletableInteger::deletedIntvalues.clear();
+    Kjut::Array<DeletableInteger> ints;
+
+    ints.append(1);
+    ints.append(2);
+    ints.append(3);
+    DeletableInteger::deletedIntvalues.clear();
+    ints.remove(1);
+    ASSERT_EQ(std::set<int>{2}, DeletableInteger::deletedIntvalues);
+
+}

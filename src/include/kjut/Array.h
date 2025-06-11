@@ -73,6 +73,28 @@ public:
         return true;
     }
 
+    bool remove(size_t index)
+    {
+        if(index < 0)
+        {
+            ContainerWarning("bool Array<T>::remove(%d) is not possible", (int)(index));
+            return false;
+        }
+        else if(index >= d.size)
+        {
+            ContainerWarning("bool Array<T>::remove(%d) is not possible (size = %d)", (int)(index), (int)(d.size));
+            return false;
+        }
+
+        d.data[index].~T();
+        T* destination = d.data+(index);
+        T* source = d.data+(index+1);
+        const size_t count = d.size - index;
+        memmove(destination, source, count*sizeof(T));
+        d.size--;
+        return true;
+    }
+
 
     bool append(const T &element)
     {
