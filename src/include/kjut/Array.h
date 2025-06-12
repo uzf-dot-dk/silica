@@ -29,6 +29,13 @@ public:
         initialize(0, nullptr);
     }
 
+#ifndef KJUT_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
+    Array(const Array<T, 0> &) = delete;
+#else
+    This is not implemented yet
+#endif
+
+
     size_t size() const
     {
         return d.size;
@@ -212,6 +219,12 @@ public:
     {
         this->initialize(S, data);
     }
+
+#ifndef KJUT_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
+    Array(const Array<T, S> &) = delete;
+#else
+    This is not implemented yet
+#endif
 
     T data[S];
 };
