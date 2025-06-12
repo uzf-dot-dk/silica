@@ -152,6 +152,57 @@ public:
     const T& take(size_t index);
 
 
+    // Custom iterator class
+    class Iterator {
+    public:
+        using iterator_category = std::random_access_iterator_tag;
+        using value_type        = T;
+        using difference_type   = std::ptrdiff_t;
+        using pointer           = T*;
+        using reference         = T&;
+
+        Iterator(pointer ptr = nullptr) : ptr_(ptr) {}
+
+        reference operator*() const { return *ptr_; }
+        pointer operator->() const { return ptr_; }
+
+        Iterator& operator++() { ++ptr_; return *this; }
+        Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+
+        Iterator& operator--() { --ptr_; return *this; }
+        Iterator operator--(int) { Iterator tmp = *this; --(*this); return tmp; }
+
+        Iterator operator+(difference_type n) const { return Iterator(ptr_ + n); }
+        Iterator operator-(difference_type n) const { return Iterator(ptr_ - n); }
+        difference_type operator-(const Iterator& other) const { return ptr_ - other.ptr_; }
+
+        Iterator& operator+=(difference_type n) { ptr_ += n; return *this; }
+        Iterator& operator-=(difference_type n) { ptr_ -= n; return *this; }
+
+        reference operator[](difference_type n) const { return *(ptr_ + n); }
+
+        bool operator==(const Iterator& other) const { return ptr_ == other.ptr_; }
+        bool operator!=(const Iterator& other) const { return ptr_ != other.ptr_; }
+        bool operator<(const Iterator& other) const { return ptr_ < other.ptr_; }
+        bool operator>(const Iterator& other) const { return ptr_ > other.ptr_; }
+        bool operator<=(const Iterator& other) const { return ptr_ <= other.ptr_; }
+        bool operator>=(const Iterator& other) const { return ptr_ >= other.ptr_; }
+
+    private:
+        pointer ptr_;
+    };
+
+    using iterator = Iterator;
+    using const_iterator = Iterator; // Optional: make a separate const_iterator for true const-correctness
+
+    iterator begin() { return iterator(d.data); }
+    iterator end()   { return iterator(d.data + d.size); }
+
+    const_iterator begin() const { return const_iterator(d.data); }
+    const_iterator end()   const { return const_iterator(d.data + d.size); }
+
+    const_iterator cbegin() const { return begin(); }
+    const_iterator cend()   const { return end(); }
 
 
 
@@ -234,13 +285,15 @@ public:
 template <typename T>
 std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) {
     os << "[";
-    for(size_t i = 0; i < a.size(); i++)
+    bool first = true;
+    for(const T &element : a)
     {
-        if(i > 0)
+        if(!first)
         {
             os << ", ";
         }
-        os << a[i];
+        os << element;
+        first = false;
     }
     os << "]";
     return os;

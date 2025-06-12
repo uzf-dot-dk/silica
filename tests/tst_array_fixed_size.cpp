@@ -319,7 +319,48 @@ TEST(suiteName, test_deletion_deletes_content)
     const int expectedDeletions = 3 // the three elements in the array
                                 + 1; //For the `outOfBoundElement`
     ASSERT_EQ(expectedDeletions, DeletableInteger::deletedIntvalues.size());
+}
 
 
+TEST(suiteName, test_iterator_builds_with_stdlib)
+{
+    Kjut::Array<int> ints;
+
+    std::sort(ints.begin(), ints.end());
+
+    for(const auto &T : ints)
+    {}
+
+}
+
+TEST(suiteName, test_forward_iterator)
+{
+    Kjut::Array<int> ints;
+    ints.append(11);
+    ints.append(22);
+    ints.append(33);
+    ints.append(44);
+
+    std::vector<int> copy;
+    for(const int &i: ints)
+    {
+        copy.push_back(i);
+    }
+
+    ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(ints, copy);
+}
+
+TEST(suiteName, test_forward_iterator_on_empty_array)
+{
+    Kjut::Array<int> ints;
+
+    std::vector<int> copy;
+    for(const int &i: ints)
+    {
+        copy.push_back(i);
+    }
+
+    ASSERT_EQ(copy.size(), 0);
+    ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(ints, copy);
 }
 
