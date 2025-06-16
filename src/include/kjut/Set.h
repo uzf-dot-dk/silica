@@ -52,6 +52,11 @@ public:
     This is not implemented yet
 #endif
 
+    size_t size() const
+    {
+        return actualValues().size();
+    }
+
     bool insert(const T&element)
     {
         if( contains(element))
@@ -123,24 +128,6 @@ private:
 }
 
 
-
-template <typename T> std::ostream &operator<<(std::ostream &os, const Kjut::Set<T> &a)
-{
-    bool first = true;
-    os << "(";
-    for(const T & element : a.values())
-    {
-        if(!first)
-        {
-            os << ", ";
-        }
-        first = false;
-        os << element;
-    }
-    os << ")";
-
-    return os;
-}
 
 
 #endif // KJUT_SET_H

@@ -49,3 +49,5 @@ namespace Kjut
 
 
 }
+
+#include <kjut/Array.hpp>
