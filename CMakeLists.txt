@@ -9,12 +9,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_library( kjutContainers
     src/KjutContainers.cpp
     src/KjutCore.cpp
-    src/Array.cpp
 )
 
 target_include_directories( kjutContainers PUBLIC src/include )
 
-if(NOT ${CMAKE_EXPORT_COMPILE_COMMANDS})
 
     add_executable(sandbox main.cpp)
     target_link_libraries(sandbox PUBLIC kjutContainers )
@@ -31,8 +29,8 @@ if(NOT ${CMAKE_EXPORT_COMPILE_COMMANDS})
     endmacro()
 
     create_test( tst_array_fixed_size )
+    create_test( tst_array_dynamic_size )
     create_test( tst_array_fixed_size_dynamic_size_interchangability )
-endif()
 
 # CXX=clang++ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build
 #  docker run --platform linux/x86_64 --mount type=bind,source="$(pwd)",target=/mnt/host     --tty --interactive     -v `pwd`:`pwd` -w `pwd` ghcr.io/adobe/hyde:latest bash
