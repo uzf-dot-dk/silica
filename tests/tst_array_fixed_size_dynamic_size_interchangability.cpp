@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <kjut/Array.h>
+#include <kjut/Array.hpp>
 
 #include <sstream>
 
@@ -95,5 +95,24 @@ TEST(suiteName, test_static_dynamic_interchangability_ostream)
         stringBulder << staticSized;
 
         ASSERT_EQ(stringBulder.str(), std::string("[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"));
+    }
+}
+
+TEST(suiteName, test_static_dynamic_interchangability_equals_operator)
+{
+    Kjut::Array<int, 10> staticSized;
+    Kjut::Array<int> dynamicSized;
+
+    {
+        [[maybe_unused]] const bool doesEqual = staticSized == dynamicSized;
+    }
+    {
+        [[maybe_unused]] const bool doesEqual = dynamicSized == staticSized;
+    }
+    {
+        [[maybe_unused]] const bool doesEqual = dynamicSized == dynamicSized;
+    }
+    {
+        [[maybe_unused]] const bool doesEqual = staticSized == staticSized;
     }
 }

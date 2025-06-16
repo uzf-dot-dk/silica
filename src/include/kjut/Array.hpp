@@ -1,25 +1,20 @@
 #include <iostream>
 #include <stdio.h>
 
+#include <string.h>
+
 #include <kjut/Debug.h>
 
-#define ContainerWarning(message, ...) createLogEntry(__LINE__, __FILE__, message, ##__VA_ARGS__)
-
-
-#ifndef KJUT_ARRAY_INITIAL_CAPACITY
-#define KJUT_ARRAY_INITIAL_CAPACITY 10
-#endif
+#include "ContainerDefinitions.h"
 
 
 namespace Kjut {  template <typename T, size_t S = 0> class Array; }
 template <typename T> std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) ;
 
+
 namespace Kjut
 {
 
-
-
-// Array<T> is the base class — Array<T, 0> inherits from Array<T>
 template <typename T>
 class Array<T, 0> {
 public:
@@ -29,10 +24,18 @@ public:
         initialize(0, nullptr);
     }
 
-#ifndef KJUT_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
+#ifndef KJUT_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
+    Array(std::initializer_list<T> init) {
+        initialize(0, nullptr);
+        for (const T& value : init) {
+            append(value);
+        }
+    }
+#endif
+
+
+#ifndef KJUT_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
     Array(const Array<T, 0> &) = delete;
-#else
-    This is not implemented yet
 #endif
 
 
@@ -80,6 +83,14 @@ public:
         return true;
     }
 
+
+    /** Removes the index'th element from the Array.
+     *  The element at index `index` is removed from the Array and deleted. After that, the array has its size decremented.
+     *  If the element to remove, throws any exceptions, it is caught and the then rethrown after resizing has happened. The array is guaranteed to have its `index`th element removed and size decremented.
+     *  @param index The index of the element to remove.
+     *  @returns True if the element could be removed and false if not. Reasons for not being able to remove an element can be of `index` is our of bounds.
+     *  @throws Any exception that T thows in its descructor.
+    */
     bool remove(size_t index)
     {
         if(index < 0)
@@ -93,12 +104,24 @@ public:
             return false;
         }
 
-        d.data[index].~T();
-        T* destination = d.data+(index);
-        T* source = d.data+(index+1);
-        const size_t count = d.size - index;
-        memmove(destination, source, count*sizeof(T));
-        d.size--;
+        auto maintainArray = [=](){
+            T* destination = this->d.data+(index);
+            T* source = this->d.data+(index+1);
+            const size_t count = this->d.size - index;
+            memmove(destination, source, count*sizeof(T));
+            this->d.size--;
+        };
+
+        try
+        {
+            d.data[index].~T();
+            maintainArray();
+        }
+        catch( ... )
+        {
+            maintainArray();
+            throw;
+        }
         return true;
     }
 
@@ -143,14 +166,16 @@ public:
         return d.data[index];
     }
 
-    const T& front() const;
-    const T& back() const;
+    /** Removes the first element from the Array.
+     *  This is identical to calling Array<T>::remove(0).
+     *  @see remove()*/
+    bool pop() { return remove(0);}
 
-    void push(const T& element);
-    void pop();
 
-    const T& take(size_t index);
-
+    /** Appends an element to the end of the array.
+     *  This is identical to calling Array<T>::append(T).
+     *  @see append()*/
+    bool push(const T &element) { return append(element); }
 
     // Custom iterator class
     class Iterator {
@@ -260,6 +285,30 @@ private:
     }
 };
 
+template <typename T>
+bool operator==(const Array<T> &lhs, const Array<T> &rhs)
+{
+    if(lhs.size() != rhs.size())
+    {
+        return false;
+    }
+    auto rhsit = rhs.cbegin();
+    for(auto lhsit = lhs.cbegin(); lhsit != lhs.cend(); lhsit++)
+    {
+        if( ! (*lhsit == *rhsit) )
+        {
+            return false;
+        }
+        rhsit++;
+    }
+    return true;
+}
+
+template <typename T>
+bool operator!=(const Array<T> &lhs, const Array<T> &rhs)
+{
+    return ! (lhs == rhs);
+}
 
 template <typename T, size_t S>
 class Array : public Array<T, 0> {
@@ -271,10 +320,18 @@ public:
         this->initialize(S, data);
     }
 
-#ifndef KJUT_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
+#ifndef KJUT_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
+    Array(std::initializer_list<T> init) {
+        this->initialize(S, data);
+        for (const T& value : init) {
+            this->append(value);
+        }
+    }
+#endif
+
+
+#ifndef KJUT_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
     Array(const Array<T, S> &) = delete;
-#else
-    This is not implemented yet
 #endif
 
     T data[S];
