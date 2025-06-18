@@ -30,7 +30,6 @@ void resetMockLogEntryCount()
     mockCount = 0;
 }
 
-
 TEST(suiteName, test_default_constructor)
 {
     registerMockLogEntryHandler();
@@ -512,4 +511,17 @@ TEST(suiteName, test_exceptions_thrown_in_T_descructors_are_handled_in_remove)
     ASSERT_EQ(a.size(), 2);
     ASSERT_EQ(a[0].value, 22);
     ASSERT_EQ(a[1].value, 33);
+}
+
+TEST(suiteName, test_fill_method)
+{
+    registerMockLogEntryHandler();
+    Kjut::Array<int, 9> array;
+    array.fill(27);
+    ASSERT_EQ(array.size(), 9);
+    for(size_t i = 0; i < array.size(); i++)
+    {
+        ASSERT_EQ(array[i], 27);
+    }
+    ASSERT_EQ(0, mockLogEntryHandlerInvocationCount());
 }

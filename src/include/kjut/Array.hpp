@@ -330,6 +330,16 @@ public:
 #endif
 
 
+    template <size_t U = S, typename std::enable_if<U != 0, int>::type = 0>
+    void fill(const T& e) {
+        for(size_t i = 0; i < S; i++)
+        {
+            data[i] = e;
+        }
+        this->d.size = S;
+    }
+
+
 #ifndef KJUT_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
     Array(const Array<T, S> &) = delete;
 #endif

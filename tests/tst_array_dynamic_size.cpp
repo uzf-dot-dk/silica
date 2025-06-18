@@ -45,6 +45,7 @@ TEST(suiteName, test_default_constructor)
     ASSERT_EQ(0, mockLogEntryHandlerInvocationCount());
 }
 
+
 TEST(suiteName, test_appending_and_reading_back_within_bounds)
 {
     registerMockLogEntryHandler();
