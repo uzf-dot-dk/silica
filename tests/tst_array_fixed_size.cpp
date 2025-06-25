@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <kjut/Array.hpp>
+#include <kjut/Array.h>
 
 #include "array_helpers.h"
 

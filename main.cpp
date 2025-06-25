@@ -1,14 +1,12 @@
-#include <kjut/Set.h>
-#include<algorithm>
+#include <kjut/Mutex.h>
 
-void foo(Kjut::Set<int> &s)
-{
 
-}
+
 
 int main() {
 
-    //Kjut::Set<int> fixed;
+    Kjut::Mutex m;
+    Kjut::MutexLocker ml(m);
 
     return 0;
 }

@@ -2,7 +2,7 @@
 
 #define KJUT_ARRAY_INITIAL_CAPACITY 1
 
-#include <kjut/Array.hpp>
+#include <kjut/Array.h>
 
 #include "array_helpers.h"
 

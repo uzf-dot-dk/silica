@@ -8,15 +8,29 @@
 #include "ContainerDefinitions.h"
 
 
+///@cond
 namespace Kjut {  template <typename T, size_t S = 0> class Array; }
 template <typename T> std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) ;
-
+///@endcond
 
 namespace Kjut
 {
 
+
+/** \brief An array
+
+asdfr5asd fvaxd
+asdff34v asdf
+asdff asd sdaf
+asdf asdf asdf asd */
+#ifdef DOXYGEN
+template <typename T, S>
+class Array<T, S> {
+#else
 template <typename T>
 class Array<T, 0> {
+#endif
+
 public:
 
     Array()
@@ -38,6 +52,11 @@ public:
     Array(const Array<T, 0> &) = delete;
 #endif
 
+
+    #ifdef DOXYGEN
+    /** */
+    void fill(const T& e) ;
+    #endif
 
     size_t size() const
     {
@@ -188,7 +207,7 @@ public:
     bool push(const T &element) { return append(element); }
 
 
-    ///@cond
+    ///@cond INCLUDE_CLASS_ITERATORS
     // Custom iterator class
     class Iterator {
     public:
@@ -231,7 +250,7 @@ public:
 
     using iterator = Iterator;
     using const_iterator = Iterator; // Optional: make a separate const_iterator for true const-correctness
-    ///@condend
+    ///@endcond
     iterator begin() { return iterator(d.data); }
     iterator end()   { return iterator(d.data + d.size); }
 
@@ -263,7 +282,7 @@ protected:
 
         d.size = 0;
     }
-
+    ///@cond OPAQUE_STRUCTS
     typedef struct Private
     {
         size_t capacity;
@@ -287,6 +306,7 @@ protected:
     } Private;
 
     Private d;
+    ///@endcond
 
 private:
 
@@ -322,7 +342,8 @@ bool operator!=(const Array<T> &lhs, const Array<T> &rhs)
     return ! (lhs == rhs);
 }
 
-///@cond ZERO_SIZED_CONTAINERS
+///@cond
+
 template <typename T, size_t S>
 class Array : public Array<T, 0> {
 public:
@@ -359,5 +380,7 @@ public:
 
     T data[S];
 };
-}
+
 ///@endcond
+}
+

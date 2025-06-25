@@ -2,7 +2,7 @@
 #define RINGBUFFER_H
 
 #include <stdint.h>
-#include <kjut/Array.hpp>
+#include <kjut/Array.h>
 
 namespace Kjut
 {

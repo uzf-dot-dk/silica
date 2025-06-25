@@ -1,7 +1,7 @@
 #ifndef KJUT_SET_H
 #define KJUT_SET_H
 
-#include "Array.hpp"
+#include <kjut/Array.h>
 
 
 #include <iostream>

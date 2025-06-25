@@ -50,4 +50,4 @@ namespace Kjut
 
 }
 
-#include <kjut/Array.hpp>
+#include <kjut/Array.h>
