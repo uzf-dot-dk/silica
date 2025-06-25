@@ -17,3 +17,5 @@
         #define KJUT_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
     #endif
 #endif
+
+#define KJUT_VOLATILE //Figure out how to make things volatile without breaking const correctness.... Shit fuck!

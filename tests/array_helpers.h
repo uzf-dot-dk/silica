@@ -37,6 +37,23 @@ std::ostream &operator<<(std::ostream &os, std::vector<T> &a) {
 
 
 
+template <typename T>
+std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) {
+    os << "[";
+    for(size_t i = 0; i < a.size(); i++)
+    {
+        if(i > 0)
+        {
+            os << ", ";
+        }
+        os << a[i];
+    }
+    os << "]";
+    return os;
+}
+
+
+
 
 
 #include <vector>

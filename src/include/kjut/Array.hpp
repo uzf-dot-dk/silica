@@ -166,6 +166,16 @@ public:
         return d.data[index];
     }
 
+    const T& operator[](size_t index) const
+    {
+        if(index >= d.size)
+        {
+            ContainerWarning("const T& List<T>::operator[](size_t) const out of bound");
+            return d.outOfBoundElement;
+        }
+        return d.data[index];
+    }
+
     /** Removes the first element from the Array.
      *  This is identical to calling Array<T>::remove(0).
      *  @see remove()*/
@@ -177,6 +187,8 @@ public:
      *  @see append()*/
     bool push(const T &element) { return append(element); }
 
+
+    ///@cond
     // Custom iterator class
     class Iterator {
     public:
@@ -219,7 +231,7 @@ public:
 
     using iterator = Iterator;
     using const_iterator = Iterator; // Optional: make a separate const_iterator for true const-correctness
-
+    ///@condend
     iterator begin() { return iterator(d.data); }
     iterator end()   { return iterator(d.data + d.size); }
 
@@ -310,6 +322,7 @@ bool operator!=(const Array<T> &lhs, const Array<T> &rhs)
     return ! (lhs == rhs);
 }
 
+///@cond ZERO_SIZED_CONTAINERS
 template <typename T, size_t S>
 class Array : public Array<T, 0> {
 public:
@@ -347,21 +360,4 @@ public:
     T data[S];
 };
 }
-
-
-template <typename T>
-std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) {
-    os << "[";
-    bool first = true;
-    for(const T &element : a)
-    {
-        if(!first)
-        {
-            os << ", ";
-        }
-        os << element;
-        first = false;
-    }
-    os << "]";
-    return os;
-}
+///@endcond

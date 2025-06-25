@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <kjut/Array.hpp>
+#include "array_helpers.h"
 
 #include <sstream>
 
@@ -104,15 +105,15 @@ TEST(suiteName, test_static_dynamic_interchangability_equals_operator)
     Kjut::Array<int> dynamicSized;
 
     {
-        [[maybe_unused]] const bool doesEqual = staticSized == dynamicSized;
+        [[maybe_unused]] const bool doesThisCompile = staticSized == dynamicSized;
     }
     {
-        [[maybe_unused]] const bool doesEqual = dynamicSized == staticSized;
+        [[maybe_unused]] const bool doesThisCompile = dynamicSized == staticSized;
     }
     {
-        [[maybe_unused]] const bool doesEqual = dynamicSized == dynamicSized;
+        [[maybe_unused]] const bool doesThisCompile = dynamicSized == dynamicSized;
     }
     {
-        [[maybe_unused]] const bool doesEqual = staticSized == staticSized;
+        [[maybe_unused]] const bool doesThisCompile = staticSized == staticSized;
     }
 }
