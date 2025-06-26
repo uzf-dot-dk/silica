@@ -52,7 +52,9 @@ The Array<T,S> implements an array with elements stored in adject memory for fas
 </table>
 
 
-There are three ways to declare an Array<T,S>:
+@anchor the_concept_of_container_capacity
+### The Concept of Capacity
+There are three ways to declare capacities of an Array<T,S>:
 
 ```cpp
 Array<int> dynamicArray;            // Will grow as needed by allocating memory
@@ -200,6 +202,24 @@ public:
     {
         return d.capacity;
     }
+
+    /**
+    \brief Removes all elements from this Array.
+
+    \returns The number of \c T instances in the array.
+    \throws Any Any exception thrown in ~T()
+    \note If any call to ~T() throws, the Array is left in undefined state.
+    \todo Write unittests.
+    \todo Optimize
+    */
+    void empty()
+    {
+        while(size() > 0)
+        {
+            pop();
+        }
+    }
+
 
 
     /**

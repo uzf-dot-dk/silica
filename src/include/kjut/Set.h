@@ -15,37 +15,25 @@
 
 
 
-
+#ifndef DOXYGEN
 namespace Kjut {  template <typename T, size_t S = 0> class Set; }
 template <typename T> std::ostream &operator<<(std::ostream &os, const Kjut::Set<T> &a) ;
-
+#endif // DOXYGEN
 
 
 namespace Kjut
 {
 
-
-
 /**
 
-\brief Implements the mathematical concept of a set.
+\brief Implements the mathematical concept of a set. A Set<T,S> instance may have static or dynamic capacity.
+
+### Capacity and S
+
+Regarding capacity, Set<T,S> behaves exactly like @ref the_concept_of_container_capacity "the Array<T,S> class".
 
 
-|     No
-| Implemented | Operation Name       | Set Notation Symbol           | Description                                           | Analogous Math Operator             |
-|-------------|----------------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
-|     No      | Union                | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
-|     No      | Intersection         | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
-|     No      | Difference           | A−B or A∖B                    | Elements in A not in B                                | -                                   |
-|     No      | Symmetric Difference | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
-|     No      | Cartesian Product    | A×B                           | All ordered pairs (a,b) where a∈A and b∈Bb           | × or * (ordered pair generation)    |
-|     No      | Complement           | A'                            | Elements not in A, relative to a universal set U      | ¬ or logical NOT                    |
-|     No      | Subset               | A⊆B                          | All elements of A are in B                             | —                                  |
-|     No      | Proper Subset        | A⊂B                          | A⊆B  and A≠B                                          | —                                  |
-|     No      | Superset             | A⊇B                          | All elements of B are in A                             | —                                  |
-
-
-## Requirements for T
+### Requirements for T
 
 \c T must provide the following:
 
@@ -57,10 +45,35 @@ namespace Kjut
 </table>
 
 
+### Set Operations
+
+Set operations are implemented a bit differently than often seen in other frameworks. Since the copy constructor is disabled by default, oeprators that result in a new set
+do not create a new set, but store the result in a provided *resultDestination*. It is the responsibility of the programmer to ensure there is capacity for the result by either using dynamically
+sized \ref Set<T,S> "Set<T,S>s" or by allocating enough static capacity.
+
+| Operation Name           | Method      | Set Notation Symbol           | Description                                           | Analogous Math Operator             |
+|--------------------------|-------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
+| Union                    |     N/A     | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
+| Intersection             |     N/A     | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
+| Difference               |     N/A     | A−B or A∖B                    | Elements in A not in B                                | -                                   |
+| Symmetric Difference     |     N/A     | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
+| ~~Cartesian Product~~    |   Omitted   | A×B                           | All ordered pairs (a,b) where a∈A and b∈Bb           | × or * (ordered pair generation)    |
+| ~~Complement~~           |   Omitted   | A'                            | Elements not in A, relative to a universal set U      | ¬ or logical NOT                    |
+| Subset                   |     N/A     | A⊆B                          | All elements of A are in B                             | —                                  |
+| Proper Subset            |     N/A     | A⊂B                          | A⊆B  and A≠B                                          | —                                  |
+| Superset                 |     N/A     | A⊇B                          | All elements of B are in A                             | —                                  |
+
+\note The values in a Set is not guaranteed to be stored in any particular order.
+
 \ingroup Containers
 */
+#ifdef DOXYGEN
+template <typename T, size_t S>
+class Set<T, S> {
+#else
 template <typename T>
 class Set<T, 0> {
+#endif
 public:
 
 
@@ -72,6 +85,9 @@ public:
     This is not implemented yet
 #endif
 
+    /**
+`
+    */
     size_t size() const
     {
         return actualValues().size();
@@ -86,6 +102,10 @@ public:
         return actualValues().append(element);
     }
 
+    /**
+    \brief Checks whether \p element is contained in this Set.
+    \returns True if \p element is in this Set. False if not.
+    */
     bool contains(const T&element) const
     {
         for(const T & candidate : actualValues())
@@ -98,6 +118,11 @@ public:
         return false;
     }
 
+    /**
+    \brief Removes the element from this set that is equal to \p element.
+    \param element The element to look for and remove
+    \returns True if any element equalling \p element was removed from this Set.  False if no element equalling \p element was found.
+    */
     bool erase(const T&element)
     {
         for(size_t i = 0 ; i < actualValues().size(); i++)
@@ -111,12 +136,34 @@ public:
         return false;
     }
 
+    /**
+    \brief Clears all elements from this Set.
+    \throws Any Any exception thrown in ~T().
+    \note If any call to ~T() throws, the Set is left in undefined state.
+    \todo Write tests
+    */
+    void clear()
+    {
+        actualValues().empty();
+    }
 
+
+    /** \brief Returns a Array<T> with all the elements in this Set.
+    \returns A const reference to an Array<T> holding the elements in this set.
+    \note The order of the elements in the Array<T> is not guaranteed to conform to any order. In particular, two subsequent calls to values() may return Arrays with the elements in different order.
+    */
     const Array<T>& values() const
     {
         return actualValues();
     }
 
+    /** \brief Returns true if thw two sets are identical.
+
+    Being identical is defined as containing exactely the same elements.
+    \param rhs The set to compare this Set to.
+
+    \returns True if the two sets are identidal. False if not.
+    */
     bool operator==(const Set<T> &rhs) const
     {
         if(this->size() != rhs.size())
@@ -136,13 +183,14 @@ public:
 ///@cond
 protected:
     inline virtual Array<T> &actualValues() const { return dynamicValues ; }
-///@endcond
 
 private:
     mutable Array<T> dynamicValues;
+///@endcond
 
 };
 
+#ifndef DOXYGEN
 
 template <typename T, size_t S>
 class Set : public Set<T, 0> {
@@ -162,6 +210,7 @@ private:
     mutable Array<T,S> staticValues;
 
 };
+#endif // DOXYGEN
 }
 
 

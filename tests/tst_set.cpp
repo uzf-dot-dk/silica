@@ -199,6 +199,25 @@ TEST(suiteName, test_equality_operator)
 
 
 
+TEST(suiteName, test_clear)
+{
+    Kjut::Set<int> s;
+    s.insert(1);
+    s.insert(2);
+    s.insert(3);
+
+    s.clear();
+
+    ASSERT_EQ(s.size(), 0);
+
+    ASSERT_FALSE(s.contains(1));
+    ASSERT_FALSE(s.contains(2));
+    ASSERT_FALSE(s.contains(3));
+}
+
+
+
+
 TEST(suiteName, test_erase)
 {
     registerMockLogEntryHandler();
