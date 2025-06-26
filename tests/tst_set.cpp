@@ -235,15 +235,23 @@ TEST(suiteName, test_set_operations)
             {{1,2,3}, "union", {2,3,4}, "results in", {1,2,3,4}},
             {{1,2,3}, "union", {4,5,6}, "results in", {1,2,3,4,5,6}},
 
-            {{}, "intersection", {}, "results in", {}},
-            {{}, "intersection", {4,5,6}, "results in", {}},
-            {{1,2,3}, "intersection", {}, "results in", {}},
-            {{1,2,3}, "intersection", {4,5,6}, "results in", {}},
-            {{1,2,3}, "intersection", {3,4,5}, "results in", {3}},
-            {{1,2,3}, "intersection", {2,3,4,5}, "results in", {2,3}},
-            {{1,2,3,5}, "intersection", {1,2,3,4,5}, "results in", {1,2,3,5}},
+            {{},          "intersection", {},         "results in", {}},
+            {{},          "intersection", {4,5,6},     "results in", {}},
+            {{1,2,3},     "intersection", {},          "results in", {}},
+            {{1,2,3},     "intersection", {4,5,6},     "results in", {}},
+            {{1,2,3},     "intersection", {3,4,5},     "results in", {3}},
+            {{1,2,3},     "intersection", {2,3,4,5},   "results in", {2,3}},
+            {{1,2,3,5},   "intersection", {1,2,3,4,5}, "results in", {1,2,3,5}},
             {{1,2,3,4,5}, "intersection", {1,2,3,4,5}, "results in", {1,2,3,4,5}},
-        };
+
+            {{}, "difference", {}, "results in", {}},
+            {{}, "difference", {1,2,3}, "results in", {}},
+            {{1,2,3}, "difference", {}, "results in", {1,2,3}},
+            {{1,2,3}, "difference", {1,2,3}, "results in", {}},
+            {{1,2,3,4}, "difference", {1,2,3}, "results in", {4}},
+            {{1,2,3,4,5}, "difference", {1,2,3}, "results in", {4,5}},
+
+            };
 
     for( auto & testCase : cases)
     {
@@ -260,6 +268,10 @@ TEST(suiteName, test_set_operations)
         else if(operation == "intersection")
         {
             wasOperationSuccessful = A.intersectionWith(B, result);
+        }
+        else if(operation == "difference")
+        {
+            wasOperationSuccessful = A.differenceFrom(B, result);
         }
         else
         {

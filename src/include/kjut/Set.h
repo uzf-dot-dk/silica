@@ -56,7 +56,7 @@ sized \ref Set<T,S> "Set<T,S>s" or by allocating enough static capacity.
 |--------------------------|--------------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
 | Union                    | unionWith()        | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
 | Intersection             | intersectionWith() | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
-| Difference               |     N/A            | A−B or A∖B                    | Elements in A not in B                                | -                                   |
+| Difference               | differenceFrom()   | A−B or A∖B                    | Elements in A not in B                                | -                                   |
 | Symmetric Difference     |     N/A            | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
 | ~~Cartesian Product~~    |   Omitted          | A×B                           | All ordered pairs (a,b) where a∈A and b∈Bb           | × or * (ordered pair generation)    |
 | ~~Complement~~           |   Omitted          | A'                            | Elements not in A, relative to a universal set U      | ¬ or logical NOT                    |
@@ -205,7 +205,6 @@ public:
     \param B The set to calculate the union with.
     \param resultDestination The Set<T> to store the resulting union in.
     \returns True if all elements in the resulting union could be added to \p resultDestination. False if not.
-    \todo Test
     */
     bool unionWith(const Set<T> &B, Set<T> &resultDestination) const
     {
@@ -236,7 +235,6 @@ public:
     \param B The set to calculate the intersection with.
     \param resultDestination The Set<T> to store the resulting intersection in.
     \returns True if all elements in the resulting intersection could be added to \p resultDestination. False if not.
-    \todo Test
     */
     bool intersectionWith(const Set<T> &B, Set<T> &resultDestination) const
     {
@@ -264,6 +262,35 @@ public:
         }
         return true;
     }
+
+
+    /**
+    \brief Calculates the difference from \c this Set with \p B.
+
+    In this method, \c this is the \c A operand when consulting the \ref table_of_set_operations "table of operations".
+
+    \param B The set to calculate the difference from.
+    \param resultDestination The Set<T> to store the resulting difference in.
+    \returns True if all elements in the resulting difference could be added to \p resultDestination. False if not.
+    */
+    bool differenceFrom(const Set<T> &B, Set<T> &resultDestination) const
+    {
+        //Elements in A not in B
+        resultDestination.clear();
+        for(auto const &element: this->actualValues())
+        {
+            if( ! B.contains(element))
+            {
+                if ( ! resultDestination.insert(element) )
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+
 
 ///@cond
 protected:
