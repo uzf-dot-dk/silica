@@ -52,17 +52,17 @@ Set operations are implemented a bit differently than often seen in other framew
 do not create a new set, but store the result in a provided *resultDestination*. It is the responsibility of the programmer to ensure there is capacity for the result by either using dynamically
 sized \ref Set<T,S> "Set<T,S>s" or by allocating enough static capacity.
 
-| Operation Name           | Method      | Set Notation Symbol           | Description                                           | Analogous Math Operator             |
-|--------------------------|-------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
-| Union                    | unionWith() | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
-| Intersection             |     N/A     | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
-| Difference               |     N/A     | A−B or A∖B                    | Elements in A not in B                                | -                                   |
-| Symmetric Difference     |     N/A     | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
-| ~~Cartesian Product~~    |   Omitted   | A×B                           | All ordered pairs (a,b) where a∈A and b∈Bb           | × or * (ordered pair generation)    |
-| ~~Complement~~           |   Omitted   | A'                            | Elements not in A, relative to a universal set U      | ¬ or logical NOT                    |
-| Subset                   |     N/A     | A⊆B                          | All elements of A are in B                             | —                                  |
-| Proper Subset            |     N/A     | A⊂B                          | A⊆B  and A≠B                                          | —                                  |
-| Superset                 |     N/A     | A⊇B                          | All elements of B are in A                             | —                                  |
+| Operation Name           | Method             | Set Notation Symbol           | Description                                           | Analogous Math Operator             |
+|--------------------------|--------------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
+| Union                    | unionWith()        | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
+| Intersection             | intersectionWith() | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
+| Difference               |     N/A            | A−B or A∖B                    | Elements in A not in B                                | -                                   |
+| Symmetric Difference     |     N/A            | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
+| ~~Cartesian Product~~    |   Omitted          | A×B                           | All ordered pairs (a,b) where a∈A and b∈Bb           | × or * (ordered pair generation)    |
+| ~~Complement~~           |   Omitted          | A'                            | Elements not in A, relative to a universal set U      | ¬ or logical NOT                    |
+| Subset                   |     N/A            | A⊆B                          | All elements of A are in B                             | —                                  |
+| Proper Subset            |     N/A            | A⊂B                          | A⊆B  and A≠B                                          | —                                  |
+| Superset                 |     N/A            | A⊇B                          | All elements of B are in A                             | —                                  |
 
 \note The values in a Set is not guaranteed to be stored in any particular order.
 
@@ -222,6 +222,44 @@ public:
             if ( ! resultDestination.insert(element) )
             {
                 return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+    \brief Calculates the interesction of \c this Set with \p B.
+
+    In this method, \c this is the \c A operand when consulting the \ref table_of_set_operations "table of operations".
+
+    \param B The set to calculate the intersection with.
+    \param resultDestination The Set<T> to store the resulting intersection in.
+    \returns True if all elements in the resulting intersection could be added to \p resultDestination. False if not.
+    \todo Test
+    */
+    bool intersectionWith(const Set<T> &B, Set<T> &resultDestination) const
+    {
+        // Elements common to both A and B
+        resultDestination.clear();
+        for(auto const &element: this->actualValues())
+        {
+            if(B.contains(element))
+            {
+                if ( ! resultDestination.insert(element) )
+                {
+                    return false;
+                }
+            }
+        }
+        for(auto const &element: B.actualValues())
+        {
+            if(this->contains(element))
+            {
+                if ( ! resultDestination.insert(element) )
+                {
+                    return false;
+                }
             }
         }
         return true;

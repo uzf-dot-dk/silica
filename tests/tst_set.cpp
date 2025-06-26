@@ -219,7 +219,7 @@ TEST(suiteName, test_clear)
 
 #define CREATE_SET(name, index) Kjut::Set<int> name; { std::vector<int> stdv = std::get<index>(testCase); for(auto e: stdv) { name.insert(e); } }
 
-TEST(suiteName, test_union)
+TEST(suiteName, test_set_operations)
 {
     std::vector<
         std::tuple<
@@ -234,7 +234,17 @@ TEST(suiteName, test_union)
             {{},      "union", {1,2,3}, "results in", {1,2,3}},
             {{1,2,3}, "union", {2,3,4}, "results in", {1,2,3,4}},
             {{1,2,3}, "union", {4,5,6}, "results in", {1,2,3,4,5,6}},
+
+            {{}, "intersection", {}, "results in", {}},
+            {{}, "intersection", {4,5,6}, "results in", {}},
+            {{1,2,3}, "intersection", {}, "results in", {}},
+            {{1,2,3}, "intersection", {4,5,6}, "results in", {}},
+            {{1,2,3}, "intersection", {3,4,5}, "results in", {3}},
+            {{1,2,3}, "intersection", {2,3,4,5}, "results in", {2,3}},
+            {{1,2,3,5}, "intersection", {1,2,3,4,5}, "results in", {1,2,3,5}},
+            {{1,2,3,4,5}, "intersection", {1,2,3,4,5}, "results in", {1,2,3,4,5}},
         };
+
     for( auto & testCase : cases)
     {
         CREATE_SET(A, 0);
@@ -247,19 +257,23 @@ TEST(suiteName, test_union)
         {
             wasOperationSuccessful = A.unionWith(B, result);
         }
+        else if(operation == "intersection")
+        {
+            wasOperationSuccessful = A.intersectionWith(B, result);
+        }
         else
         {
-
         }
         const bool expectedEqualsActual = (result == expected);
         ASSERT_TRUE(wasOperationSuccessful);
         if(!expectedEqualsActual)
         {
-            std::cout << "A        " << A << std::endl;
-            std::cout << "B        " << B << std::endl;
-            std::cout << "Expected " << expected << std::endl;
-            std::cout << "Actual   " << result<< std::endl;
-            std::cout << "Equals?  " << (result == expected ? "true" : "false") << std::endl;
+            std::cout << "A         " << A << std::endl;
+            std::cout << "B         " << B << std::endl;
+            std::cout << "Operation " << operation << std::endl;
+            std::cout << "Expected  " << expected << std::endl;
+            std::cout << "Actual    " << result<< std::endl;
+            std::cout << "Equals?   " << (result == expected ? "true" : "false") << std::endl;
             std::cout << "------------------------------" << std::endl;
         }
         ASSERT_TRUE(expectedEqualsActual);
