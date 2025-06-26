@@ -117,9 +117,26 @@ public:
         return actualValues();
     }
 
+    bool operator==(const Set<T> &rhs) const
+    {
+        if(this->size() != rhs.size())
+        {
+            return false;
+        }
+        for(const T & candidate : actualValues())
+        {
+            if( ! rhs.contains(candidate))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
+///@cond
 protected:
     inline virtual Array<T> &actualValues() const { return dynamicValues ; }
+///@endcond
 
 private:
     mutable Array<T> dynamicValues;

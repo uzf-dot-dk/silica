@@ -175,6 +175,28 @@ TEST(suiteName, test_insert)
 
 }
 
+TEST(suiteName, test_equality_operator)
+{
+    {
+        Kjut::Set<int> s;
+        s.insert(1);
+        Kjut::Set<int> s2;
+        s2.insert(1);
+
+        ASSERT_TRUE(s == s2);
+    }
+
+
+    {
+        Kjut::Set<int> s;
+        s.insert(1);
+        Kjut::Set<int> s2;
+        s2.insert(2);
+
+        ASSERT_FALSE(s == s2);
+    }
+}
+
 
 
 TEST(suiteName, test_erase)
