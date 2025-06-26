@@ -86,13 +86,26 @@ public:
 #endif
 
     /**
-`
+    \brief Returns the number of elements in this Set.
+    \returns The number of elements in this Set.
     */
     size_t size() const
     {
         return actualValues().size();
     }
 
+    /**
+    \brief Inserts an element into this Set.
+
+    If this Set already contains an element equal to \p element, nothing happens, otherwise, \p element is added to this Set.
+    Wether an element can be added to this Set, depends on its capacity policy:
+
+    - If this Set has static capacity, and there is no more space left, this Set is left unmodified nothing else happens.
+    - if this Set has dynamic capacity, it is grown and \p element is added and this Set's size frows by one.
+
+    \param element The new element to add.
+    \returns True if \p element was added to this Set. False if not.
+    */
     bool insert(const T&element)
     {
         if( contains(element))
@@ -101,6 +114,7 @@ public:
         }
         return actualValues().append(element);
     }
+
 
     /**
     \brief Checks whether \p element is contained in this Set.
