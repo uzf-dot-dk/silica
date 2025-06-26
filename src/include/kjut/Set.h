@@ -45,6 +45,7 @@ Regarding capacity, Set<T,S> behaves exactly like @ref the_concept_of_container_
 </table>
 
 
+@anchor table_of_set_operations
 ### Set Operations
 
 Set operations are implemented a bit differently than often seen in other frameworks. Since the copy constructor is disabled by default, oeprators that result in a new set
@@ -53,7 +54,7 @@ sized \ref Set<T,S> "Set<T,S>s" or by allocating enough static capacity.
 
 | Operation Name           | Method      | Set Notation Symbol           | Description                                           | Analogous Math Operator             |
 |--------------------------|-------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
-| Union                    |     N/A     | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
+| Union                    | unionWith() | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
 | Intersection             |     N/A     | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
 | Difference               |     N/A     | A−B or A∖B                    | Elements in A not in B                                | -                                   |
 | Symmetric Difference     |     N/A     | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
@@ -187,6 +188,38 @@ public:
         for(const T & candidate : actualValues())
         {
             if( ! rhs.contains(candidate))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+    /**
+    \brief Calculates the union of \c this Set with \p B.
+
+    In this method, \c this is the \c A operand when consulting the \ref table_of_set_operations "table of operations".
+
+    \param B The set to calculate the union with.
+    \param resultDestination The Set<T> to store the resulting union in.
+    \returns True if all elements in the resulting union could be added to \p resultDestination. False if not.
+    \todo Test
+    */
+    bool unionWith(const Set<T> &B, Set<T> &resultDestination) const
+    {
+        resultDestination.clear();
+        for(auto const &element: this->actualValues())
+        {
+            if ( ! resultDestination.insert(element) )
+            {
+                return false;
+            }
+        }
+        for(auto const &element: B.actualValues())
+        {
+            if ( ! resultDestination.insert(element) )
             {
                 return false;
             }

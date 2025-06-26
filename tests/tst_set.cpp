@@ -91,14 +91,10 @@ std::ostream &operator<<(std::ostream &os, const std::set<T> &a) {
 }
 
 
-
-template <typename T>
-std::ostream &operator<<(std::ostream &os, const Kjut::Set<T> &a) {
-
-    const Kjut::Array<T>& values = a.values();
+std::ostream &operator<<(std::ostream &os, const Kjut::Set<int> &a) {
     os << "(";
     bool first = true;
-    for(const auto &element: values)
+    for(const auto &element: a.values())
     {
         if(!first)
         {
@@ -111,6 +107,9 @@ std::ostream &operator<<(std::ostream &os, const Kjut::Set<T> &a) {
     os << ")";
     return os;
 }
+
+
+
 
 
 TEST(suiteName, test_default_constructor)
@@ -215,6 +214,59 @@ TEST(suiteName, test_clear)
     ASSERT_FALSE(s.contains(3));
 }
 
+
+#include <vector>
+
+#define CREATE_SET(name, index) Kjut::Set<int> name; { std::vector<int> stdv = std::get<index>(testCase); for(auto e: stdv) { name.insert(e); } }
+
+TEST(suiteName, test_union)
+{
+    std::vector<
+        std::tuple<
+            std::vector<int>,       // A
+            std::string,            //operator
+            std::vector<int>,       // B
+            std::string,            //Filler just for readability
+            std::vector<int>> >     // Expected
+        cases = {
+            {{1,2,3}, "union", {1,2,3}, "results in", {1,2,3}},
+            {{1,2,3}, "union", {},      "results in", {1,2,3}},
+            {{},      "union", {1,2,3}, "results in", {1,2,3}},
+            {{1,2,3}, "union", {2,3,4}, "results in", {1,2,3,4}},
+            {{1,2,3}, "union", {4,5,6}, "results in", {1,2,3,4,5,6}},
+        };
+    for( auto & testCase : cases)
+    {
+        CREATE_SET(A, 0);
+        CREATE_SET(B, 2);
+        CREATE_SET(expected, 4);
+        std::string operation = std::get<1>(testCase);
+        Kjut::Set<int> result;
+        bool wasOperationSuccessful = false;
+        if(operation == "union")
+        {
+            wasOperationSuccessful = A.unionWith(B, result);
+        }
+        else
+        {
+
+        }
+        const bool expectedEqualsActual = (result == expected);
+        ASSERT_TRUE(wasOperationSuccessful);
+        if(!expectedEqualsActual)
+        {
+            std::cout << "A        " << A << std::endl;
+            std::cout << "B        " << B << std::endl;
+            std::cout << "Expected " << expected << std::endl;
+            std::cout << "Actual   " << result<< std::endl;
+            std::cout << "Equals?  " << (result == expected ? "true" : "false") << std::endl;
+            std::cout << "------------------------------" << std::endl;
+        }
+        ASSERT_TRUE(expectedEqualsActual);
+    }
+
+
+}
 
 
 
