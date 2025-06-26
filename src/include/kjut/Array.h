@@ -8,6 +8,12 @@
 #include "ContainerDefinitions.h"
 
 
+/**
+ * \defgroup Containers Container classes
+ * This group contains all container classes.
+ */
+
+
 ///@cond
 namespace Kjut {  template <typename T, size_t S = 0> class Array; }
 template <typename T> std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) ;
@@ -17,12 +23,108 @@ namespace Kjut
 {
 
 
-/** \brief An array
+/** \brief Array<T,S> implements a linear container with iterators and random access. Array may have static or dynamic capacity.
 
-asdfr5asd fvaxd
-asdff34v asdf
-asdff asd sdaf
-asdf asdf asdf asd */
+The Array<T,S> implements an array with elements stored in adject memory for fast index based access. Based on the value of \c S, Array<T,S> implements two different allocation behaviours:
+
+<table>
+<tr>
+    <th>\c S</th>
+    <th>Behaviour</th>
+</tr>
+<tr>
+    <td><code>S > 0</code></td>
+    <td>
+        The Array has a fixed capacity and will never grow nor shrink.<br/>
+        With <code>S > 0</code> , Array<T,S> is guaranteed to not perform any dynamic allocations.
+
+    \see append()
+    </td>
+</tr>
+<tr>
+    <td><code>S = 0</code></td>
+    <td>
+        The Array has a dynamic capacity and will grow if needed. <br/>
+        With \c S \c = \c 0 , Array<T,S> allocates \ref KJUT_ARRAY_INITIAL_CAPACITY instances of T upon instantiation and may realloc that as required at runtime.<br />
+        \see append()
+    </td>
+</tr>
+</table>
+
+
+There are three ways to declare an Array<T,S>:
+
+```cpp
+Array<int> dynamicArray;            // Will grow as needed by allocating memory
+Array<int, 0> anotherDynamicArray;  // Will grow as needed by allocating memory
+Array<int, 17> staticArray;         // Will never grow and never allocate any memody dynamically..
+```
+and they are interchangable under certain circumstances.
+
+For example
+```cpp
+void print(Array<int> &a)
+{
+    for(const auto &element: a)
+    {
+        std::cout << a < " ";
+    }
+}
+
+Array<int> dynamicArray;
+Array<int, 0> anotherDynamicArray;
+Array<int, 17> staticArray;
+
+
+print(dynamicArray);
+print(anotherDynamicArray);
+print(staticArray);
+```
+will all work as expected and print the integers in each array. This works because the arrays are passed by *reference* and not by value.
+
+\warning Passing Array<T,S> value will build but most likely crash at runtime.
+
+### Examples
+
+```cpp
+#include <kjut/Array.h>
+
+Array<int> integers = {6,2,4,5,3};
+integers.append(1);
+integers.append(7);
+
+for(auto &i : integers)
+{
+    std::cout << i << "  ";
+}
+std::cout << "\n";
+
+// Prints 6 2 4 5 3 1 7
+
+std::sort(integers.begin(), integers.end());
+
+for(auto &i : integers)
+{
+    std::cout << i << "  ";
+}
+std::cout << "\n";
+
+// Prints 1 2 3 4 5 6 7
+```
+
+### Requirements for <code>T</code>
+
+\c T must provide the following:
+
+<table>
+<tr><td><code>T()</code></td><td>A default constructor</td></tr>
+<tr><td><code>~T()</code></td><td>A public destructor</td></tr>
+<tr><td><code>T& operator=(const T &other)</code></td><td>The assignment operator.</td></tr>
+</table>
+
+\ingroup Containers
+
+*/
 #ifdef DOXYGEN
 template <typename T, S>
 class Array<T, S> {
@@ -33,12 +135,28 @@ class Array<T, 0> {
 
 public:
 
+    /**
+    \brief Constructs a new array instance with a capacity of \c S and all elements uninitialized. */
     Array()
     {
         initialize(0, nullptr);
     }
 
+    /**
+    Destroys this array.
+
+    All instances of T currently held by this array, is also destroyed.
+    */
+    ~Array()
+    {
+
+    }
+
 #ifndef KJUT_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
+    /** Constructs a new array instance and initializes its content to the list.
+     *
+     * \note This constructor may be disabled by define the \ref KJUT_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR macro when including Array.h
+     */
     Array(std::initializer_list<T> init) {
         initialize(0, nullptr);
         for (const T& value : init) {
@@ -48,26 +166,60 @@ public:
 #endif
 
 
-#ifndef KJUT_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
+#ifdef KJUT_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
     Array(const Array<T, 0> &) = delete;
+#else
+    Array(const Array<T, 0> &);
 #endif
 
 
     #ifdef DOXYGEN
-    /** */
+    /**
+    \brief Fills the array with \c S copies of \c e. Existing elements are overwritten.
+    \param e The element to copy into the array.
+    \note This method is only available for arrays with static size, meaning \c S \c != \c 0.
+    */
     void fill(const T& e) ;
     #endif
 
+    /**
+    \brief Returns the number of \c T instances in the array.
+    \returns The number of \c T instances in the array.
+    */
     size_t size() const
     {
         return d.size;
     }
 
+    /**
+    \brief Returns the current capacity of the array.
+    For static sized arrays, this equals \c S, and for dynamic arrays the capacity is the current capacity.
+    \returns The number of \c T instances in the array.
+    */
     size_t capacity() const
     {
         return d.capacity;
     }
 
+
+    /**
+    \brief Copies \p element into a given position in the array, moving other elements as needed.
+
+    A copy of \p element is inserted into the array at \p index. All elements from \p index and to \ref size() is moved to one index higher.
+
+    Calling \c insert( \ref size(), T ) is equal to \ref append().
+
+    In cases where the capacity of the array has been depleted one of two things can happen:
+
+    - For dynamic sized arrays, the capacity is grown, and \c insert proceeds as expected.
+    - For statically sized arrays, nothing happens and false is returned.
+
+    \param element The element to copy into the array.
+    \returns True if the element could be inserted/appended. False if there was no capacity left to insert \p element.
+    \throws Any exception that T thows in its assignment operator.
+    \see append()
+    \todo Handle exceptions thrown in assignment operator and test thereof.
+    */
     bool insert(size_t index, const T &element)
     {
         if(index == d.size)
@@ -103,12 +255,15 @@ public:
     }
 
 
-    /** Removes the index'th element from the Array.
-     *  The element at index `index` is removed from the Array and deleted. After that, the array has its size decremented.
-     *  If the element to remove, throws any exceptions, it is caught and the then rethrown after resizing has happened. The array is guaranteed to have its `index`th element removed and size decremented.
-     *  @param index The index of the element to remove.
-     *  @returns True if the element could be removed and false if not. Reasons for not being able to remove an element can be of `index` is our of bounds.
-     *  @throws Any exception that T thows in its descructor.
+    /** \brief Removes the index'th element from the array.
+     *
+       The element at \p index is removed from the array and deleted. After that, the array has its size decremented.
+
+       If the element to remove, throws any exceptions, it is caught and then rethrown after resizing has happened. The array is guaranteed to have element \p index removed and size decremented.
+
+       \param index The index of the element to remove.
+       \returns True if the element could be removed and false if not. Reasons for not being able to remove an element can be if \p index is our of bounds.
+       \throws Any exception that T thows in its descructor.
     */
     bool remove(size_t index)
     {
@@ -144,7 +299,19 @@ public:
         return true;
     }
 
+    /**
+    \brief Appends a copy of \p element to the array.
 
+    If the array has its capacity depleted, one of two things can happen:
+
+    - For dynamic sized arrays, the capacity is grown, and append() proceeds as expected.
+    - For statically sized arrays, nothing happens and false is returned.
+
+    \param element The \c T instance to append.
+    \throws Any exception that T thows in its assignment operator.
+    \todo Handle exceptions thrown in assignment operator and test thereof.
+
+    */
     bool append(const T &element)
     {
         if(d.size >= d.capacity)
@@ -164,7 +331,16 @@ public:
         return true;
     }
 
-    T at(size_t index) const
+
+    /**
+     \brief Returns the element at the given index.
+
+      Returns a \c const& to the element at \p index, or a \c const& to a garbage \c T instance if \p index is out of bounds.
+
+      \param index The position of the element to access.
+      \returns A \c const& to the element at \p index, or a \c const& to a garbage \c T instance if \p index is out of bounds.
+    */
+    const T& at(size_t index) const
     {
         if(index >= d.size)
         {
@@ -175,6 +351,14 @@ public:
         return d.data[index];
     }
 
+    /**
+     \brief Returns a reference to the element at the given index.
+
+      Returns a mutable reference to the element at \p index, or to a garbage \c T instance if \p index is out of bounds.
+
+      \param index The position of the element to access.
+      \returns A mutable reference to the element at \p index, or to a garbage \c T instance if \p index is out of bounds.
+    */
     T& operator[](size_t index)
     {
         if(index >= d.size)
@@ -185,6 +369,14 @@ public:
         return d.data[index];
     }
 
+    /**
+     \brief Returns the element at the given index.
+
+      Returns a \c const& to the element at \p index, or a \c const& to a garbage \c T instance if \p index is out of bounds.
+
+      \param index The position of the element to access.
+      \returns A \c const& to the element at \p index, or a \c const& to a garbage \c T instance if \p index is out of bounds.
+    */
     const T& operator[](size_t index) const
     {
         if(index >= d.size)
@@ -195,15 +387,25 @@ public:
         return d.data[index];
     }
 
-    /** Removes the first element from the Array.
-     *  This is identical to calling Array<T>::remove(0).
-     *  @see remove()*/
+    /**
+    \brief Removes the first element from the Array.
+
+    This is identical to calling \ref remove(0).
+    \return The same as remove(0).
+    \see remove()
+
+    */
     bool pop() { return remove(0);}
 
 
-    /** Appends an element to the end of the array.
-     *  This is identical to calling Array<T>::append(T).
-     *  @see append()*/
+    /**
+    \brief Appends an element to the end of the array.
+
+    This is identical to calling \c append(element)
+
+    \returns The same as \ref append()
+    \see append()
+    */
     bool push(const T &element) { return append(element); }
 
 
@@ -251,19 +453,47 @@ public:
     using iterator = Iterator;
     using const_iterator = Iterator; // Optional: make a separate const_iterator for true const-correctness
     ///@endcond
+
+    /**
+    \brief Returns an iterator pointing to the beginning of this array.
+    \returns Aniterator pointing to the beginning of this array.
+    */
     iterator begin() { return iterator(d.data); }
+
+    /**
+    \brief Returns an iterator pointing to the end of this array.
+    \returns Aniterator pointing to the end of this array.
+    */
     iterator end()   { return iterator(d.data + d.size); }
 
+    /**
+    \brief Returns a const iterator pointing to the beginning of this array.
+    \returns A const iterator pointing to the beginning of this array.
+    */
     const_iterator begin() const { return const_iterator(d.data); }
+
+    /**
+    \brief Returns a const iterator pointing to the end of this array.
+    \returns A const iterator pointing to the end of this array.
+    */
     const_iterator end()   const { return const_iterator(d.data + d.size); }
 
+    /**
+    \brief Returns a const iterator pointing to the beginning of this array.
+    \returns A const iterator pointing to the beginning of this array.
+    */
     const_iterator cbegin() const { return begin(); }
+
+    /**
+    \brief Returns a const iterator pointing to the end of this array.
+    \returns A const iterator pointing to the end of this array.
+    */
     const_iterator cend()   const { return end(); }
 
 
 
 protected:
-
+///@cond
     void initialize(size_t capacity, T* data)
     {
         if(capacity == 0)
@@ -282,6 +512,8 @@ protected:
 
         d.size = 0;
     }
+///@endcond
+
     ///@cond OPAQUE_STRUCTS
     typedef struct Private
     {

@@ -19,6 +19,8 @@
 namespace Kjut {  template <typename T, size_t S = 0> class Set; }
 template <typename T> std::ostream &operator<<(std::ostream &os, const Kjut::Set<T> &a) ;
 
+
+
 namespace Kjut
 {
 
@@ -26,18 +28,36 @@ namespace Kjut
 
 /**
 
-| Operation Name       | Set Notation Symbol           | Description                                           | Analogous Math Operator             |
-|----------------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
-| Union                | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
-| Intersection         | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
-| Difference           | A−B or A∖B                    | Elements in A not in B                                | -                                   |
-| Symmetric Difference | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
-| Cartesian Product    | A×B                           | All ordered pairs (a,b) where a∈A and b∈Bb           | × or * (ordered pair generation)    |
-| Complement           | AcA^c                         | Elements not in A, relative to a universal set U      | ¬ or logical NOT                    |
-| Subset               | A⊆B                          | All elements of A are in B                             | —                                  |
-| Proper Subset        | A⊂B                          | A⊆B  and A≠B                                          | —                                  |
-| Superset             | A⊇B                          | All elements of B are in A                             | —                                  |
+\brief Implements the mathematical concept of a set.
 
+
+|     No
+| Implemented | Operation Name       | Set Notation Symbol           | Description                                           | Analogous Math Operator             |
+|-------------|----------------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
+|     No      | Union                | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
+|     No      | Intersection         | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
+|     No      | Difference           | A−B or A∖B                    | Elements in A not in B                                | -                                   |
+|     No      | Symmetric Difference | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
+|     No      | Cartesian Product    | A×B                           | All ordered pairs (a,b) where a∈A and b∈Bb           | × or * (ordered pair generation)    |
+|     No      | Complement           | A'                            | Elements not in A, relative to a universal set U      | ¬ or logical NOT                    |
+|     No      | Subset               | A⊆B                          | All elements of A are in B                             | —                                  |
+|     No      | Proper Subset        | A⊂B                          | A⊆B  and A≠B                                          | —                                  |
+|     No      | Superset             | A⊇B                          | All elements of B are in A                             | —                                  |
+
+
+## Requirements for T
+
+\c T must provide the following:
+
+<table>
+<tr><td><code>T()</code></td><td>A default constructor</td></tr>
+<tr><td><code>~T()</code></td><td>A public destructor</td></tr>
+<tr><td><code>T& operator=(const T &other)</code></td><td>The assignment operator.</td></tr>
+<tr><td><code>bool operator==(const T &rhs) const </code></td><td>The comparison operator.</td></tr>
+</table>
+
+
+\ingroup Containers
 */
 template <typename T>
 class Set<T, 0> {

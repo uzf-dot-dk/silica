@@ -94,11 +94,17 @@ OverwriteOldestData  | The oldest element in the RingBuffer is overwritten and t
 
 ## Requirements for T
 
-T must provide the following
+\c T must provide the following:
 
- - A default Constructor: \c T()
- - A public detructor: \c ~T()
- - An assignment operator: \c T& \c operator=(const T & )
+<table>
+<tr><td><code>T()</code></td><td>A default constructor</td></tr>
+<tr><td><code>~T()</code></td><td>A public destructor</td></tr>
+<tr><td><code>T& operator=(const T &other)</code></td><td>The assignment operator.</td></tr>
+</table>
+
+
+\ingroup Containers
+
 */
 
 template <typename T, size_t S>
