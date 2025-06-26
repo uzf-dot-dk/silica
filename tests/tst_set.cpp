@@ -244,12 +244,19 @@ TEST(suiteName, test_set_operations)
             {{1,2,3,5},   "intersection", {1,2,3,4,5}, "results in", {1,2,3,5}},
             {{1,2,3,4,5}, "intersection", {1,2,3,4,5}, "results in", {1,2,3,4,5}},
 
-            {{}, "difference", {}, "results in", {}},
-            {{}, "difference", {1,2,3}, "results in", {}},
-            {{1,2,3}, "difference", {}, "results in", {1,2,3}},
-            {{1,2,3}, "difference", {1,2,3}, "results in", {}},
-            {{1,2,3,4}, "difference", {1,2,3}, "results in", {4}},
+            {{},          "difference", {},      "results in", {}},
+            {{},          "difference", {1,2,3}, "results in", {}},
+            {{1,2,3},     "difference", {},      "results in", {1,2,3}},
+            {{1,2,3},     "difference", {1,2,3}, "results in", {}},
+            {{1,2,3,4},   "difference", {1,2,3}, "results in", {4}},
             {{1,2,3,4,5}, "difference", {1,2,3}, "results in", {4,5}},
+
+            {{},    "symmetric difference", {},     "results in", {}},
+            {{1},   "symmetric difference", {},     "results in", {1}},
+            {{},    "symmetric difference", {1},    "results in", {1}},
+            {{1},   "symmetric difference", {1},    "results in", {}},
+            {{1,2}, "symmetric difference", {2},    "results in", {1}},
+            {{2},   "symmetric difference", {1,2},  "results in", {1}},
 
             };
 
@@ -273,8 +280,13 @@ TEST(suiteName, test_set_operations)
         {
             wasOperationSuccessful = A.differenceFrom(B, result);
         }
-        else
+        else if(operation == "symmetric difference")
         {
+            wasOperationSuccessful = A.symmetricDifference(B, result);
+        }
+        else
+        {   std::cout << "'" << operation << "' is not a tested operation." << std::endl;
+            FAIL();
         }
         const bool expectedEqualsActual = (result == expected);
         ASSERT_TRUE(wasOperationSuccessful);
@@ -290,11 +302,89 @@ TEST(suiteName, test_set_operations)
         }
         ASSERT_TRUE(expectedEqualsActual);
     }
-
-
 }
 
+#undef CREATE_SET
 
+#define CREATE_SET(name, index) Kjut::Set<int> name; { std::vector<int> stdv = std::get<index>(testCase); for(auto e: stdv) { name.insert(e); } }
+
+TEST(suiteName, test_set_deductors)
+{
+    std::vector<
+        std::tuple<
+            std::vector<int>,       // A
+            std::string,            // check
+            std::vector<int>,       // B
+            bool                    //expected
+            >
+        > cases = {
+            {{},      "is subset of", {}, true},
+            {{},      "is subset of", {1,2,3}, true},
+            {{1,2,3}, "is subset of", {1,2,3}, true},
+            {{1,2,3}, "is subset of", {1,2}, false},
+            {{1,2,3}, "is subset of", {1}, false},
+            {{1,2,3}, "is subset of", {0}, false},
+            {{2},     "is subset of", {1}, false},
+
+            {{},        "is proper subset of", {}, false},
+            {{},        "is proper subset of", {1}, true},
+            {{1},       "is proper subset of", {1}, false},
+            {{1},       "is proper subset of", {1,2}, true},
+            {{1,2,3,4}, "is proper subset of", {1,2,3,4}, false},
+            {{1,2,3,4}, "is proper subset of", {1,2,3,4,5}, true},
+
+
+            {{},      "is superset of", {}, true},
+            {{1,2,3}, "is superset of", {}, true},
+            {{1,2,3}, "is superset of", {1,2,3}, true},
+            {{1,2},   "is superset of", {1,2,3}, false},
+            {{1},     "is superset of", {1,2,3}, false},
+            {{},      "is superset of", {1,2,3}, false},
+            {{1},     "is superset of", {2}, false},
+
+        };
+    for( auto & testCase : cases)
+    {
+        CREATE_SET(A, 0);
+        const std::string check = std::get<1>(testCase);
+        CREATE_SET(B, 2);
+        const bool expected = std::get<3>(testCase);
+        bool actual;
+        if( check  == "is subset of" )
+        {
+            actual = A.isSubsetOf(B);
+        }
+        else if( check  == "is proper subset of" )
+        {
+            actual = A.isProperSubsetOf(B);
+        }
+        else if( check  == "is superset of" )
+        {
+            actual = A.isSupersetOf(B);
+        }
+        else
+        {
+            std::cout << "'" << check << "' is not a tested check." << std::endl;
+            FAIL();
+        }
+
+        const bool expectedEqualsActual = (expected == actual);
+
+        if(!expectedEqualsActual)
+        {
+            std::cout << "A         " << A << std::endl;
+            std::cout << "B         " << B << std::endl;
+            std::cout << "Check     " << "'" << check << "'" << std::endl;
+            std::cout << "Expected  " << (expected ? "True" : "False" )<< std::endl;
+            std::cout << "Actual    " << (actual ? "True" : "False" ) << std::endl;
+            std::cout << "Equals?   " << (expectedEqualsActual ? "True" : "False") << std::endl;
+            std::cout << "------------------------------" << std::endl;
+        }
+        ASSERT_TRUE(expectedEqualsActual);
+    }
+}
+
+#undef CREATE_SET
 
 TEST(suiteName, test_erase)
 {

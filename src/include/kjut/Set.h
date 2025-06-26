@@ -52,17 +52,15 @@ Set operations are implemented a bit differently than often seen in other framew
 do not create a new set, but store the result in a provided *resultDestination*. It is the responsibility of the programmer to ensure there is capacity for the result by either using dynamically
 sized \ref Set<T,S> "Set<T,S>s" or by allocating enough static capacity.
 
-| Operation Name           | Method             | Set Notation Symbol           | Description                                           | Analogous Math Operator             |
-|--------------------------|--------------------|-------------------------------|-------------------------------------------------------|-------------------------------------|
-| Union                    | unionWith()        | A∪B                          | All elements in A, B, or both                         | + (loosely, additive combination)   |
-| Intersection             | intersectionWith() | A∩B                           | Elements common to both A and B                       | * (loosely, multiplicative overlap) |
-| Difference               | differenceFrom()   | A−B or A∖B                    | Elements in A not in B                                | -                                   |
-| Symmetric Difference     |     N/A            | A△B                           | Elements in A or B, but not both                      | ⊕ (exclusive OR / XOR)              |
-| ~~Cartesian Product~~    |   Omitted          | A×B                           | All ordered pairs (a,b) where a∈A and b∈Bb           | × or * (ordered pair generation)    |
-| ~~Complement~~           |   Omitted          | A'                            | Elements not in A, relative to a universal set U      | ¬ or logical NOT                    |
-| Subset                   |     N/A            | A⊆B                          | All elements of A are in B                             | —                                  |
-| Proper Subset            |     N/A            | A⊂B                          | A⊆B  and A≠B                                          | —                                  |
-| Superset                 |     N/A            | A⊇B                          | All elements of B are in A                             | —                                  |
+| Operation Name           | Method                | Set Notation Symbol           | Description                                           |
+|--------------------------|-----------------------|-------------------------------|-------------------------------------------------------|
+| Union                    | unionWith()           | A∪B                          | All elements in A, B, or both                         |
+| Intersection             | intersectionWith()    | A∩B                           | Elements common to both A and B                       |
+| Difference               | differenceFrom()      | A−B or A∖B                    | Elements in A not in B                                |
+| Symmetric Difference     | symmetricDifference() | A△B                           | Elements in A or B, but not both                      |
+| Subset                   | isSubsetOf()          | A⊆B                          | All elements of A are in B                             |
+| Proper Subset            | isProperSubsetOf()    | A⊂B                          | A⊆B  and A≠B                                          |
+| Superset                 | isSupersetOf()        | A⊇B                          | All elements of B are in A                             |
 
 \note The values in a Set is not guaranteed to be stored in any particular order.
 
@@ -289,6 +287,96 @@ public:
         }
         return true;
     }
+
+
+    /**
+    \brief Calculates the symmetric difference from \c this Set with \p B.
+
+    In this method, \c this is the \c A operand when consulting the \ref table_of_set_operations "table of operations".
+
+    \param B The set to calculate the symmetric difference from.
+    \param resultDestination The Set<T> to store the resulting symmetric difference in.
+    \returns True if all elements in the resulting symmetric difference could be added to \p resultDestination. False if not.
+    */
+    bool symmetricDifference(const Set<T> &B, Set<T> &resultDestination) const
+    {
+        resultDestination.clear();
+        for(auto const &element: this->actualValues())
+        {
+            if( ! B.contains(element))
+            {
+                if ( ! resultDestination.insert(element) )
+                {
+                    return false;
+                }
+            }
+        }
+        for(auto const &element: B.actualValues())
+        {
+            if( ! this->contains(element))
+            {
+                if ( ! resultDestination.insert(element) )
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+    \brief Calculates whether \c this Set is a subset of \p B.
+
+    In this method, \c this is the \c A operand when consulting the \ref table_of_set_operations "table of operations".
+
+    \param B The set to check, whether this Set is a subset of.
+    \returns True if this Set is a subset of B. False if not.
+    */
+    bool isSubsetOf(const Set<T> &B) const
+    {
+        for(auto const &element: this->actualValues())
+        {
+            if( ! B.contains(element))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+    \brief Calculates whether \c this Set is a proper subset of \p B.
+
+    In this method, \c this is the \c A operand when consulting the \ref table_of_set_operations "table of operations".
+
+    \param B The set to check, whether this Set is a proper subset of.
+    \returns True if this Set is a proper subset of B. False if not.
+    */
+    bool isProperSubsetOf(const Set<T> &B) const
+    {
+        if( ! this->isSubsetOf(B) )
+        {
+            return false;
+        }
+        return B.size() != size();
+    }
+
+    /**
+    \brief Calculates whether \c this Set is a superset of \p B.
+
+    In this method, \c this is the \c A operand when consulting the \ref table_of_set_operations "table of operations".
+
+    \param B The set to check, whether this Set is a superset of.
+    \returns True if this Set is a superset  of B. False if not.
+    */
+    bool isSupersetOf(const Set<T> &B) const
+    {
+        return B.isSubsetOf(*this);
+    }
+
+
+
 
 
 
