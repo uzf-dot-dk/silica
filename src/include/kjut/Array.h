@@ -346,7 +346,7 @@ public:
                 return false;
             }
         }
-        d.data[d.size] = element;
+        new (&d.data[d.size]) T(element);
         d.size++;
         return true;
     }
@@ -521,7 +521,7 @@ protected:
             d.mayGrow = true;
             d.initialDynamicCapacity = KJUT_ARRAY_INITIAL_CAPACITY;
             d.capacity = d.initialDynamicCapacity;
-            d.data = (T*)(malloc(sizeof(T)*d.initialDynamicCapacity));
+            d.data = static_cast<T*>(malloc( sizeof(T)*d.initialDynamicCapacity ));
         }
         else
         {

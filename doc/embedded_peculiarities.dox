@@ -1,0 +1,62 @@
+/** \page embedded_concers Embedded Concerns
+
+Running applications in headless embedded devices, has a unique set of challenges, which the Kjut project tries to address. This section lists what areas of embedded concern are addressed and how that may impact appplications developers implementation decisions.
+
+\anchor Container_elaboration
+# Containers
+
+\anchor Dual_Capacity_Policies
+## Dual Capacity Policies
+
+In embedded development it is often desireable to know at compile time how much space is going to be used at runtime, and in some settings dynamic allocations are forbidden. However, container classes as known from the standard library are still desireable.
+
+Kjut offers a set of container classes, where most can be configured to a static capcacity that will never grow and where ths size is known at compilie time. At the same time, the container classes can be configured for dynamic capacity. Container classes with dynamic capacity will allocate new space as the need for more capacity occurs and will have as much capacity as allowed by available memory.
+Whether a container instance has dynamic or static capacity is specified as the template parameter, \c S. Omitting \c S from the template parameters or specifying it as 0, will result in an instance that has dynamic capacity, where a \c S present and non zero, will return in a fixed capacity that can be depleted by addint elements.
+
+When passed by reference or as pointer, most container classes can subsittute \c ContainerClass<T,S> with \c ContinerClass<T> and as such be used interchangibly, as in this example:
+
+
+```cpp
+
+#include <Kjut/Array.h.>
+
+void printCapacity(Array<int> &array)
+{
+    std::cout << "Capacity: " << array.capacity() << std::endl;
+}
+
+Array<int> dynamic;
+Array<int,0> anotherdynamic;
+Array<int, 7> staticCapacivy;
+
+printCapacity(dynamic);         // prints "Capacity: 16"
+printCapacity(anotherdynamic);  // prints "Capacity: 16"
+printCapacity(staticCapacivy);  // prints "Capacity: 7"
+```
+
+\anchor containers_out_of_bound_indexing
+## Out of Bound Indexing
+
+In several other container collections, indexing out of a collections range can throw exceptions or terminating application execution.
+
+It is a core design decision in the Kjut collection Classes, that indexing out of range shall not terminate execution.
+Instead a reference to a default element is returned and the container is not modified.
+
+  - Assigning to the garbage element is always successful and execution proceeds.
+  - Reading from the garbage element returns valid but undefined data and likewise will writing to it succeed but written data may be lost.
+
+\warning If the \c T held in the container throws exceptions or causes application termination during assignment or copying, the container may not be able to guarantee continued execition.
+
+\anchor containers_adding_elements_to_containers
+## Adding Elements to Containers
+
+Because the index operator always returns a reference to an existing element, whether being in bounds or the out of bounds garbage element, the index operator cannot be used to add elements to a container.
+Instead, adding elememnts to the container must be done using add, append, emplace or any other method that conceptually matches the container. The documentation for each container specifies what method to use to grow the container.
+
+Because of the [Dual Capacity Policie](\ref Dual_Capacity_Policies) implementaion, asking to increase the size of a container may make the size of the container grow beyond the capacity of the container. Asking a container to grow beoynd its capacity must not cause execution to halt or throw exceptions.
+
+  - If the container is dynamically sized, and the addition makes the size grow beyond its capacity, the container grows its capacity and adds the new element.
+  - If the container is staically sized, and the addition makes the size grow beyond its capacity, nothing in the container will change, \c false will be returned where appropriate and a call to the installed [log handler](\ref registerLoghandler_method) will be made.
+
+
+*/

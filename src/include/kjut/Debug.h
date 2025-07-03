@@ -12,10 +12,19 @@ MyWarning("Foo and %d bars", 24);
 
 ```
 */
-void createLogEntry(size_t lineno, const char *filename, const char *fmt, ...);
+    ///@cond
 
+    void createLogEntry(size_t lineno, const char *filename, const char *fmt, ...);
+    void processLogEntry(int, const char*, const char*);
+    ///@endcond
+
+    /**
+    LogHandler is a type dhat. ...*/
     typedef void(*LogHandler)(int, const char*, const char*);
 
+    /**
+     *  \anchor registerLoghandler_method
+     *  Register log handler is a methog dhat .... */
     void registerLoghandler(LogHandler newHandler);
-    void processLogEntry(int, const char*, const char*);
+
 }

@@ -55,8 +55,10 @@ endmacro()
 create_test( tst_array_fixed_size )
 create_test( tst_array_dynamic_size )
 create_test( tst_array_fixed_size_dynamic_size_interchangability )
+create_test( tst_array_different_types )
 create_test( tst_set )
 create_test( tst_ringbuffer )
+create_test( tst_map )
 
 # CXX=clang++ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build
 #  docker run --platform linux/x86_64 --mount type=bind,source="$(pwd)",target=/mnt/host     --tty --interactive     -v `pwd`:`pwd` -w `pwd` ghcr.io/adobe/hyde:latest bash
