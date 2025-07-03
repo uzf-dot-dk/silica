@@ -65,10 +65,10 @@
         #define KJUT_CATCH_ALL } catch( ... ) {
         #define KJUT_TRY_CATCH_END }
     #else
-        #define KJUT_TRY {
-        #define KJUT_CATCH_ALL } if( false ) {
-        #define KJUT_CATCH(Type)  } if ( false ) {
-        #define KJUT_TRY_CATCH_END }
+        #define KJUT_TRY
+        #define KJUT_CATCH_ALL
+        #define KJUT_CATCH(Type)
+        #define KJUT_TRY_CATCH_END
     #endif
 
 #endif

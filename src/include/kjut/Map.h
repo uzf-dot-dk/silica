@@ -345,6 +345,30 @@ bool Map<K, V, 0>::insert(const K &key, const V& value)
 
 
 template <typename K, typename V>
+void Map<K, V, 0>::erase(const K &key)
+{
+    const ssize_t indexOfKey = this->indexOfKey(key);
+    if(indexOfKey < 0)
+    {
+        return;
+    }
+    //KJUT_TRY
+        actualValues().remove(indexOfKey);
+   // KJUT_CATCH_ALL
+        //Nop
+   // KJUT_TRY_CATCH_END
+
+   // KJUT_TRY
+        actualKeys().remove(indexOfKey);
+   // KJUT_CATCH_ALL
+        //Nop
+   // KJUT_TRY_CATCH_END
+
+
+}
+
+
+template <typename K, typename V>
 V& Map<K, V, 0>::operator[](const K& key)
 {
     const ssize_t indexOfKey = this->indexOfKey(key);

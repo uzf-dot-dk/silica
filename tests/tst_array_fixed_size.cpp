@@ -272,15 +272,6 @@ std::ostream &operator<<(std::ostream &os, DeletableInteger &i) {
     return os;
 }
 
-TEST(suiteName, test_removal_causes_deletion)
-{
-    Kjut::Array<DeletableInteger> ints = {1,2,3};
-
-    DeletableInteger::deletedIntvalues.clear();
-    ints.remove(1);
-    ASSERT_EQ(std::set<int>{2}, DeletableInteger::deletedIntvalues);
-}
-
 
 TEST(suiteName, test_removal_of_pointers_works)
 {
@@ -497,21 +488,36 @@ public:
 
 };
 
-TEST(suiteName, test_exceptions_thrown_in_T_descructors_are_handled_in_remove)
+class AssignableInteger
 {
-    Kjut::Array<ThrowDuringDesctuctors> a;
-    a.append(ThrowDuringDesctuctors(11));
-    a.append(ThrowDuringDesctuctors(22));
-    a.append(ThrowDuringDesctuctors(33));
 
-    a[0].shouldThrow = true;
+public:
+    AssignableInteger() { value = 0; };
+    AssignableInteger(int i) { value = i; };
+    AssignableInteger& operator=(const AssignableInteger& rhs)
+    {
+        AssignableInteger::assignedIntvalues.insert(this->value);
+        value = rhs.value;
+        return *this;
+    };
 
-    ASSERT_THROW(a.remove(0), std::string);
+    static std::set<int> assignedIntvalues;
+    int value;
+};
+std::set<int> AssignableInteger::assignedIntvalues;
 
-    ASSERT_EQ(a.size(), 2);
-    ASSERT_EQ(a[0].value, 22);
-    ASSERT_EQ(a[1].value, 33);
+
+
+TEST(suiteName, test_removal_causes_assignment)
+{
+    Kjut::Array<AssignableInteger, 7> ints = {1,2,3};
+
+    AssignableInteger::assignedIntvalues.clear();
+    ints.remove(1);
+    ASSERT_EQ(std::set<int>{2}, AssignableInteger::assignedIntvalues);
 }
+
+
 
 TEST(suiteName, test_fill_method)
 {

@@ -17,3 +17,18 @@ TEST(suiteName, test_placement_new)
     ASSERT_EQ(std::string("bar"), countsDynamic[1]);
     ASSERT_EQ(std::string("fubar"), countsDynamic[2]);
 }
+
+
+TEST(suiteName, test_erase_new)
+{
+    Kjut::Array<std::string> a;
+    a.append("foo");
+    a.append("bar");
+    a.append("fubar");
+
+    a.remove(1);
+
+    ASSERT_EQ(std::string("foo"), a[0]);
+    ASSERT_EQ(std::string("fubar"), a[1]);
+}
+

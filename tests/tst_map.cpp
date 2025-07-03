@@ -25,7 +25,7 @@ TEST(suiteName, test_insert_of_complex_K_type)
 {
     Kjut::Map<std::string, int, 10> map;
     ASSERT_NE(117, map["foo"]);
-    map["foo"] = 117;
+    map.insert("foo", 117);
     ASSERT_EQ(117, map["foo"]);
 }
 
@@ -33,7 +33,7 @@ TEST(suiteName, test_insert_of_complex_K_type_and_complex_V_type)
 {
     Kjut::Map<std::string, std::string, 10> map;
     ASSERT_NE("Chewbacca", map["wookie"]);
-    map["wookie"] = "Chewbacca";
+    map.insert("wookie", "Chewbacca");
     ASSERT_EQ("Chewbacca", map["wookie"]);
 }
 
@@ -72,7 +72,7 @@ TEST(suiteName,  test_range_based_for_loop_with_structured_bindings_on_empty_map
 
     for (const auto & [key, value] : inputMap)
     {
-        mapUnderTest[key] = value;
+        mapUnderTest.insert(key, value);
     }
 
     for (const auto & [key, value] : mapUnderTest)
@@ -86,5 +86,33 @@ TEST(suiteName,  test_range_based_for_loop_with_structured_bindings_on_empty_map
 
 TEST(suiteName,  test_erase_on_existing_keys)
 {
+    const std::map<std::string, int> input = {
+        {"water", 11},
+        {"tea", 55},
+        {"coffee", 22}
+    };
+
+    const std::string keyToRemove = "tea";
+
+    const std::map<std::string, int> expected = {
+        {"water", 11},
+        {"coffee", 22}
+    };
+
+    std::map<std::string, int> result;
+
     Kjut::Map<std::string, int> beverages;
+    for (const auto & [key, value] : input)
+    {
+        beverages.insert(key, value);
+    }
+
+    beverages.erase(keyToRemove);
+    for (const auto & [key, value] : beverages)
+    {
+        result[key] = value;
+    }
+
+    ASSERT_EQ(expected, result);
+
 }

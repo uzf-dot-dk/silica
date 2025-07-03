@@ -239,6 +239,8 @@ public:
     \throws Any exception that T thows in its assignment operator.
     \see append()
     \todo Handle exceptions thrown in assignment operator and test thereof.
+    \todo Test that inserting (appending) the last element does not move/copy anything else
+    \todo change to move assign/move for non trivial types.
     */
     bool insert(size_t index, const T &element)
     {
@@ -284,6 +286,7 @@ public:
        \param index The index of the element to remove.
        \returns True if the element could be removed and false if not. Reasons for not being able to remove an element can be if \p index is our of bounds.
        \throws Any exception that T thows in its descructor.
+       \todo Test that removing the last element calls a single destructor and nothing else.
     */
     bool remove(size_t index)
     {
@@ -298,24 +301,25 @@ public:
             return false;
         }
 
-        auto maintainArray = [=](){
-            T* destination = this->d.data+(index);
-            T* source = this->d.data+(index+1);
             const size_t count = this->d.size - index;
-            memmove(destination, source, count*sizeof(T));
-            this->d.size--;
-        };
 
-        try
-        {
-            d.data[index].~T();
-            maintainArray();
-        }
-        catch( ... )
-        {
-            maintainArray();
-            throw;
-        }
+            if constexpr (std::is_trivially_copyable<T>::value)
+            {
+                T* destination = this->d.data+(index);
+                T* source = this->d.data+(index+1);
+                memmove(destination, source, count * sizeof(T));
+            }
+            else {
+                for (size_t i = index; i < index+count-1; i++ )
+                {
+                    d.data[i] = std::move(d.data[i + 1]);
+                }
+            }
+            this->d.size--;
+            d.data[d.size].~T();
+
+
+
         return true;
     }
 
@@ -330,7 +334,7 @@ public:
     \param element The \c T instance to append.
     \throws Any exception that T thows in its assignment operator.
     \todo Handle exceptions thrown in assignment operator and test thereof.
-
+    \todo Test that the last element does not move/copy anything else
     */
     bool append(const T &element)
     {
