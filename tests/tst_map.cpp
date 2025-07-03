@@ -52,7 +52,7 @@ TEST(suiteName,  test_range_based_for_loop_with_structured_bindings)
 
     for (const auto & [key, value] : inputMap)
     {
-        mapUnderTest[key] = value;
+        mapUnderTest.insert(key, value);
     }
 
     for (const auto & [key, value] : mapUnderTest)

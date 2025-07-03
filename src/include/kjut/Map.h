@@ -323,29 +323,38 @@ size_t Map<K, V, 0>::size() const{
     return actualValues().size();
 }
 
+
+template <typename K, typename V>
+bool Map<K, V, 0>::insert(const K &key, const V& value)
+{
+    const ssize_t indexOfKey = this->indexOfKey(key);
+    if(indexOfKey >= 0)
+    {
+        return false;
+    }
+    if( ! actualValues().append(value))
+    {
+        return false;
+    }
+    if( ! actualKeys().append(key))
+    {
+        return false;
+    }
+    return true;
+}
+
+
 template <typename K, typename V>
 V& Map<K, V, 0>::operator[](const K& key)
 {
     const ssize_t indexOfKey = this->indexOfKey(key);
-    Array<K> &keys  = actualKeys();
-    Array<V> &values  = actualValues();
     if(indexOfKey < 0)
     {
-        if( keys.append(key))
-        {
-            values.append(V());
-            return values[values.size()-1];
-        }
-        else
-        {
-            // Could not append element.
-            return garbage;
-
-        }
+        return garbage;
     }
     else
     {
-        return values[indexOfKey];
+        return actualValues()[indexOfKey];
     }
 }
 
