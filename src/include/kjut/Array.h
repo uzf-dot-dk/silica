@@ -335,9 +335,7 @@ public:
     - For statically sized arrays, nothing happens and false is returned.
 
     \param element The \c T instance to append.
-    \throws Any exception that T thows in its assignment operator.
-    \todo Handle exceptions thrown in assignment operator and test thereof.
-    \todo Test that the last element does not move/copy anything else
+    \throws Any exception that T thows in its copy constructor if anything is throsn in Ts copy constructor, the Array is intact and this callto append() has no effeect.
     */
     bool append(const T &element)
     {
