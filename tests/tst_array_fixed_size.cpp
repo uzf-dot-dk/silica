@@ -531,3 +531,19 @@ TEST(suiteName, test_fill_method)
     }
     ASSERT_EQ(0, mockLogEntryHandlerInvocationCount());
 }
+
+
+
+TEST(suiteName, test_method_clear)
+{
+    Kjut::Array<DeletableInteger, 9> array = {11,22,33,44,55,66,77,88,99};
+    ASSERT_EQ(array.size(), 9);
+    DeletableInteger::deletedIntvalues.clear();
+    ASSERT_EQ(DeletableInteger::deletedIntvalues.size(), 0);
+    array.clear();
+    std::set<int> expected = {11,22,33,44,55,66,77,88,99};
+    ASSERT_EQ(DeletableInteger::deletedIntvalues, expected);
+    ASSERT_EQ(array.size(), 0);
+}
+
+

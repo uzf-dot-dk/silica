@@ -208,15 +208,14 @@ public:
 
     \returns The number of \c T instances in the array.
     \throws Any Any exception thrown in ~T()
-    \note If any call to ~T() throws, the Array is left in undefined state.
-    \todo Write unittests.
-    \todo Optimize
+    \note The Array is emptied from the back maintaining the size and content in the process. Should a call to ~T() throw any exception, this Array instance is promised to be intact.
     */
-    void empty()
+    void clear()
     {
-        while(size() > 0)
+        for(ssize_t i = d.size-1; i >= 0; i--)
         {
-            pop();
+            d.size--;
+            d.data[i].~T();
         }
     }
 
@@ -301,24 +300,21 @@ public:
             return false;
         }
 
-            const size_t count = this->d.size - index;
+        const size_t count = this->d.size - index;
 
-            if constexpr (std::is_trivially_copyable<T>::value)
+        if constexpr (std::is_trivially_copyable<T>::value)
+        {
+            T* destination = this->d.data+(index);
+            T* source = this->d.data+(index+1);
+            memmove(destination, source, count * sizeof(T));
+        }
+        else {
+            for (size_t i = index; i < index+count-1; i++ )
             {
-                T* destination = this->d.data+(index);
-                T* source = this->d.data+(index+1);
-                memmove(destination, source, count * sizeof(T));
+                d.data[i] = std::move(d.data[i + 1]);
             }
-            else {
-                for (size_t i = index; i < index+count-1; i++ )
-                {
-                    d.data[i] = std::move(d.data[i + 1]);
-                }
-            }
-            this->d.size--;
-            d.data[d.size].~T();
-
-
+        }
+        this->d.size--;
 
         return true;
     }

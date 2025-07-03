@@ -157,7 +157,7 @@ public:
     */
     void clear()
     {
-        actualValues().empty();
+        actualValues().clear();
     }
 
 
