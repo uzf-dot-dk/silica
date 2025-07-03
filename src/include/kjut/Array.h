@@ -284,8 +284,7 @@ public:
 
        \param index The index of the element to remove.
        \returns True if the element could be removed and false if not. Reasons for not being able to remove an element can be if \p index is our of bounds.
-       \throws Any exception that T thows in its descructor.
-       \todo Test that removing the last element calls a single destructor and nothing else.
+       \throws Anything Anything that \c T thows in its descructor, assignment operator or move operator. If anything is thrown, the state of this Array is undefined.
     */
     bool remove(size_t index)
     {
@@ -300,21 +299,29 @@ public:
             return false;
         }
 
-        const size_t count = this->d.size - index;
-
-        if constexpr (std::is_trivially_copyable<T>::value)
+        if( index == d.size-1)
         {
-            T* destination = this->d.data+(index);
-            T* source = this->d.data+(index+1);
-            memmove(destination, source, count * sizeof(T));
+            this->d.size--;
+            d.data[this->d.size].~T();
         }
-        else {
-            for (size_t i = index; i < index+count-1; i++ )
+        else
+        {
+            const size_t count = this->d.size - index;
+
+            if constexpr (std::is_trivially_copyable<T>::value)
             {
-                d.data[i] = std::move(d.data[i + 1]);
+                T* destination = this->d.data+(index);
+                T* source = this->d.data+(index+1);
+                memmove(destination, source, count * sizeof(T));
             }
+            else {
+                for (size_t i = index; i < index+count-1; i++ )
+                {
+                    d.data[i] = std::move(d.data[i + 1]);
+                }
+            }
+            this->d.size--;
         }
-        this->d.size--;
 
         return true;
     }

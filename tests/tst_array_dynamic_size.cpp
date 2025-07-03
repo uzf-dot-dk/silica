@@ -494,3 +494,42 @@ TEST(suiteName, test_method_clear)
     ASSERT_EQ(DeletableInteger::deletedIntvalues, expected);
     ASSERT_EQ(array.size(), 0);
 }
+
+
+bool operator==(const std::vector<int> &lhs, const Kjut::Array<DeletableInteger> &rhs)
+{
+    if(rhs.size() != lhs.size())
+    {
+        return false;
+    }
+    for(size_t i = 0; i < rhs.size();i++)
+    {
+        if(rhs[i].value != lhs[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool operator==(const Kjut::Array<DeletableInteger> &lhs, const std::vector<int> &rhs)
+{
+    return rhs == lhs;
+}
+
+TEST(suiteName, test_method_remove_element_at_end_calls_destructor)
+{
+    Kjut::Array<DeletableInteger, 9> array = {11,22,33,44,55,66,77,88,99};
+    DeletableInteger::deletedIntvalues.clear();
+    array.remove(8);
+    {
+        std::vector<int> expected = {11,22,33,44,55,66,77,88};
+        ASSERT_EQ(array, expected);
+    }
+
+    {
+        std::set<int> expected = {99};
+        ASSERT_EQ(DeletableInteger::deletedIntvalues, expected);
+    }
+
+}
