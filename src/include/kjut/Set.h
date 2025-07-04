@@ -153,7 +153,6 @@ public:
     \brief Clears all elements from this Set.
     \throws Any Any exception thrown in ~T().
     \note If any call to ~T() throws, the Set is left in undefined state.
-    \todo Write tests
     */
     void clear()
     {
