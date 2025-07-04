@@ -237,9 +237,6 @@ public:
     \returns True if the element could be inserted/appended. False if there was no capacity left to insert \p element.
     \throws Any exception that T thows in its assignment operator.
     \see append()
-    \todo Handle exceptions thrown in assignment operator and test thereof.
-    \todo Test that inserting (appending) the last element does not move/copy anything else
-    \todo change to move assign/move for non trivial types.
     */
     bool insert(size_t index, const T &element)
     {
@@ -266,12 +263,28 @@ public:
             }
         }
 
-        T* destination = d.data+(index+1);
-        T* source = d.data+index;
-        const size_t count = d.size - index;
-        memmove(destination, source, count*sizeof(T));
-        d.data[index] = element;
-        d.size++;
+        const size_t count = this->d.size - index;
+
+        if constexpr (std::is_trivially_copyable<T>::value)
+        {
+            T* destination = d.data+(index+1);
+            T* source = d.data+index;
+            const size_t count = d.size - index;
+            memmove(destination, source, count*sizeof(T));
+            d.data[index] = element;
+            d.size++;
+        }
+        else {
+            for (size_t i = d.size; i > index;  i-- )
+            {
+                d.data[i] = std::move(d.data[i - 1]);
+            }
+            d.data[index] = element;
+            d.size++;
+        }
+
+
+
         return true;
     }
 
