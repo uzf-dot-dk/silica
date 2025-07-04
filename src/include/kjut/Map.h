@@ -203,8 +203,9 @@ public:
 
     /** \brief Inserts a new key into this instance.
      * Tries to insert a new \p key and \p value into this map and return true if an insertion could be made, and false if not.
-     *
-     *  \todo Handle overflow on static capacity arrays.
+     * \param key The new key to insert
+     * \param value The value to match the \p key.
+     * \returns True if the key/value pair could be inserted. False if not.
      */
     bool insert(const K &key, const V& value = V());
 
