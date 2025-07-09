@@ -1,0 +1,9 @@
+/**
+
+ \defgroup Containers Container classes
+  This group contains all container classes and THIS is defined in some magic file. Ho Hooo!
+
+\defgroup Core Core Classes
+This colelction embraces all the core classes
+
+*/

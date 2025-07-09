@@ -64,7 +64,9 @@ sized \ref Set<T,S> "Set<T,S>s" or by allocating enough static capacity.
 
 \note The values in a Set is not guaranteed to be stored in any particular order.
 
+
 \ingroup Containers
+\ingroup Core
 */
 #ifdef DOXYGEN
 template <typename T, size_t S>

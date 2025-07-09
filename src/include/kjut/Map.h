@@ -25,7 +25,9 @@ namespace Kjut
 
 /** \brief Map<K,V,S> provides an associative array.
 
+
 \ingroup Containers
+\ingroup Core
 
 ## Requirements
 

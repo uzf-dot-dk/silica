@@ -8,11 +8,6 @@
 #include "ContainerDefinitions.h"
 
 
-/**
- * \defgroup Containers Container classes
- * This group contains all container classes.
- */
-
 
 ///@cond
 namespace Kjut {  template <typename T, size_t S = 0> class Array; }
@@ -125,6 +120,7 @@ std::cout << "\n";
 </table>
 
 \ingroup Containers
+\ingroup Core
 
 */
 #ifdef DOXYGEN

@@ -104,6 +104,7 @@ OverwriteOldestData  | The oldest element in the RingBuffer is overwritten and t
 
 
 \ingroup Containers
+\ingroup Core
 
 */
 
