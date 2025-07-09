@@ -34,15 +34,6 @@ private:
 #endif
     void distributeInvocation(Ts... parameters);
 
-    union
-    {
-#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
-        //std::function<void(Ts...)> *functionObject;
-#endif
-        Slot<Ts...> *slot;
-        Signal<Ts...> *signal;
-    } destinations;
-
     enum class DestinationType
     {
         None = 0,
@@ -53,9 +44,22 @@ private:
 #endif
     };
 
-    DestinationType destinationType;
+    struct
+    {
+        union
+        {
+    #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+            //std::function<void(Ts...)> *functionObject;
+    #endif
+            Slot<Ts...> *slot;
+            Signal<Ts...> *signal;
+        } destinations;
 
-    Signal<Ts...> *source;
+
+
+        DestinationType destinationType;
+        Signal<Ts...> *source;
+    } d;
 
 };
 
@@ -70,11 +74,14 @@ public:
     void invoke(Ts... parameters);
 
 private:
-    void (*freeFloatingFunction)(Ts...);
-    std::function<void(Ts...)> functionObject;
+    struct
+    {
+        void (*freeFloatingFunction)(Ts...);
+        std::function<void(Ts...)> functionObject;
 
-    friend class Signal<Ts...>;
-    Array<Signal<Ts...>*, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> sources;
+        friend class Signal<Ts...>;
+        Array<Signal<Ts...>*, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> sources;
+    } d;
 };
 
 
@@ -95,7 +102,10 @@ public:
     bool connectTo(Signal<Ts...> *target);
 private:
     friend class Slot<Ts...>;
-    Array<Connection<Ts...>, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> connections;
+    struct
+    {
+        Array<Connection<Ts...>, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> connections;
+    } d;
 };
 
 }
@@ -113,7 +123,7 @@ private:
 
 template <typename ...Ts>  void Kjut::Signal<Ts...>::operator()(Ts... parameters)
 {
-    for(auto &connection : connections)
+    for(auto &connection : d.connections)
     {
         connection.distributeInvocation(parameters...);
     }
@@ -122,14 +132,14 @@ template <typename ...Ts>  void Kjut::Signal<Ts...>::operator()(Ts... parameters
 template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Slot<Ts...> *target)
 {
     Connection<Ts...> connection(this, target);
-    this->connections.append(connection);
+    this->d.connections.append(connection);
     return false;
 }
 
 template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Signal<Ts...> *target)
 {
     Connection<Ts...> connection(this, target);
-    this->connections.append(connection);
+    this->d.connections.append(connection);
     return false;
 }
 
@@ -142,33 +152,33 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Signal<Ts...> *tar
 
 template <typename ...Ts> Kjut::Slot<Ts...>::Slot()
 {
-    freeFloatingFunction = nullptr;
-    functionObject  = nullptr;
+    d.freeFloatingFunction = nullptr;
+    d.functionObject  = nullptr;
 }
 
 template <typename ...Ts> Kjut::Slot<Ts...>::Slot(void (*freeFloatingFunction)(Ts...))
 {
-    this->freeFloatingFunction = freeFloatingFunction;
-    this->functionObject  = nullptr;
+    this->d.freeFloatingFunction = freeFloatingFunction;
+    this->d.functionObject  = nullptr;
 }
 
 
 template <typename ...Ts> Kjut::Slot<Ts...>::Slot(std::function<void(Ts...)> functor)
 {
-    this->freeFloatingFunction = nullptr;
-    this->functionObject  = functor;
+    this->d.freeFloatingFunction = nullptr;
+    this->d.functionObject  = functor;
 
 }
 
 template <typename ...Ts> void Kjut::Slot<Ts...>::invoke(Ts... parameters)
 {
-    if(freeFloatingFunction)
+    if(d.freeFloatingFunction)
     {
-        freeFloatingFunction(parameters...);
+        d.freeFloatingFunction(parameters...);
     }
-    else if(functionObject)
+    else if(d.functionObject)
     {
-        functionObject(parameters...);
+        d.functionObject(parameters...);
     }
 }
 
@@ -179,37 +189,37 @@ template <typename ...Ts> void Kjut::Slot<Ts...>::invoke(Ts... parameters)
 template <typename... Ts>
 Kjut::Connection<Ts...>::Connection()
 {
-    this->source = nullptr;
-    memset(&this->destinations, 0, sizeof(this->destinations));
-    this->destinationType = DestinationType::None;
+    this->d.source = nullptr;
+    memset(&this->d.destinations, 0, sizeof(this->d.destinations));
+    this->d.destinationType = DestinationType::None;
 }
 
 template <typename... Ts>
 Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Slot<Ts...>* slotDestination)
 {
-    this->source = source;
-    this->destinations.slot = slotDestination;
-    this->destinationType = DestinationType::Slot;
+    this->d.source = source;
+    this->d.destinations.slot = slotDestination;
+    this->d.destinationType = DestinationType::Slot;
 }
 
 template <typename... Ts>
 Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signalDestination)
 {
-    this->source = source;
-    this->destinations.signal = signalDestination;
-    this->destinationType = DestinationType::Signal;
+    this->d.source = source;
+    this->d.destinations.signal = signalDestination;
+    this->d.destinationType = DestinationType::Signal;
 }
 
 template <typename... Ts>
 void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
 {
-    switch(this->destinationType)
+    switch(this->d.destinationType)
     {
     case DestinationType::Signal:
-        (*this->destinations.signal)(parameters...);
+        (*this->d.destinations.signal)(parameters...);
         break;
     case DestinationType::Slot:
-        this->destinations.slot->invoke(parameters...);
+        this->d.destinations.slot->invoke(parameters...);
         break;
 
     case DestinationType::None:
