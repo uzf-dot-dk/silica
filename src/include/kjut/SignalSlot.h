@@ -2,6 +2,7 @@
 #define SIGNAL_SLOTS_H
 
 #include <kjut/Array.h>
+#include <kjut/Set.h>
 
 #ifndef MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT
 #define MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT 10
@@ -10,6 +11,8 @@
 #include <functional>
 
 #define KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#define emit
+
 namespace Kjut
 {
 
@@ -23,6 +26,7 @@ template <typename ...Ts> class Connection
 {
 public:
     Connection();
+    bool isTarget(const Slot<Ts...> *slotDestination) const;
 private:
     friend class Signal<Ts...>;
     friend class Slot<Ts...>;
@@ -33,6 +37,7 @@ private:
     //Connection(Signal<Ts...> *source, std::function<void(Ts...)> *functionObjectDestination);
 #endif
     void distributeInvocation(Ts... parameters);
+
 
     enum class DestinationType
     {
@@ -61,6 +66,7 @@ private:
         Signal<Ts...> *source;
     } d;
 
+
 };
 
 
@@ -69,18 +75,19 @@ template <typename ...Ts> class Slot
 
 public:
     Slot();
+    ~Slot();
     Slot(std::function<void(Ts...)>);
     Slot(void (*freeFloatingFunction)(Ts...));
     void invoke(Ts... parameters);
 
 private:
+    friend class Signal<Ts...>;
     struct
     {
         void (*freeFloatingFunction)(Ts...);
         std::function<void(Ts...)> functionObject;
 
-        friend class Signal<Ts...>;
-        Array<Signal<Ts...>*, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> sources;
+        Set<Signal<Ts...>*, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> sources;
     } d;
 };
 
@@ -102,6 +109,8 @@ public:
     bool connectTo(Signal<Ts...> *target);
 private:
     friend class Slot<Ts...>;
+
+    void removeTarget(Slot<Ts...> *target);
     struct
     {
         Array<Connection<Ts...>, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> connections;
@@ -133,6 +142,7 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Slot<Ts...> *targe
 {
     Connection<Ts...> connection(this, target);
     this->d.connections.append(connection);
+    target->d.sources.insert(this);
     return false;
 }
 
@@ -141,6 +151,17 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Signal<Ts...> *tar
     Connection<Ts...> connection(this, target);
     this->d.connections.append(connection);
     return false;
+}
+
+template <typename ...Ts> void Kjut::Signal<Ts...>::removeTarget(Slot<Ts...> *target)
+{
+    for(size_t i = 0 ; i < d.connections.size(); i++)
+    {
+        if(d.connections[i].isTarget(target))
+        {
+            d.connections.remove(i);
+        }
+    }
 }
 
 
@@ -154,6 +175,15 @@ template <typename ...Ts> Kjut::Slot<Ts...>::Slot()
 {
     d.freeFloatingFunction = nullptr;
     d.functionObject  = nullptr;
+}
+
+template <typename ...Ts> Kjut::Slot<Ts...>::~Slot()
+{
+    for(auto source : d.sources.values())
+    {
+        source->removeTarget(this);
+    }
+
 }
 
 template <typename ...Ts> Kjut::Slot<Ts...>::Slot(void (*freeFloatingFunction)(Ts...))
@@ -226,6 +256,20 @@ void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
         break;
 
     }
+}
+
+template <typename ...Ts>
+bool Kjut::Connection<Ts...>::isTarget(const Slot<Ts...> *slotDestination) const
+{
+    if(d.destinationType != DestinationType::Slot)
+    {
+        return false;
+    }
+    if(d.destinations.slot == slotDestination)
+    {
+        return true;
+    }
+    return false;
 }
 
 

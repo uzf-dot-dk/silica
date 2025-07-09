@@ -7,6 +7,8 @@
 
 #include "ContainerDefinitions.h"
 
+#ifndef KJUT_ARRAY_H
+#define KJUT_ARRAY_H
 
 
 ///@cond
@@ -650,3 +652,4 @@ public:
 ///@endcond
 }
 
+#endif // KJUT_ARRAY_H
