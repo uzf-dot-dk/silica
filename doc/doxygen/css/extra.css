@@ -4,3 +4,7 @@ div.fragment
    padding-bottom: none;
 }
 
+.image
+{
+    text-align: left;
+}

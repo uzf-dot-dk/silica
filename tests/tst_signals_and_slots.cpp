@@ -95,14 +95,11 @@ public:
     MySlotOwner()
         : printNewInt(std::bind(&MySlotOwner::doPrintNextImpl, this, std::placeholders::_1))
     {
-
-
     }
 
     void doPrintNextImpl(int i)
     {
         caught = i;
-
     }
 
     Slot<int> printNewInt;
@@ -151,34 +148,37 @@ TEST( suiteName, test_slot_deletions_doesnt_crash)
     Slot<std::string> *slotB = new Slot<std::string>(test_slot_deletions_doesnt_crash_b);
     Slot<std::string> slotC(test_slot_deletions_doesnt_crash_c);
 
-    test_slot_deletions_doesnt_crash_slot_destination_a.clear();
-    test_slot_deletions_doesnt_crash_slot_destination_b.clear();
-    test_slot_deletions_doesnt_crash_slot_destination_c.clear();
-
     source.connectTo( & slotA );
     source.connectTo(   slotB );
     source.connectTo( & slotC );
 
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_a, std::string(""));
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_b, std::string(""));
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_c, std::string(""));
-
-    emit source("FOO");
-
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_a, std::string("AFOO"));
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_b, std::string("BFOO"));
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_c, std::string("CFOO"));
+    {
+        test_slot_deletions_doesnt_crash_slot_destination_a.clear();
+        test_slot_deletions_doesnt_crash_slot_destination_b.clear();
+        test_slot_deletions_doesnt_crash_slot_destination_c.clear();
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_a, std::string(""));
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_b, std::string(""));
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_c, std::string(""));
+        emit source("FOO");
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_a, std::string("AFOO"));
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_b, std::string("BFOO"));
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_c, std::string("CFOO"));
+    }
 
     delete slotB;
-    test_slot_deletions_doesnt_crash_slot_destination_a.clear();
-    test_slot_deletions_doesnt_crash_slot_destination_b.clear();
-    test_slot_deletions_doesnt_crash_slot_destination_c.clear();
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_a, std::string(""));
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_b, std::string(""));
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_c, std::string(""));
 
-    emit source("FOO");
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_a, std::string("AFOO"));
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_b, std::string(""));
-    ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_c, std::string("CFOO"));
+    {
+        test_slot_deletions_doesnt_crash_slot_destination_a.clear();
+        test_slot_deletions_doesnt_crash_slot_destination_b.clear();
+        test_slot_deletions_doesnt_crash_slot_destination_c.clear();
+
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_a, std::string(""));
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_b, std::string(""));
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_c, std::string(""));
+
+        emit source("FOO");
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_a, std::string("AFOO"));
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_b, std::string(""));
+        ASSERT_EQ(test_slot_deletions_doesnt_crash_slot_destination_c, std::string("CFOO"));
+    }
 }

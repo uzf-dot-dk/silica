@@ -16,25 +16,31 @@
 namespace Kjut
 {
 
-
-
 template <typename ...Ts> class Signal;
 template <typename ...Ts> class Slot;
-template <typename ...Ts> class Connection;
 
 template <typename ...Ts> class Connection
 {
 public:
-    Connection();
+    enum class Type
+    {
+        Direct,
+        Queued,
+        Auto,
+    };
+
+    Connection(Connection::Type type = Connection::Type::Auto);
     bool isTarget(const Slot<Ts...> *slotDestination) const;
+
+
 private:
     friend class Signal<Ts...>;
     friend class Slot<Ts...>;
 
-    Connection(Signal<Ts...> *source, Slot<Ts...> *slotDestination);
-    Connection(Signal<Ts...> *source, Signal<Ts...> *signalDestination);
+    Connection(Signal<Ts...> *source, Slot<Ts...> *slotDestination, Connection::Type type = Connection::Type::Auto);
+    Connection(Signal<Ts...> *source, Signal<Ts...> *signalDestination, Connection::Type type = Connection::Type::Auto);
 #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
-    //Connection(Signal<Ts...> *source, std::function<void(Ts...)> *functionObjectDestination);
+    //Connection(Signal<Ts...> *source, std::function<void(Ts...)> *functionObjectDestination, Connection::Type type = Connection::Type::Auto);
 #endif
     void distributeInvocation(Ts... parameters);
 
@@ -61,25 +67,94 @@ private:
         } destinations;
 
 
-
         DestinationType destinationType;
+        Connection::Type connectionType;
         Signal<Ts...> *source;
+        std::tuple<Ts...> queuedParameters;
     } d;
 
 
 };
 
 
+/** \brief Class Slot implements the observer in Kjut's implementation of the Observer pattern.
+ *
+ *  \see [Signal and Slots](\ref signal_and_slots)
+ *
+ *  \ingroup Core
+ */
 template <typename ...Ts> class Slot
 {
 
 public:
+    /** \brief Creates a new slot connected to nothing and invoking nothing.*/
     Slot();
-    ~Slot();
-    Slot(std::function<void(Ts...)>);
+
+/** \brief Creates a new Slot<Ts...> connected to nothing and invoking the \p functionObject when invoked.
+
+Example:
+
+```cpp
+class ClassWithSlot
+{
+
+public:
+
+    ClassWithSlot()
+        : printNewInt(std::bind(&MySlotOwner::doPrintNextImpl, this, std::placeholders::_1))
+    {
+    }
+
+    void doPrintNextImpl(int i)
+    {
+        std::cout << name << " got invoked with " << i << std::endl;
+    }
+
+    Slot<int> printNewInt;
+    std::string name;
+};
+
+...
+ClassWithSlot cws;
+cws.name = "SomeName";
+
+Slot<int> newInt;
+newInt.connectTo(cws.printNewInt);
+emit newInt(117);   // Prints "SomeName got invoked with 117"
+```
+
+\param functionObject The function object to call, when invoked.
+*/
+    Slot(std::function<void(Ts...)> functionObject);
+
+    /**
+\brief Creates a new Slot<Ts...> connected to nothing and invoking the \p freeFloatingFunction when invoked.
+
+Example:
+
+```cpp
+void doStuff(int, double)
+{
+   std::cout << int << " " << double << std::endl;
+}
+...
+Slot<int, double> doStuffWithIntAnddoubles(doStuff);
+Signal<int, double> newValues;
+newValues.connectTo(&doStuffWithIntAnddoubles);
+emit newValues(42, 3.1415);
+// prints "42 3.1415"
+```
+
+\param functionObject The function object to call, when invoked.
+    */
     Slot(void (*freeFloatingFunction)(Ts...));
+
+/** \brief Deletes this slot and breaks connections it may have to any [Signals](\ref Signal).*/
+    ~Slot();
+    void operator()(Ts... parameters);
     void invoke(Ts... parameters);
 
+/// @cond DEVELOPER_DOCUMENTATION
 private:
     friend class Signal<Ts...>;
     struct
@@ -89,6 +164,7 @@ private:
 
         Set<Signal<Ts...>*, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> sources;
     } d;
+/// @endcond
 };
 
 
@@ -98,7 +174,12 @@ private:
 
 
 
-
+/** \brief Class Signal implements the subject in Kjut's implementation of the Observer pattern.
+ *
+ *  \see \ref SignalAndSlots
+ *
+ *  \ingroup Core
+ */
 template <typename ...Ts> class Signal
 {
 
@@ -200,6 +281,11 @@ template <typename ...Ts> Kjut::Slot<Ts...>::Slot(std::function<void(Ts...)> fun
 
 }
 
+template <typename ...Ts> void Kjut::Slot<Ts...>::operator()(Ts... parameters)
+{
+    this->invoke(parameters...);
+}
+
 template <typename ...Ts> void Kjut::Slot<Ts...>::invoke(Ts... parameters)
 {
     if(d.freeFloatingFunction)
@@ -217,15 +303,24 @@ template <typename ...Ts> void Kjut::Slot<Ts...>::invoke(Ts... parameters)
 /// ------------------------------------------------------------------------------------------
 
 template <typename... Ts>
-Kjut::Connection<Ts...>::Connection()
+Kjut::Connection<Ts...>::Connection(Connection::Type connectionType)
 {
+    if(connectionType == Connection::Type::Auto)
+    {
+        d.connectionType = Connection::Type::Direct;
+    }
+    else
+    {
+        d.connectionType = connectionType;
+    }
     this->d.source = nullptr;
     memset(&this->d.destinations, 0, sizeof(this->d.destinations));
     this->d.destinationType = DestinationType::None;
 }
 
 template <typename... Ts>
-Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Slot<Ts...>* slotDestination)
+Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Slot<Ts...>* slotDestination, Connection::Type type)
+    : Connection(type)
 {
     this->d.source = source;
     this->d.destinations.slot = slotDestination;
@@ -233,7 +328,8 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Slot<Ts...>* slotDest
 }
 
 template <typename... Ts>
-Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signalDestination)
+Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signalDestination, Connection::Type type)
+    : Connection(type)
 {
     this->d.source = source;
     this->d.destinations.signal = signalDestination;
@@ -243,19 +339,42 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signal
 template <typename... Ts>
 void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
 {
-    switch(this->d.destinationType)
+    if(d.connectionType == Connection::Type::Direct)
     {
-    case DestinationType::Signal:
-        (*this->d.destinations.signal)(parameters...);
-        break;
-    case DestinationType::Slot:
-        this->d.destinations.slot->invoke(parameters...);
-        break;
 
-    case DestinationType::None:
-        break;
+        switch(this->d.destinationType)
+        {
+        case DestinationType::Signal:
+            (*this->d.destinations.signal)(parameters...);
+            break;
+        case DestinationType::Slot:
+            this->d.destinations.slot->invoke(parameters...);
+            break;
 
+        case DestinationType::None:
+            break;
+        }
     }
+    // else if(d.connectionType == Connection::Type::Queued)
+    // {
+        // d.queuedParameters = std::make_tuple(parameters...);
+        //
+        // and then later do
+        //
+        // switch(this->d.destinationType)
+        // {
+        // case DestinationType::Signal:
+        //     std::apply(*this->d.destinations.signal, d.queuedParameters);
+        //     break;
+        // case DestinationType::Slot:
+        //     std::apply(*this->d.destinations.slot, d.queuedParameters);
+        //     this->d.destinations.slot->invoke(parameters...);
+        //     break;
+
+        // case DestinationType::None:
+        //     break;
+        // }
+    // }
 }
 
 template <typename ...Ts>
