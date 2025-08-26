@@ -57,3 +57,32 @@ TEST(suiteName, test_set_filename_with_forward_slashes)
     ASSERT_STREQ(le.originatingFile(), "bongo.cpp");
 }
 
+TEST(suiteName, test_set_filename_with_no_slashes_at_all)
+{
+    Kjut::LogEntry le;
+    le.setOriginatingFile("bongo.cpp");
+    ASSERT_STREQ(le.originatingFile(), "bongo.cpp");
+}
+
+
+TEST(suiteName, test_set_super_long_filename_with_no_slashes_at_all)
+{
+    Kjut::LogEntry le;
+    le.setOriginatingFile("bongo-bongo-super-long.cpp");
+    ASSERT_STREQ(le.originatingFile(), "bongo-...ng.cpp");
+}
+
+
+TEST(suiteName, test_set_super_long_filename_with_forward_slashes)
+{
+    Kjut::LogEntry le;
+    le.setOriginatingFile("/for/ward/slashes/bongo-bongo-super-long.cpp");
+    ASSERT_STREQ(le.originatingFile(), "bongo-...ng.cpp");
+}
+
+TEST(suiteName, test_set_super_long_filename_with_backward_slashes)
+{
+    Kjut::LogEntry le;
+    le.setOriginatingFile("c:\\back\\ward\\slashes\\bongo-bongo-super-long.cpp");
+    ASSERT_STREQ(le.originatingFile(), "bongo-...ng.cpp");
+}

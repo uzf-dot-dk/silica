@@ -36,26 +36,62 @@ Kjut::LogEntry::LogEntry(size_t line, const char *originatingFile)
 void Kjut::LogEntry::setOriginatingFile(const char *originatingFile)
 {
     ssize_t lenght_of_filename = strlen(originatingFile);
-    ssize_t index_of_last_path_separator = lenght_of_filename-1;
-    while(index_of_last_path_separator > 0)
+    ssize_t index_first_character_after_last_path_separator = lenght_of_filename-1;
+    while(index_first_character_after_last_path_separator > 0)
     {
-        if((originatingFile[index_of_last_path_separator] == '/' )
+        if((originatingFile[index_first_character_after_last_path_separator] == '/' )
             ||
-            (originatingFile[index_of_last_path_separator] == '\\' ))
+            (originatingFile[index_first_character_after_last_path_separator] == '\\' ))
         {
-            index_of_last_path_separator;
+            index_first_character_after_last_path_separator++;
             break;
         }
-        index_of_last_path_separator--;
+        index_first_character_after_last_path_separator--;
     }
 
-    size_t bytesToCopy = lenght_of_filename - index_of_last_path_separator -1 ;
+    size_t bytesToCopy = lenght_of_filename - index_first_character_after_last_path_separator  ;
+    bool should_elide = false;
+    if(bytesToCopy > KJUT_LOGENTRY_MESSAGE_MAX_LENGTH)
+    {
+        should_elide = true;
+        bytesToCopy = KJUT_LOGENTRY_MESSAGE_MAX_LENGTH;
+    }
 
-    memcpy(
-        d.originatingFile,
-        originatingFile+index_of_last_path_separator + 1 ,
-        bytesToCopy);
-    d.originatingFile[bytesToCopy] = 0;
+    if ( ! should_elide )
+    {
+        memcpy(
+            d.originatingFile,
+            originatingFile+index_first_character_after_last_path_separator ,
+            bytesToCopy);
+        d.originatingFile[bytesToCopy] = 0;
+    }
+    else
+    {
+        const size_t left_part_size = (KJUT_LOGENTRY_MESSAGE_MAX_LENGTH-elision_size)/2;
+        const size_t right_part_size = KJUT_LOGENTRY_MESSAGE_MAX_LENGTH-elision_size-left_part_size;
+
+        const char * const source_left_part_start = originatingFile+index_first_character_after_last_path_separator;
+        const char * const source_left_part_end = source_left_part_start + left_part_size;
+        const char * const source_right_part_start = originatingFile+(strlen(originatingFile)-right_part_size);
+
+        char * destination_left_part_start = d.originatingFile;
+        char * destination_right_part_start = d.originatingFile + left_part_size+elision_size;
+
+        memcpy(destination_left_part_start, source_left_part_start, left_part_size);
+        memcpy(destination_right_part_start, source_right_part_start, right_part_size);
+
+        d.originatingFile[KJUT_LOGENTRY_MESSAGE_MAX_LENGTH] = 0;
+
+        for(size_t i = 0; i < elision_size; i++)
+        {
+            d.originatingFile[left_part_size+i] = '.';
+        }
+
+
+
+
+
+    }
 
 
 }
@@ -96,12 +132,14 @@ void Kjut::LogEntry::setMessage(const char *message, size_t length)
         bytesToCopy = d.messageMaxLength - elision_size;
     }
     memcpy(d.message, message, bytesToCopy);
+    d.message[bytesToCopy] = 0;
     if(shouldElisionBeDone)
     {
         for(int i = d.messageMaxLength - elision_size; i <d.messageMaxLength; i++)
         {
             d.message[i] = '.';
         }
+        d.message[d.messageMaxLength] = 0;
     }
 }
 
