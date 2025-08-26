@@ -3,7 +3,7 @@
 #include <kjut/Array.h>
 
 #include "array_helpers.h"
-
+#include <algorithm>
 
 #define suiteName tst_array_fixed_size
 

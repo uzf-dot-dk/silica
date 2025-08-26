@@ -351,6 +351,12 @@ void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
             this->d.destinations.slot->invoke(parameters...);
             break;
 
+#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+        case DestinationType::FunctionObject:
+            break;
+#endif
+
+
         case DestinationType::None:
             break;
         }

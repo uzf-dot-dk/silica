@@ -7,6 +7,11 @@
 
 #include "ContainerDefinitions.h"
 
+#ifdef _MSC_VER
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#endif
+
 #ifndef KJUT_ARRAY_H
 #define KJUT_ARRAY_H
 
