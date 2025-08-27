@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
-
 #include <kjut/LogEntry.h>
+#include <kjut/Application.h>
 
 #define suiteName tst_logentry
 
 static_assert( KJUT_LOGENTRY_MESSAGE_MAX_LENGTH == 15, "This test is designed for a KJUT_LOGENTRY_MESSAGE_MAX_LENGTH of 15");
+static_assert( KJUT_LOGENTRY_FILENAME_MAX_LENGTH == 15, "This test is designed for a KJUT_LOGENTRY_FILENAME_MAX_LENGTH of 15");
 
 
 TEST(suiteName, test_format_of_message)
@@ -85,4 +86,9 @@ TEST(suiteName, test_set_super_long_filename_with_backward_slashes)
     Kjut::LogEntry le;
     le.setOriginatingFile("c:\\back\\ward\\slashes\\bongo-bongo-super-long.cpp");
     ASSERT_STREQ(le.originatingFile(), "bongo-...ng.cpp");
+}
+
+TEST(suiteName, test_send_to_application_instance)
+{
+    LOG("Bongo drums are awesome!");
 }

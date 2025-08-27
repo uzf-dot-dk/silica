@@ -67,8 +67,8 @@ void Kjut::LogEntry::setOriginatingFile(const char *originatingFile)
     }
     else
     {
-        const size_t left_part_size = (KJUT_LOGENTRY_MESSAGE_MAX_LENGTH-elision_size)/2;
-        const size_t right_part_size = KJUT_LOGENTRY_MESSAGE_MAX_LENGTH-elision_size-left_part_size;
+        const size_t left_part_size = (KJUT_LOGENTRY_FILENAME_MAX_LENGTH-elision_size)/2;
+        const size_t right_part_size = KJUT_LOGENTRY_FILENAME_MAX_LENGTH-elision_size-left_part_size;
 
         const char * const source_left_part_start = originatingFile+index_first_character_after_last_path_separator;
         const char * const source_left_part_end = source_left_part_start + left_part_size;
@@ -80,7 +80,7 @@ void Kjut::LogEntry::setOriginatingFile(const char *originatingFile)
         memcpy(destination_left_part_start, source_left_part_start, left_part_size);
         memcpy(destination_right_part_start, source_right_part_start, right_part_size);
 
-        d.originatingFile[KJUT_LOGENTRY_MESSAGE_MAX_LENGTH] = 0;
+        d.originatingFile[d.orignatingFileMaxLength] = 0;
 
         for(size_t i = 0; i < elision_size; i++)
         {
@@ -143,7 +143,7 @@ void Kjut::LogEntry::setMessage(const char *message, size_t length)
     }
 }
 
-const char * const Kjut::LogEntry::message()
+const char * const Kjut::LogEntry::message() const
 {
     return d.message;
 }

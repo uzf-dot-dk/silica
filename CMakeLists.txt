@@ -59,6 +59,7 @@ if( ${BUILD_TESTS} )
     message( STATUS "Builds tests")
 
     target_compile_definitions(kjutContainers PUBLIC KJUT_LOGENTRY_MESSAGE_MAX_LENGTH=15)
+    target_compile_definitions(kjutContainers PUBLIC KJUT_LOGENTRY_FILENAME_MAX_LENGTH=15)
 
     add_subdirectory(tests/googletest/)
 
