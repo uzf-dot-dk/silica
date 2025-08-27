@@ -22,6 +22,15 @@ class LogEntry
 {
 
 public:
+
+    enum class Type
+    {
+        Log,
+        Warning,
+        Fatal
+    };
+
+
     LogEntry();
     LogEntry(size_t line, const char *originatingFile);
     LogEntry(size_t line, const char *originatingFile, const char *message);
@@ -33,6 +42,9 @@ public:
 
     void setOriginatingFile(const char *fileName);
     const char * originatingFile() const;
+
+    void setType(Type type);
+    Type type() const;
 
     size_t originatingLine() const { return d.originatingLine; }
 
@@ -47,6 +59,7 @@ private:
                      + 1 // For null
                      + 1 // To help figuring out elision
         ];
+        Type type;
     } d;
 
 };

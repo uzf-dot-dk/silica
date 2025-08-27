@@ -23,7 +23,20 @@ Kjut::LogEntry::~LogEntry()
 {}
 
 Kjut::LogEntry::LogEntry()
-{}
+{
+    setType(Type::Log);
+}
+
+Kjut::LogEntry::Type Kjut::LogEntry::type() const
+{
+    return d.type;
+}
+
+void Kjut::LogEntry::setType(Type type)
+{
+    d.type = type;
+}
+
 
 Kjut::LogEntry::LogEntry(size_t line, const char *originatingFile)
     : LogEntry()

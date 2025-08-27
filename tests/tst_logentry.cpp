@@ -90,5 +90,6 @@ TEST(suiteName, test_set_super_long_filename_with_backward_slashes)
 
 TEST(suiteName, test_send_to_application_instance)
 {
-    LOG("Bongo drums are awesome!");
+
+    LOG("%s drums are %s!", "Bongo", "AWESOME");
 }

@@ -3,10 +3,28 @@
 
 #include <kjut/LogEntry.h>
 
-#define LOG(format, ...) \
+#define LOG(formatString, ...) \
 { \
         Kjut::LogEntry le(__LINE__, __FILE__);          \
-        le.setMessage(format, ##__VA_ARGS__);           \
+        le.format(formatString, ##__VA_ARGS__);           \
+        le.setType(Kjut::LogEntry::Type::Log); \
+        Kjut::LoggingSystem::instance()->sinkEntry(le); \
+}
+
+
+#define WARN(formatString, ...) \
+{ \
+        Kjut::LogEntry le(__LINE__, __FILE__);          \
+        le.format(formatString, ##__VA_ARGS__);           \
+        le.setType(Kjut::LogEntry::Type::Warning); \
+        Kjut::LoggingSystem::instance()->sinkEntry(le); \
+}
+
+#define FATAL(formatString, ...) \
+{ \
+        Kjut::LogEntry le(__LINE__, __FILE__);          \
+        le.format(formatString, ##__VA_ARGS__);           \
+        le.setType(Kjut::LogEntry::Type::Fatal); \
         Kjut::LoggingSystem::instance()->sinkEntry(le); \
 }
 
