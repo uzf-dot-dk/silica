@@ -21,7 +21,7 @@ size_t mockLogEntryHandlerInvocationCount()
 
 void registerMockLogEntryHandler()
 {
-    Kjut::registerLoghandler(mockLogEntryHandler);
+    //Kjut::registerLoghandler(mockLogEntryHandler);
     mockCount = 0;
 }
 

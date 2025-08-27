@@ -3,31 +3,28 @@
 #include <kjut/Array.h>
 
 #include "array_helpers.h"
+#include "test_helpers.h"
+
 #include <algorithm>
 
 #define suiteName tst_array_fixed_size
 
-size_t mockCount = 0;
-
-void mockLogEntryHandler(int, const char*, const char*)
-{
-    mockCount++;
-}
+CountingLogSink logSink;
 
 size_t mockLogEntryHandlerInvocationCount()
 {
-    return mockCount;
+    return logSink.invocationCount();
 }
 
 void registerMockLogEntryHandler()
 {
-    Kjut::registerLoghandler(mockLogEntryHandler);
-    mockCount = 0;
+    Kjut::LoggingSystem::instance()->setSink(&logSink);
+    logSink.reset();
 }
 
 void resetMockLogEntryCount()
 {
-    mockCount = 0;
+    logSink.reset();
 }
 
 TEST(suiteName, test_default_constructor)

@@ -1,5 +1,6 @@
+#include <kjut/LoggingSystem.h>
 #ifndef DOXYGEN
-    #define ContainerWarning(message, ...) createLogEntry(__LINE__, __FILE__, message, ##__VA_ARGS__)
+    #define ContainerWarning(message, ...) WARN(message, ##__VA_ARGS__)
 #endif
 
 #ifndef KJUT_ARRAY_INITIAL_CAPACITY

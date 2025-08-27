@@ -8,8 +8,8 @@
 #include <stdio.h>
 
 #include <kjut/Debug.h>
+#include "ContainerDefinitions.h"
 
-#define ContainerWarning(message, ...) createLogEntry(__LINE__, __FILE__, message, ##__VA_ARGS__)
 
 
 
