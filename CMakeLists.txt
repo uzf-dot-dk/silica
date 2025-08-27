@@ -24,6 +24,7 @@ set( kjut_container_sources
     src/KjutContainers.cpp
     src/KjutCore.cpp
     src/KjutLogEntry.cpp
+    src/KjutLoggingSystem.cpp
     src/KjutMutex.cpp
 )
 
