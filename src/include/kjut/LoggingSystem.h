@@ -3,6 +3,13 @@
 
 #include <kjut/LogEntry.h>
 
+#define LOG(format, ...) \
+{ \
+        Kjut::LogEntry le(__LINE__, __FILE__);          \
+        le.setMessage(format, ##__VA_ARGS__);           \
+        Kjut::LoggingSystem::instance()->sinkEntry(le); \
+}
+
 namespace Kjut
 {
 

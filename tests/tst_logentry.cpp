@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <kjut/LogEntry.h>
+#include <kjut/LoggingSystem.h>
 #include <kjut/Application.h>
 
 #define suiteName tst_logentry

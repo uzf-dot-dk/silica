@@ -13,12 +13,7 @@
 #define KJUT_LOGENTRY_FILENAME_MAX_LENGTH 50
 #endif
 
-#define LOG(format, ...) \
-{ \
-        Kjut::LogEntry le(__LINE__, __FILE__); \
-        le.setMessage(format, ##__VA_ARGS__); \
-        Kjut::Application::instance()->sink(le); \
-}
+
 
 namespace Kjut
 {
