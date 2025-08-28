@@ -19,6 +19,9 @@ namespace Kjut
 template <typename ...Ts> class Signal;
 template <typename ...Ts> class Slot;
 
+/// \cond DEVELOPER_DOC
+
+
 template <typename ...Ts> class Connection
 {
 public:
@@ -78,7 +81,7 @@ private:
 
 
 };
-
+    /// \endcond
 
 /** \brief Class Slot implements the observer in Kjut's implementation of the Observer pattern.
  *
@@ -157,7 +160,7 @@ emit newValues(42, 3.1415);
     void operator()(Ts... parameters);
     void invoke(Ts... parameters);
 
-/// @cond DEVELOPER_DOCUMENTATION
+/// \cond DEVELOPER_DOC
 private:
     friend class Signal<Ts...>;
     struct
@@ -167,7 +170,7 @@ private:
 
         Set<Signal<Ts...>*, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> sources;
     } d;
-/// @endcond
+/// \endcond
 };
 
 
@@ -179,7 +182,9 @@ private:
 
 /** \brief Class Signal implements the subject in Kjut's implementation of the Observer pattern.
  *
- *  \see \ref SignalAndSlots
+ *  Signal's have to be bound to a suitable reciever for any thing to happen.
+ *
+ *  \see \ref signal_and_slots
  *
  *  \ingroup Core
  */
@@ -187,12 +192,101 @@ template <typename ...Ts> class Signal
 {
 
 public:
+
+    /** \brief Causes this Signal to trigger its connections.
+     *
+     *  To enhance readability, it is suggestted to prefix this methodcall with the macro `emit`.
+     *
+     *  Example:
+     *  ```cpp
+     *  ...
+     *  Signal<int, double> mySignal;
+     *  ...
+     *  emit mySignal(27, 3.1415);
+     *  ...
+     *  ```
+     */
     void operator()(Ts... parameters);
 
+    /** \brief Connects this Signal to a matching Slot.
+     *
+     *  Example:
+     *  ```cpp
+     *
+     *  int main(int argc, char *argv[])
+     *  {
+     *     Signal<int, const char *> personEmitter;
+     *     Slot<int, const char *> receipent([](int birthYear, const char *name)
+     *     {
+     *         std::cout << name << " was born in " << birthYear << ".\n";
+     *     });
+     *     personEmitter.connectTo(&receipent);
+     *     emit personEmitter(1815, "Ada Lovelace");
+     *     return 0;
+     *  }
+     *
+     *  // Prints "Ada Lovelace was born in 1815"
+     *
+     *  ```
+     *
+     *  \returns True if the connection could be established. False otherwise.
+     */
     bool connectTo(Slot<Ts...> *target);
+
+
+    /** \brief Connects this Signal to a matching Signal.
+     *
+     *  Example:
+     *  ```cpp
+     *  void printPerson(int birthYear, const char *name)
+     *  {
+     *      std::cout << name << " was born in " << birthYear << ".\n";
+     *  }
+     *
+     *  int main(int argc, char *argv[])
+     *  {
+     *     Signal<int, const char *> personEmitter;
+     *     Signal<int, const char *> forwarder;
+     *     personEmitter.connectTo(&forwarder);
+     *     forwarder.connectTo(printPerson);
+     *     emit personEmitter(1815, "Ada Lovelace");
+     *     return 0;
+     *  }
+     *
+     *  // Prints "Ada Lovelace was born in 1815"
+     *  ```
+     *
+     *  \returns True if the connection could be established. False otherwise.
+     */
     bool connectTo(Signal<Ts...> *target);
+
+
+    /** \brief Connects this Signal to a matching function pointer.
+     *
+     *  Example:
+     *  ```cpp
+     *  void printPerson(int birthYear, const char *name)
+     *  {
+     *      std::cout << name << " was born in " << birthYear << ".\n";
+     *  }
+     *
+     *  int main(int argc, char *argv[])
+     *  {
+     *     Signal<int, const char *> personEmitter;
+     *     personEmitter.connectTo(printPerson);
+     *     emit personEmitter(1815, "Ada Lovelace");
+     *     return 0;
+     *  }
+     *
+     *  // Prints "Ada Lovelace was born in 1815"
+     *  ```
+     *
+     *  \returns True if the connection could be established. False otherwise.
+     */
+
     bool connectTo(void(*target)(Ts...));
 private:
+    /// \cond DEVELOPER_DOC
     friend class Slot<Ts...>;
 
     void removeTarget(Slot<Ts...> *target);
@@ -200,6 +294,7 @@ private:
     {
         Array<Connection<Ts...>, MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT> connections;
     } d;
+    /// \endcond
 };
 
 }

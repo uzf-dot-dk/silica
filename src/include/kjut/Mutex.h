@@ -1,14 +1,4 @@
-
-
-#define DISABLE_COPY(T) \
-private: \
-T(const T &other) = delete; \
-    T& operator=(const T &rhs) = delete;
-
-#define DISABLE_MOVE(T) \
-private: \
-T(T &&other) = delete; \
-T& operator=(T &&rhs) = delete;
+#include <kjut/Macros.h>
 
 #if \
        defined(KJUT_OS_WINDOWS) \
@@ -25,6 +15,8 @@ namespace Kjut
 
 
 /** \brief Mutex provices a synchronization mechanism that can prevent simultaneously access to shared data.
+
+\ingroup Core
  */
 class Mutex
 {
@@ -49,6 +41,7 @@ public:
      *  \returns True if this Mutex could be locked, false if not. */
     bool tryLock();
 
+    /// \cond DEVELOPER_DOC
 private:
 
     struct
@@ -57,9 +50,15 @@ private:
         std::mutex mutex;
 #endif
     } d;
-
+    /// \endcond
 };
 
+
+/** This is a RAII guard for maintaining Mutex'es.
+ *
+ *  The MutexLocker can be used to lock a Mutex, and the locker will then automatically release the Mutex in its destructor.
+ * \ingroup Core
+ */
 class MutexLocker
 {
 
@@ -67,11 +66,21 @@ class MutexLocker
     DISABLE_MOVE(MutexLocker);
 
 public:
+    /** \brief Locks the Mutex \p target.
+
+    The constructor will block until the Mutex could be locked.
+
+      \param target The Mutex to lock.
+    */
     MutexLocker(Mutex &target);
+
+    /** \brief Releases the locked Mutex. */
     ~MutexLocker();
 
+    /// \cond DEVELOPER_DOC
 private:
     Mutex &target;
+    /// \endcond
 };
 
 }

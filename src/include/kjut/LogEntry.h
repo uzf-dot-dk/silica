@@ -18,6 +18,14 @@
 namespace Kjut
 {
 
+/**
+\brief LogEntry models a single entry in to the logging system.
+
+LogEntry models a single entry in to the logging system. This is the lowest level of granularty there exists in the logging system.
+\ingroup Core
+\ingroup Logging
+
+*/
 class LogEntry
 {
 

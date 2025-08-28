@@ -27,8 +27,7 @@ public:
 
     MicroSeconds operator+(const MicroSeconds &rhs) const
     {
-        MicroSeconds result{this->d.value + rhs.d.value};
-        return result;
+        return MicroSeconds(this->d.value + rhs.d.value);
     }
 
 //private:

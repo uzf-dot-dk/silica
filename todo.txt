@@ -1,0 +1,7 @@
+* Add tests of MicroSeconds
+* Add tests of MilliSeconds
+* Add documentation of MicroSeconds
+* Add documentation of MilliSeconds
+* Add test of CoarseTimer
+
+
