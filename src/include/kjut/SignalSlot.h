@@ -39,6 +39,7 @@ private:
 
     Connection(Signal<Ts...> *source, Slot<Ts...> *slotDestination, Connection::Type type = Connection::Type::Auto);
     Connection(Signal<Ts...> *source, Signal<Ts...> *signalDestination, Connection::Type type = Connection::Type::Auto);
+    Connection(Signal<Ts...> *source, void (*functionPointerDestination)(Ts...), Connection::Type type = Connection::Type::Auto);
 #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
     //Connection(Signal<Ts...> *source, std::function<void(Ts...)> *functionObjectDestination, Connection::Type type = Connection::Type::Auto);
 #endif
@@ -50,6 +51,7 @@ private:
         None = 0,
         Signal,
         Slot,
+        FunctionPointer,
 #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
         FunctionObject
 #endif
@@ -62,6 +64,7 @@ private:
     #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
             //std::function<void(Ts...)> *functionObject;
     #endif
+            void (*functionPointer)(Ts...);
             Slot<Ts...> *slot;
             Signal<Ts...> *signal;
         } destinations;
@@ -188,6 +191,7 @@ public:
 
     bool connectTo(Slot<Ts...> *target);
     bool connectTo(Signal<Ts...> *target);
+    bool connectTo(void(*target)(Ts...));
 private:
     friend class Slot<Ts...>;
 
@@ -233,6 +237,14 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Signal<Ts...> *tar
     this->d.connections.append(connection);
     return false;
 }
+
+template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(void(*target)(Ts...))
+{
+    Connection<Ts...> connection(this, target);
+    this->d.connections.append(connection);
+    return false;
+}
+
 
 template <typename ...Ts> void Kjut::Signal<Ts...>::removeTarget(Slot<Ts...> *target)
 {
@@ -336,6 +348,16 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signal
     this->d.destinationType = DestinationType::Signal;
 }
 
+
+template <typename... Ts>
+Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, void (*functionPointerDestination)(Ts...), Connection::Type type)
+    : Connection(type)
+{
+    this->d.source = source;
+    this->d.destinations.functionPointer = functionPointerDestination;
+    this->d.destinationType = DestinationType::FunctionPointer;
+}
+
 template <typename... Ts>
 void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
 {
@@ -350,7 +372,9 @@ void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
         case DestinationType::Slot:
             this->d.destinations.slot->invoke(parameters...);
             break;
-
+        case DestinationType::FunctionPointer:
+            this->d.destinations.functionPointer(parameters...);
+            break;
 #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
         case DestinationType::FunctionObject:
             break;

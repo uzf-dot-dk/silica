@@ -11,11 +11,10 @@ int main(int argc, char *argv[])
 {
     Kjut::Application app;
     Kjut::CoarseTimer everySecond;
+    everySecond.triggered.connectTo(doStuff);
     everySecond.setTimeout(1000);
     everySecond.start();
 
-    Kjut::Slot<> onTimeOut(doStuff);
-    everySecond.triggered.connectTo(&onTimeOut);
 
     return app.exec();
 
