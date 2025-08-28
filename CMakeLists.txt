@@ -21,8 +21,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set( kjut_container_sources
     src/KjutApplication.cpp
+    src/KjutCoarseTimer.cpp
     src/KjutContainers.cpp
     src/KjutCore.cpp
+    src/KjutEventGenerator.cpp
     src/KjutLogEntry.cpp
     src/KjutLoggingSystem.cpp
     src/KjutMutex.cpp
@@ -50,8 +52,6 @@ endif()
 if( ${KJUT_TARGET_OS} STREQUAL "linux")
     target_compile_definitions(kjutContainers PUBLIC KJUT_OS_LINUX=1)
 endif()
-
-
 
 add_executable(sandbox main.cpp)
 target_link_libraries(sandbox PUBLIC kjutContainers )

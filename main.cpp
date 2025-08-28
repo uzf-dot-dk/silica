@@ -1,10 +1,23 @@
-#include <kjut/LoggingSystem.h>
+#include <kjut/Application.h>
+#include <kjut/CoarseTimer.h>
+#include <kjut/SignalSlot.h>
+
+void doStuff()
+{
+    LOG("Does stuff");
+}
 
 int main(int argc, char *argv[])
 {
+    Kjut::Application app;
+    Kjut::CoarseTimer everySecond;
+    everySecond.setTimeout(1000);
+    everySecond.start();
 
-    FATAL("Jeg er %d %s %s", 1, "flot", "ged");
+    Kjut::Slot<> onTimeOut(doStuff);
+    everySecond.triggered.connectTo(&onTimeOut);
 
-    return 0;
+    return app.exec();
+
 }
 
