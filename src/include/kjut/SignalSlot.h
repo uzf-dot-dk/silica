@@ -10,7 +10,7 @@
 
 #include <functional>
 
-// #define KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#define KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
 #define emit
 
 namespace Kjut
@@ -60,16 +60,24 @@ private:
 #endif
     };
 
+
+
+
     struct
     {
-        union
-        {
-    #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
-            std::function<void(Ts...)>,
-    #endif
-                void(*functionPointerDestination)(Ts...) ;
-                Slot<Ts...>* slotDestination;
-                Signal<Ts...>* signalDestination;
+        union Destinations {
+            void (*functionPointerDestination)(Ts...);
+            Slot<Ts...>* slotDestination;
+            Signal<Ts...>* signalDestination;
+#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+            // Raw storage for std::function
+            typename std::aligned_storage<
+                sizeof(std::function<void(Ts...)>),
+                alignof(std::function<void(Ts...)>)
+                >::type functionObjectStorage;
+#endif
+            Destinations() {}
+            ~Destinations() {}
         } destinations;
 
 
@@ -285,6 +293,34 @@ public:
      */
 
     bool connectTo(void(*target)(Ts...));
+
+
+#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+    /** \brief Connects this Signal to a matching function object.
+     *
+     *  Example:
+     *  ```cpp
+     *  void printPerson(int birthYear, const char *name)
+     *  {
+     *      std::cout << name << " was born in " << birthYear << ".\n";
+     *  }
+     *
+     *  int main(int argc, char *argv[])
+     *  {
+     *     Signal<int, const char *> personEmitter;
+     *     personEmitter.connectTo(printPerson);
+     *     emit personEmitter(1815, "Ada Lovelace");
+     *     return 0;
+     *  }
+     *
+     *  // Prints "Ada Lovelace was born in 1815"
+     *  ```
+     *
+     *  \returns True if the connection could be established. False otherwise.
+     */
+
+    bool connectTo(std::function<void(Ts...)> target);
+#endif
 private:
     /// \cond DEVELOPER_DOC
     friend class Slot<Ts...>;
@@ -339,6 +375,15 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(void(*target)(Ts..
     this->d.connections.append(connection);
     return false;
 }
+
+#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(std::function<void(Ts...)> target)
+{
+    Connection<Ts...> connection(this, target);
+    this->d.connections.append(connection);
+    return false;
+}
+#endif
 
 
 template <typename ...Ts> void Kjut::Signal<Ts...>::removeTarget(Slot<Ts...> *target)
@@ -459,8 +504,8 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...> *source, std::function<void(Ts
     : Connection(type)
 {
     this->d.source = source;
-    this->d.destinations = functionObjectDestination;
-    this->d.destinationType = DestinationType::FunctionPointer;
+    new (&d.destinations.functionObjectStorage) std::function<void(Ts...)>(std::move(functionObjectDestination));
+    this->d.destinationType = DestinationType::FunctionObject;
 }
 #endif
 
@@ -484,8 +529,12 @@ void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
             break;
 #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
         case DestinationType::FunctionObject:
-            std::get<std::function<void(Ts...)>>(d.destinations)(parameters...);
+        {
+            std::function<void(Ts...)>& func =
+                *reinterpret_cast<std::function<void(Ts...)>*>(&d.destinations.functionObjectStorage);
+            func(parameters...);
             break;
+        }
 #endif
         case DestinationType::None:
             break;
