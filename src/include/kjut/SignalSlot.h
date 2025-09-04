@@ -3,7 +3,7 @@
 
 #include <kjut/Array.h>
 #include <kjut/Set.h>
-
+#include <variant>
 #ifndef MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT
 #define MAX_NUMBER_OF_CONNECTIONS_PER_SIGNAL_OR_SLOT 10
 #endif
@@ -62,15 +62,14 @@ private:
 
     struct
     {
-        union
-        {
+        std::variant<
     #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
             //std::function<void(Ts...)> *functionObject;
     #endif
-            void (*functionPointer)(Ts...);
-            Slot<Ts...> *slot;
-            Signal<Ts...> *signal;
-        } destinations;
+            void(*)(Ts...),
+            Slot<Ts...>*,
+            Signal<Ts...>*
+            > destinations;
 
 
         DestinationType destinationType;
@@ -430,7 +429,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Slot<Ts...>* slotDest
     : Connection(type)
 {
     this->d.source = source;
-    this->d.destinations.slot = slotDestination;
+    this->d.destinations = slotDestination;
     this->d.destinationType = DestinationType::Slot;
 }
 
@@ -439,7 +438,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signal
     : Connection(type)
 {
     this->d.source = source;
-    this->d.destinations.signal = signalDestination;
+    this->d.destinations = signalDestination;
     this->d.destinationType = DestinationType::Signal;
 }
 
@@ -449,7 +448,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, void (*functionPointe
     : Connection(type)
 {
     this->d.source = source;
-    this->d.destinations.functionPointer = functionPointerDestination;
+    this->d.destinations = functionPointerDestination;
     this->d.destinationType = DestinationType::FunctionPointer;
 }
 
@@ -462,20 +461,18 @@ void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
         switch(this->d.destinationType)
         {
         case DestinationType::Signal:
-            (*this->d.destinations.signal)(parameters...);
+            (*std::get<Signal<Ts...>*>(d.destinations))(parameters...);
             break;
         case DestinationType::Slot:
-            this->d.destinations.slot->invoke(parameters...);
+            (*std::get<Slot<Ts...>*>(d.destinations))(parameters...);
             break;
         case DestinationType::FunctionPointer:
-            this->d.destinations.functionPointer(parameters...);
+            std::get<void(*)(Ts...)>(d.destinations)(parameters...);
             break;
 #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
         case DestinationType::FunctionObject:
             break;
 #endif
-
-
         case DestinationType::None:
             break;
         }
@@ -509,7 +506,7 @@ bool Kjut::Connection<Ts...>::isTarget(const Slot<Ts...> *slotDestination) const
     {
         return false;
     }
-    if(d.destinations.slot == slotDestination)
+    if(std::get<Slot<Ts...>*>(d.destinations) == slotDestination)
     {
         return true;
     }
