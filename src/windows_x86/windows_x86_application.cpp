@@ -20,6 +20,6 @@ namespace Kjut
         uli.LowPart = ft.dwLowDateTime;
         uli.HighPart = ft.dwHighDateTime;
 
-        return static_cast<int64_t>(uli.QuadPart / 10); // 100 ns -> µs
+        return MicroSeconds(static_cast<int64_t>(uli.QuadPart / 10)); // 100 ns -> µs
     }
 }

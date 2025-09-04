@@ -2,14 +2,14 @@
 #define KJUT_UNITS_OF_TIME_H
 
 #include <stdint.h>
-
+#include <kjut/Macros.h>
 namespace Kjut
 {
 
 class MicroSeconds
 {
 public:
-    MicroSeconds(uint64_t value)
+    explicit MicroSeconds(uint64_t value)
     {
         d.value = value;
     }
@@ -31,6 +31,8 @@ public:
     }
 
 //private:
+    friend class MilliSeconds;
+
     struct
     {
         uint64_t value ;
@@ -41,21 +43,48 @@ public:
 class MilliSeconds
 {
 public:
-    MilliSeconds(uint64_t value)
+    explicit MilliSeconds(uint64_t value)
     {
         d.value = value;
     }
 
-    operator MicroSeconds() const {
-        return d.value * 1000;
+    MilliSeconds(const MicroSeconds &other)
+    {
+        d.value = other.d.value / 1000;
     }
 
-//private:
+    MilliSeconds()
+    {
+        d.value = 0;
+    }
+
+    operator MicroSeconds() const {
+        return MicroSeconds(d.value * 1000);
+    }
+
+    //private:
+    friend class MicroSeconds;
     struct
     {
         uint64_t value ;
     } d;
 };
 
+
+
+
+
+
 }
+
+
+
+
+
+Kjut::MilliSeconds operator ""_ms(unsigned long long);
+Kjut::MicroSeconds operator ""_us(unsigned long long);
+
+
+
+
 #endif // KJUT_UNITS_OF_TIME_H
