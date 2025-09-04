@@ -21,13 +21,16 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set( kjut_container_sources
     src/KjutApplication.cpp
+    src/KjutByteArray.cpp
     src/KjutCoarseTimer.cpp
     src/KjutContainers.cpp
     src/KjutCore.cpp
     src/KjutEventGenerator.cpp
+    src/KjutIODevice.cpp
     src/KjutLogEntry.cpp
     src/KjutLoggingSystem.cpp
     src/KjutMutex.cpp
+    src/KjutUnitsOfTime.cpp
 )
 
 if( ${KJUT_TARGET_OS} STREQUAL "windows")
@@ -76,12 +79,14 @@ if( ${BUILD_TESTS} )
     create_test( tst_array_dynamic_size )
     create_test( tst_array_fixed_size_dynamic_size_interchangability )
     create_test( tst_array_different_types )
+    create_test( tst_coarse_timer )
     create_test( tst_set )
     create_test( tst_ringbuffer )
     create_test( tst_map )
     create_test( tst_signals_and_slots )
     create_test( tst_application )
     create_test( tst_logentry )
+    create_test( tst_byte_array )
 
 endif()
 # CXX=clang++ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build

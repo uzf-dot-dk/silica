@@ -152,7 +152,7 @@ public:
 
     All instances of T currently held by this array, is also destroyed.
     */
-    ~Array()
+    virtual ~Array()
     {
 
     }
