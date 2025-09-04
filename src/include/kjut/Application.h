@@ -5,6 +5,7 @@
 #include <kjut/Array.h>
 #include <kjut/Macros.h>
 #include <kjut/UnitsOfTime.h>
+#include <kjut/SignalSlot.h>
 
 #ifndef KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION
 #define KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION 50
@@ -27,7 +28,7 @@ class Application
 public:
     Application();
 
-    virtual ~Application() = default;
+    virtual ~Application();
 
     /** \brief Runs the eventloop that drives the application.
      *
@@ -50,14 +51,19 @@ public:
     \addtogroup PlatformRequiresImplementation.*/
     MicroSeconds microsecondsSinceStart() const;
 
+    Slot<int> exit;
+
     /// \cond DEVELOPER_DOC
 private:
 
     friend class EventGenerator;
 
+    void exitImplementation(int exitCode);
+
     struct
     {
         bool exitRequested = false;
+        int providedExitCode = 0;
         Kjut::Array<class EventGenerator *, KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION> eventGenerators;
 
     } d;

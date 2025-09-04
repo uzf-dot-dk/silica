@@ -10,6 +10,7 @@ namespace Kjut
 {
 
 Application::Application()
+    : exit(std::bind(&Application::exitImplementation, this, std::placeholders::_1))
 {
     if ( theApplicationInstance )
     {
@@ -17,6 +18,12 @@ Application::Application()
     }
     theApplicationInstance = this;
 
+}
+
+
+Application::~Application()
+{
+    theApplicationInstance = nullptr;
 }
 
 int Application::exec()
@@ -28,7 +35,14 @@ int Application::exec()
             eventGenerator->visit();
         }
     }
-    return 0;
+    return d.providedExitCode;
+}
+
+
+void Application::exitImplementation(int exitCode)
+{
+    d.exitRequested  = true;
+    d.providedExitCode = exitCode;
 }
 
 Application * Application::instance()
