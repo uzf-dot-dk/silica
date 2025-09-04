@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 
     Kjut::CoarseTimer everySecond;
     everySecond.triggered.connectTo(doStuff);
-    everySecond.setTimeout(1000);
+    everySecond.setTimeout(1000_ms);
     everySecond.start();
 
     return app.exec();
