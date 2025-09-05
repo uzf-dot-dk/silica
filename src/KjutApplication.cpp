@@ -12,6 +12,7 @@ Application* Application::theApplicationInstance = nullptr;
 Application::Application()
     : exit(std::bind(&Application::exitImplementation, this, std::placeholders::_1))
 {
+    printf("Application()::theApplicationInstance  = %p\n", Application::theApplicationInstance ); fflush(stdout);
     if ( Application::theApplicationInstance )
     {
         FATAL("Only a single Application instance may exist.");
@@ -23,7 +24,9 @@ Application::Application()
 
 Application::~Application()
 {
+    printf("~Application()::theApplicationInstance  = %p\n", Application::theApplicationInstance ); fflush(stdout);
     Application::theApplicationInstance = nullptr;
+    printf("~Application()::theApplicationInstance  = %p\n", Application::theApplicationInstance ); fflush(stdout);
 }
 
 int Application::exec()

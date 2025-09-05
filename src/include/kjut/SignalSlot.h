@@ -65,19 +65,16 @@ private:
 
     struct
     {
-        union Destinations {
+
+        #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+        std::function<void(Ts...)> functionObject = [](Ts...){};
+        #endif
+
+
+        union {
             void (*functionPointerDestination)(Ts...);
             Slot<Ts...>* slotDestination;
             Signal<Ts...>* signalDestination;
-#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
-            // Raw storage for std::function
-            typename std::aligned_storage<
-                sizeof(std::function<void(Ts...)>),
-                alignof(std::function<void(Ts...)>)
-                >::type functionObjectStorage;
-#endif
-            Destinations() {}
-            ~Destinations() {}
         } destinations;
 
 
@@ -504,7 +501,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...> *source, std::function<void(Ts
     : Connection(type)
 {
     this->d.source = source;
-    new (&d.destinations.functionObjectStorage) std::function<void(Ts...)>(std::move(functionObjectDestination));
+    d.functionObject = functionObjectDestination;
     this->d.destinationType = DestinationType::FunctionObject;
 }
 #endif
@@ -530,9 +527,7 @@ void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
 #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
         case DestinationType::FunctionObject:
         {
-            std::function<void(Ts...)>& func =
-                *reinterpret_cast<std::function<void(Ts...)>*>(&d.destinations.functionObjectStorage);
-            func(parameters...);
+            d.functionObject(parameters...);
             break;
         }
 #endif
