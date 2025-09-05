@@ -57,7 +57,7 @@ public:
 private:
 
     friend class EventGenerator;
-
+    static Application* theApplicationInstance;
     void exitImplementation(int exitCode);
 
     struct
@@ -71,6 +71,9 @@ private:
     /// \endcond
 };
 
+/// \cond DEVELOPER_DOC
+
+/// \endcond
 
 }
 

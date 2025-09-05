@@ -2,28 +2,28 @@
 #include <kjut/EventGenerator.h>
 #include <kjut/LoggingSystem.h>
 
-static Kjut::Application * theApplicationInstance = nullptr;
 
 static_assert(KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION >= 0, "KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION must be a non negative integer. Use 0 for infinite and growing capacity.");
 
-namespace Kjut
-{
+namespace Kjut {
+
+Application* Application::theApplicationInstance = nullptr;
 
 Application::Application()
     : exit(std::bind(&Application::exitImplementation, this, std::placeholders::_1))
 {
-    if ( theApplicationInstance )
+    if ( Application::theApplicationInstance )
     {
         FATAL("Only a single Application instance may exist.");
     }
-    theApplicationInstance = this;
+    Application::theApplicationInstance = this;
 
 }
 
 
 Application::~Application()
 {
-    theApplicationInstance = nullptr;
+    Application::theApplicationInstance = nullptr;
 }
 
 int Application::exec()
