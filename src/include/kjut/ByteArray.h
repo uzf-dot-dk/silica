@@ -7,53 +7,53 @@ namespace Kjut
 {
 
 
-/** \brief An sequence of chars that provide the safety and convenience of an Array, but allows access to the ras `char *` as well.*/
 template <size_t S = 0>
-class ByteArray : public Array<char, S>
-{
+class ByteArray : public Array<unsigned char, S> {
 public:
+    using Base = Array<unsigned char, S>;
+    using Base::Base;  // inherit constructors if you add any later
 
-    ByteArray()
-        : Array<char, S>()
-    {}
+    const unsigned char* constData() const { return this->d.data; }
 
-    ByteArray(const char *data, size_t count)
+    size_t setData( const unsigned char *data, size_t count)
     {
+        this->clear();
+        size_t bytes_appended = 0;
+
         for(size_t i = 0; i < count; i++)
         {
-            this->append(data[i]);
+            if(this->append(data[i]))
+            {
+                bytes_appended++;
+            }
+            else
+            {
+                break;
+            }
         }
+        return bytes_appended;
     }
 
-    ~ByteArray()
+    size_t appendData( const unsigned char *data, size_t count)
     {
+        size_t bytes_appended = 0;
 
-    }
-
-    /** \brief Returns a `const char*` to a continous array of the entire content.
-
-     For example:
-     ```cpp
-    Kjut::ByteArray ba;
-    ba.append('F');
-    ba.append('O');
-    ba.append('O');
-    ba.append('\0');
-
-    ASSERT_EQ(ba.size(), 4);
-    ASSERT_STREQ(ba.constData(), "FOO");
-    ```
-
-    Notice, that the value 0 carries no special meaning for a ByteArray, and as such adds one to the size.
-    */
-
-    const char *constData()
-    {
-        return &(this->at(0));
+        for(size_t i = 0; i < count; i++)
+        {
+            if(this->append(data[i]))
+            {
+                bytes_appended++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return bytes_appended;
     }
 
 };
 
-}
+} // namespace Kjut
 
-#endif // KJUT_BYTE_ARRAY_H
+#endif

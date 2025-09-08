@@ -3,5 +3,6 @@
 * Add documentation of MicroSeconds
 * Add documentation of MilliSeconds
 * Add test of CoarseTimer
+* Move warning count test to tst_array (grep for WARNING_COUNT_TEST )
 
 

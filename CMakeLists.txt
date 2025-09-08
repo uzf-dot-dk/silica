@@ -22,6 +22,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set( kjut_container_sources
     src/KjutApplication.cpp
     src/KjutByteArray.cpp
+    src/KjutByteBuffer.cpp
     src/KjutCoarseTimer.cpp
     src/KjutContainers.cpp
     src/KjutCore.cpp
@@ -87,6 +88,7 @@ if( ${BUILD_TESTS} )
     create_test( tst_array_fixed_size_dynamic_size_interchangability )
     create_test( tst_array_different_types )
     create_test( tst_byte_array )
+    create_test( tst_byte_buffer )
     create_test( tst_coarse_timer )
     create_test( tst_logentry )
     create_test( tst_map )
