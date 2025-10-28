@@ -59,6 +59,7 @@ private:
     friend class EventGenerator;
     static Application* theApplicationInstance;
     void exitImplementation(int exitCode);
+    void platformSpecificInitialization();
 
     struct
     {

@@ -17,6 +17,7 @@ Application::Application()
     {
         FATAL("Only a single Application instance may exist.");
     }
+    platformSpecificInitialization();
     Application::theApplicationInstance = this;
 
 }

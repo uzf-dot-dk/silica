@@ -10,6 +10,11 @@
 namespace Kjut
 {
 
+    void Application::platformSpecificInitialization()
+    {
+        //Nop on Windows.
+    }
+
     MicroSeconds Application::microsecondsSinceStart() const
     {
         FILETIME ft;
@@ -22,4 +27,6 @@ namespace Kjut
 
         return MicroSeconds(static_cast<int64_t>(uli.QuadPart / 10)); // 100 ns -> µs
     }
+
+
 }

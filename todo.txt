@@ -5,4 +5,4 @@
 * Add test of CoarseTimer
 * Move warning count test to tst_array (grep for WARNING_COUNT_TEST )
 * Add return type on Slot's, like Slot<int, int, int> sum, sum(1,2) returns 3
-
+* Make TextBasedAPI use reflection. Grep for REFLECTION_FINALLY_GOT_HERE

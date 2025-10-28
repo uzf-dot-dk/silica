@@ -1,116 +1,108 @@
-#include <kjut/Application.h>
-#include <kjut/CoarseTimer.h>
-#include <kjut/SignalSlot.h>
-#include <kjut/IODevice.h>
-#include <kjut/ByteBuffer.h>
+#include <kjut/Array.h>
+#include <kjut/Map.h>
+
+
+#define TEXT_API_VECTOR_TYPE Kjut::Array<Kjut::Token,50>
+#define TEXT_API_VECTOR_TYPE_APPEND append
+#define TEXT_API_VECTOR_TYPE_REMOVE_FIRST(tokens) tokens.remove(0)
+#define TEXT_API_STRING_RESPONSE_MAX_LENGTH 100
+#define TEXT_API_MAP_TYPE \
+Kjut::Map< \
+           std::string_view, \
+           std::function<Kjut::APICallResult<MaximumStringlengthOfTextResponse>(C*, const VectorOfTokens &)>, \
+           50 \
+    >
+
+#define TEXT_API_MAP_INSERT(map, key, value) map.insert(key, value);
+
+
+#include <kjut/communication/TextAPI.h>
 
 
 
 
-/*
-template <typename R, typename E>
-class Result
+class MyApi : public Kjut::TextBasedAPI<MyApi, TEXT_API_STRING_RESPONSE_MAX_LENGTH, TEXT_API_VECTOR_TYPE>
 {
 
-    Result() = delete;
+public:
 
-    Result(const R &r)
+    MyApi() : Kjut::TextBasedAPI<MyApi, TEXT_API_STRING_RESPONSE_MAX_LENGTH, TEXT_API_VECTOR_TYPE>()
     {
-        d.r = r;
-        d.isError = false;
+
+// START -- Remove this block, when reflection becomes available
+#ifndef REFLECTION_FINALLY_GOT_HERE
+#define REGISTER_METHOD( name ) registerCommand(#name, &MyApi :: name)
+
+        REGISTER_METHOD(chant);
+        REGISTER_METHOD(storeTruth);
+        REGISTER_METHOD(doStuff);
+        REGISTER_METHOD(addStuff);
+        REGISTER_METHOD(doNuffin);
+
+#undef REGISTER_METHOD
+#endif
+// end -- Remove this block, when reflection becomes available
     }
 
-    Result(const E &e)
+    void doNuffin()
     {
-        d.e = e;
-        d.isError = true;
+        printf("doNuffin called\n"); fflush(stdout);
     }
 
-    virtual ~Result() = delete;
-
-    explicit operator bool() const
+    int doStuff()
     {
-        return d.isError;
+        printf("doStuff called\n"); fflush(stdout);
+        return 3;
     }
 
-    operator R() const
+    int addStuff(int a, double b)
     {
-        return d.r;
+        printf("Add stuff called with %d and %e\n", a, b); fflush(stdout);
+        return a + b;
     }
 
-    operator E() const
+    int storeTruth(bool theValue)
     {
-        return d.e;
+        printf("storeTruth called with %s \n", theValue ? "TRUE" : "FALSE"); fflush(stdout);
+        return 1;
     }
 
-
-private:
-
-    struct
+    double chant(std::string_view message, int count)
     {
-        R r;
-        E e;
-        bool isError;
-    } d;
-
+        printf("Chant called with %d x \"%.*s\" \n",
+               count ,
+               static_cast<int>(message.length()),
+               message.data());
+        return 3.1415 * count;
+    }
 
 };
-*/
 
 
-void print(Kjut::Array<Kjut::Byte> &a)
-{
-    printf("{");
-    int i = 0;
-    for(auto e: a)
-    {
-        if(i > 0)
-        {
-            printf(", ");
-        }
-        i = 1;
-        if((e >= 32) && (e <= 126))
-        {
-            printf("'%c'", e);
-        }
-        else
-        {
-            printf("%2X", e);
-        }
-    }
-    printf("}\n");
-}
 
 
 int main(int argc, char *argv[])
 {
-/*
-    Kjut::Array<Kjut::Byte> implicitGrowingData;
-    Kjut::Array<Kjut::Byte, 0> explicitGrowingData;
-    Kjut::Array<Kjut::Byte, 10> fixedSizeData;
+    MyApi tba;
+    { auto r = tba.execute("doNuffin"); printf("%s\n", r.output); }
+    { auto r = tba.execute("doStuff"); printf("%s\n", r.output); }
+    { auto r = tba.execute("addStuff 0b100 53.7"); printf("%s\n", r.output); }
+    { auto r = tba.execute("storeTruth 0"); printf("%s\n", r.output); }
+    { auto r = tba.execute("chant hey 5"); printf("%s\n", r.output); }
 
-    Kjut::IODevice* iod;
-    Kjut::ByteBuffer myiod;
-    iod = &myiod;
+    fflush(stdout);
+    /*
+    Kjut::Application app;
+    Kjut::CoarseTimer everySecond;
+    everySecond.triggered.connectTo([&](){
+        printf("Ping...\n");
+        fflush(stdout);
+    });
+    everySecond.setTimeout(1'000'000_us);
+    everySecond.start();
 
-    iod->write(&implicitGrowingData);
-    iod->write(&explicitGrowingData);
-    iod->write(&fixedSizeData);
+    return app.exec();
 */
-    Kjut::Array<Kjut::Byte> readSource = {'H', 'e', 'j'};
-    Kjut::Array<Kjut::Byte> writeData = {'D', 'a', 'v'};
-    Kjut::Array<Kjut::Byte> writeDestination;
-    Kjut::ByteBuffer myiod(&readSource, &writeDestination);
-    Kjut::IODevice* iod = &myiod;
-
-    iod->writeArray(&writeData);
-    print(writeDestination);
-
-    while(iod->canReadMore())
-    {
-        printf("Read %c\n", iod->read());
-    }
-
     return 0;
-
 }
+
