@@ -58,7 +58,9 @@ public:
 
     Slot<> close;
     Slot<OpenMode> open;
-    Slot<Array<Byte> *> write;
+    Slot<Array<Byte> *> writeArray;
+    Slot<Byte> writeByte;
+
 
     Signal<IODevice*, Array<Byte>*> dataReady;
     Signal<IODevice*, size_t> writeComplete;
@@ -76,7 +78,8 @@ protected:
 
     virtual void closeImplementation() = 0;
     virtual void openImplementation(OpenMode) = 0;
-    virtual void writeImplementation(Array<Byte> *data) = 0;
+    virtual void writeArrayImplementation(Array<Byte> *data) = 0;
+    virtual void writeByteImplementation(Byte data) = 0;
 
     void setCurrentOpenMode(OpenMode newOpenMode)
     {

@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
     Kjut::ByteBuffer myiod(&readSource, &writeDestination);
     Kjut::IODevice* iod = &myiod;
 
-    iod->write(&writeData);
+    iod->writeArray(&writeData);
     print(writeDestination);
 
     while(iod->canReadMore())

@@ -129,7 +129,24 @@ protected:
         this->setCurrentOpenMode(mode);
     }
 
-    void writeImplementation(Array<Byte> *data) override
+
+
+    void writeByteImplementation(Byte data) override
+    {
+        if( ! d.canWriteToDevice(this->currentOpenMode()))
+        {
+            return;
+        }
+
+        if( ! d.toWriteTo->append(data) )
+        {
+            return;
+        }
+
+    }
+
+
+    void writeArrayImplementation(Array<Byte> *data) override
     {
         if( ! d.canWriteToDevice(this->currentOpenMode()))
         {
