@@ -140,8 +140,10 @@ protected:
 
         if( ! d.toWriteTo->append(data) )
         {
+            emit writeComplete(this, 0);
             return;
         }
+        emit writeComplete(this, 1);
 
     }
 
@@ -152,14 +154,16 @@ protected:
         {
             return;
         }
-
+        size_t bytesWritten = 0;
         for(size_t i = 0; i < data->size(); i++)
         {
             if( ! d.toWriteTo->append((*data)[i]) )
             {
-                return;
+                break;
             }
+            bytesWritten++;
         }
+        emit writeComplete(this, bytesWritten);
     }
 
 
