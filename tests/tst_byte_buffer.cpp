@@ -1,45 +1,9 @@
 #include <gtest/gtest.h>
 #include <kjut/ByteBuffer.h>
 
-
-namespace Kjut
-{
-
-}
+#include "SignalSpy.h"
 
 #define suiteName tst_byte_buffer
-
-
-template <typename ...Ts>
-class SignalSpy
-{
-public:
-    void spyOn(Kjut::Signal<Ts...> *signal)
-    {
-        signal->connectTo([=](Ts... args){
-            d.invocations.push_back(std::tuple<Ts...>(args...));
-        });
-    }
-
-    size_t invocationCount() const
-    {
-        return d.invocations.size();
-    }
-
-    std::vector<std::tuple<Ts...>> & invocations()
-    {
-        return d.invocations;
-    }
-
-
-private:
-    struct
-    {
-        std::vector<std::tuple<Ts...>> invocations;
-    } d;
-};
-
-
 
 TEST(suiteName, test_basic_reading_with_dynamic_array_as_source)
 {
