@@ -1,9 +1,12 @@
 #include <gtest/gtest.h>
+#include <kjut/Application.h>
 #include <kjut/ByteBuffer.h>
 
 #include "SignalSpy.h"
 
 #define suiteName tst_byte_buffer
+
+Kjut::Application app;
 
 TEST(suiteName, test_basic_reading_with_dynamic_array_as_source)
 {

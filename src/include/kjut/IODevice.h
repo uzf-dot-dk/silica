@@ -1,15 +1,16 @@
 #ifndef KJUT_IO_DEVICE_H
 #define KJUT_IO_DEVICE_H
 
-#include <kjut/SignalSlot.h>
+#include <kjut/EventGenerator.h>
 #include <kjut/ByteArray.h>
+#include <kjut/SignalSlot.h>
 
 namespace Kjut
 {
 
 typedef unsigned char Byte;
 
-class IODevice
+class IODevice : public EventGenerator
 {
 public:
 
@@ -87,6 +88,8 @@ protected:
     }
 
 private:
+
+    void visit() override {}
 
     struct
     {

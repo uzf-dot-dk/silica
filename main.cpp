@@ -93,12 +93,10 @@ int main(int argc, char *argv[])
     Kjut::ByteBuffer myiod;
     iod = &myiod;
 
-
     iod->write(&implicitGrowingData);
     iod->write(&explicitGrowingData);
     iod->write(&fixedSizeData);
 */
-
     Kjut::Array<Kjut::Byte> readSource = {'H', 'e', 'j'};
     Kjut::Array<Kjut::Byte> writeData = {'D', 'a', 'v'};
     Kjut::Array<Kjut::Byte> writeDestination;
