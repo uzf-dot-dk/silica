@@ -95,6 +95,7 @@ if( ${BUILD_TESTS} )
     create_test( tst_ringbuffer )
     create_test( tst_set )
     create_test( tst_signals_and_slots )
+    create_test( tst_text_based_api )
 
 endif()
 # CXX=clang++ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build

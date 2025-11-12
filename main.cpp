@@ -1,32 +1,11 @@
-#include <kjut/Array.h>
-#include <kjut/Map.h>
-
-
-#define TEXT_API_VECTOR_TYPE Kjut::Array<Kjut::Token,50>
-#define TEXT_API_VECTOR_TYPE_APPEND append
-#define TEXT_API_VECTOR_TYPE_REMOVE_FIRST(tokens) tokens.remove(0)
-#define TEXT_API_STRING_RESPONSE_MAX_LENGTH 100
-#define TEXT_API_MAP_TYPE \
-Kjut::Map< \
-           std::string_view, \
-           std::function<Kjut::APICallResult<MaximumStringlengthOfTextResponse>(C*, const VectorOfTokens &)>, \
-           50 \
-    >
-
-#define TEXT_API_MAP_INSERT(map, key, value) map.insert(key, value);
-
-
 #include <kjut/communication/TextAPI.h>
 
-
-
-
-class MyApi : public Kjut::TextBasedAPI<MyApi, TEXT_API_STRING_RESPONSE_MAX_LENGTH, TEXT_API_VECTOR_TYPE>
+class MyApi : public Kjut::TextBasedAPI<MyApi>
 {
 
 public:
 
-    MyApi() : Kjut::TextBasedAPI<MyApi, TEXT_API_STRING_RESPONSE_MAX_LENGTH, TEXT_API_VECTOR_TYPE>()
+    MyApi() : Kjut::TextBasedAPI<MyApi>()
     {
 
 // START -- Remove this block, when reflection becomes available

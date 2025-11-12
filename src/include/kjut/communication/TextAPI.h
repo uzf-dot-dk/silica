@@ -7,36 +7,50 @@
 #ifndef KJUT_TEXT_API_H
 #define KJUT_TEXT_API_H
 
+#ifndef TEXT_API_MAX_TOKENS
+#define TEXT_API_MAX_TOKENS 50
+#endif //TEXT_API_MAX_TOKENS
+
+#ifndef TEXT_API_STRING_RESPONSE_MAX_LENGTH
+#define TEXT_API_STRING_RESPONSE_MAX_LENGTH 100
+#endif
+
+#ifndef TEXT_API_STRING_MAX_EXPOSED_METHODS
+#define TEXT_API_STRING_MAX_EXPOSED_METHODS 50
+#endif
+
+
+
 
 #ifndef TEXT_API_MAP_TYPE
-#include <map>
+#include <kjut/Map.h>
 #define TEXT_API_MAP_TYPE \
-    std::map< \
-              std::string_view, \
-              std::function<APICallResult<MaximumStringlengthOfTextResponse>(C*, const VectorOfTokens &)> \
-        >
-#define TEXT_API_MAP_INSERT(map, key, value) map[key] = value;
+Kjut::Map< \
+           std::string_view, \
+           std::function<Kjut::APICallResult<MaximumStringlengthOfTextResponse>(C*, const VectorOfTokens &)>, \
+           TEXT_API_STRING_MAX_EXPOSED_METHODS \
+           >
+
+#define TEXT_API_MAP_INSERT(map, key, value) map.insert(key, value);
 #endif // TEXT_API_MAP_TYPE
 
 #ifndef TEXT_API_VECTOR_TYPE
-#include <vector>
-#define TEXT_API_VECTOR_TYPE std::vector<Token>
+#include <kjut/Array.h>
+
+#define TEXT_API_VECTOR_TYPE Kjut::Array<Kjut::Token,TEXT_API_MAX_TOKENS>
 #ifdef TEXT_API_VECTOR_TYPE_APPEND
 #undef TEXT_API_VECTOR_TYPE_APPEND
 #endif
-#define TEXT_API_VECTOR_TYPE_APPEND push_back
+#define TEXT_API_VECTOR_TYPE_APPEND append
 
 #ifdef TEXT_API_VECTOR_TYPE_REMOVE_FIRST
 #undef TEXT_API_VECTOR_TYPE_REMOVE_FIRST
 #endif
 
-#define TEXT_API_VECTOR_TYPE_REMOVE_FIRST(tokens) tokens.erase(tokens.begin(), tokens.begin()+1);
+#define TEXT_API_VECTOR_TYPE_REMOVE_FIRST(tokens) tokens.remove(0)
 
 #endif // TEXT_API_VECTOR_TYPE
 
-#ifndef TEXT_API_STRING_RESPONSE_MAX_LENGTH
-#define TEXT_API_STRING_RESPONSE_MAX_LENGTH 100
-#endif
 
 namespace Kjut
 {
@@ -325,12 +339,73 @@ constexpr void constexpr_for(F&& f) {
 
 
 
+/**
+\brief TextBasedApi is a class that, when properly subclasses, accepts a string and executes the method with the right parameters provided in the string.
+
+An example is
+
+```c++
+class MyApi: public Kjut::TextBasedAPI<MyApi>
+{
+
+public:
+
+    MyApi() : Kjut::TextBasedAPI<MyApi>()
+    {
+        registerCommand("addNumbers", &MyApi::addNumbers)
+    }
+
+    int addNumbers(int a, int b) { return a + b; }
+};
+
+...
+
+MyApi api;
+std::cout << api.execute("addNumbers 2 4").output << "\n";  // Prints 6
+
+```
+
+
+To use other containers, for example the std::vector and std::map, define the following prior to include
+
+```c++
+
+
+#include <map>
+#define TEXT_API_MAP_TYPE \
+std::map< \
+          std::string_view, \
+          std::function<APICallResult<MaximumStringlengthOfTextResponse>(C*, const VectorOfTokens &)> \
+    >
+#define TEXT_API_MAP_INSERT(map, key, value) map[key] = value;
+
+#include <vector>
+#define TEXT_API_VECTOR_TYPE std::vector<Kjut::Token>
+#define TEXT_API_VECTOR_TYPE_APPEND push_back
+#define TEXT_API_VECTOR_TYPE_REMOVE_FIRST(tokens) tokens.erase(tokens.begin(), tokens.begin()+1);
+
+```
+
+
+*/
+
+
+
 template <typename C,
          size_t MaximumStringlengthOfTextResponse = TEXT_API_STRING_RESPONSE_MAX_LENGTH,
          typename VectorOfTokens = TEXT_API_VECTOR_TYPE,
          typename MapOfWrappers = TEXT_API_MAP_TYPE>
 class TextBasedAPI
 {
+public:
+
+    enum class Error
+    {
+        NoSuchMethod = 130,
+        ConversionError = 131,
+        ParameterCountMismatch = 132,
+        MethodThrewException = 133
+    };
 
 protected:
     constexpr auto createArrayOfMemberFunctionsToRegister()
@@ -423,7 +498,7 @@ public:
         setExitCode(0);
         if (!wrappers.contains(std::string_view(commandName.p, commandName.len))) {
             APICallResult<MaximumStringlengthOfTextResponse> returnValue;
-            returnValue.returnCode = 130;
+            returnValue.returnCode = static_cast<int>(Error::NoSuchMethod);
             snprintf(returnValue.output,
                      returnValue.maxSize,
                      "#:! Unknown command: %.*s",
@@ -440,7 +515,7 @@ public:
         catch(const ConversionError &ce)
         {
             APICallResult<MaximumStringlengthOfTextResponse> returnValue;
-            returnValue.returnCode = 127;
+            returnValue.returnCode = static_cast<int>(Error::ConversionError);
             snprintf(returnValue.output,
                      returnValue.maxSize,
                      "#:! Could not convert %.*s to %.*s",
@@ -452,7 +527,7 @@ public:
         catch(const ParameterCountError &pce)
         {
             APICallResult<MaximumStringlengthOfTextResponse> returnValue;
-            returnValue.returnCode = 128;
+            returnValue.returnCode = static_cast<int>(Error::ParameterCountMismatch);
             snprintf(returnValue.output,
                      returnValue.maxSize,
                      "#:! Wrong number of parameters proviced; %.*s expects %zu but %zu was given.",
@@ -465,7 +540,7 @@ public:
         catch( ... )
         {
             APICallResult<MaximumStringlengthOfTextResponse> returnValue;
-            returnValue.returnCode = 129;
+            returnValue.returnCode = static_cast<int>(Error::MethodThrewException);
             snprintf(returnValue.output,
                      returnValue.maxSize,
                      "#:! Somthing unknown went wrong while calling %.*s.",
