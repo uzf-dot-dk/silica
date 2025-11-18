@@ -3,7 +3,7 @@
 #include <silica/LoggingSystem.h>
 
 
-static_assert(KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION >= 0, "KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION must be a non negative integer. Use 0 for infinite and growing capacity.");
+static_assert(SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION >= 0, "SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION must be a non negative integer. Use 0 for infinite and growing capacity.");
 
 namespace Kjut {
 

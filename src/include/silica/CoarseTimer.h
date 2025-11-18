@@ -1,5 +1,5 @@
-#ifndef KJUT_COARSE_TIMER_H
-#define KJUT_COARSE_TIMER_H
+#ifndef SILICA_COARSE_TIMER_H
+#define SILICA_COARSE_TIMER_H
 
 #include <silica/EventGenerator.h>
 #include <silica/UnitsOfTime.h>
@@ -89,4 +89,4 @@ private:
 
 }
 
-#endif // KJUT_COARSE_TIMER_H
+#endif // SILICA_COARSE_TIMER_H

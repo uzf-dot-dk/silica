@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#define KJUT_ARRAY_INITIAL_CAPACITY 1
+#define SILICA_ARRAY_INITIAL_CAPACITY 1
 #include <set>
 #include <silica/Set.h>
 

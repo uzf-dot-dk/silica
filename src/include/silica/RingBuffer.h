@@ -186,7 +186,7 @@ public:
 //private:
 ///@cond
 
-    KJUT_VOLATILE struct
+    SILICA_VOLATILE struct
     {
         void (*overflowCallback)(const RingBuffer &, size_t currentHeadIndex, size_t currentTailIndex, const T& element) = nullptr;
         Array<T, S+1> data;

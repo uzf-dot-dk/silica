@@ -1,5 +1,5 @@
-#ifndef KJUT_UNITS_OF_TIME_H
-#define KJUT_UNITS_OF_TIME_H
+#ifndef SILICA_UNITS_OF_TIME_H
+#define SILICA_UNITS_OF_TIME_H
 
 #include <stdint.h>
 #include <silica/Macros.h>
@@ -87,4 +87,4 @@ Kjut::MicroSeconds operator ""_us(unsigned long long);
 
 
 
-#endif // KJUT_UNITS_OF_TIME_H
+#endif // SILICA_UNITS_OF_TIME_H

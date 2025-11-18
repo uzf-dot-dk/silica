@@ -1,5 +1,5 @@
-#ifndef KJUT_SCOPE_GUARD_H
-#define KJUT_SCOPE_GUARD_H
+#ifndef SILICA_SCOPE_GUARD_H
+#define SILICA_SCOPE_GUARD_H
 
 #include <functional>
 namespace Kjut
@@ -30,4 +30,4 @@ private:
 
 }
 
-#endif // KJUT_SCOPE_GUARD
+#endif // SILICA_SCOPE_GUARD

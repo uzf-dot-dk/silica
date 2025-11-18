@@ -1,5 +1,5 @@
-#ifndef KJUT_APPLICATION_H
-#define KJUT_APPLICATION_H
+#ifndef SILICA_APPLICATION_H
+#define SILICA_APPLICATION_H
 
 #include <stddef.h>
 #include <silica/Array.h>
@@ -7,8 +7,8 @@
 #include <silica/UnitsOfTime.h>
 #include <silica/SignalSlot.h>
 
-#ifndef KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION
-#define KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION 50
+#ifndef SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION
+#define SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION 50
 #endif
 
 namespace Kjut
@@ -65,7 +65,7 @@ private:
     {
         bool exitRequested = false;
         int providedExitCode = 0;
-        Kjut::Array<class EventGenerator *, KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION> eventGenerators;
+        Kjut::Array<class EventGenerator *, SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION> eventGenerators;
 
     } d;
 
@@ -78,4 +78,4 @@ private:
 
 }
 
-#endif // KJUT_APPLICATION_H
+#endif // SILICA_APPLICATION_H

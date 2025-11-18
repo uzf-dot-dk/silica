@@ -189,7 +189,7 @@ TEST(suiteName, test_insertion)
 
         ASSERT_EQ(shouldExpectTrue, wasInsertionSuccesful);
         ASSERT_EQ(expectedLogEntries, mockLogEntryHandlerInvocationCount());
-        ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(array, cases[i])
+        ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(array, cases[i])
     }
 
     #undef CREATE_ARRAY
@@ -242,7 +242,7 @@ TEST(suiteName, test_removal)
 
         ASSERT_EQ(shouldExpectTrue, wasRemovalSuccesful);
         ASSERT_EQ(expectedLogEntries, mockLogEntryHandlerInvocationCount());
-        ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(array, cases[i])
+        ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(array, cases[i])
     }
 
 #undef CREATE_ARRAY
@@ -324,7 +324,7 @@ TEST(suiteName, test_forward_iterator)
     {
         copy.push_back(i);
     }
-    ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(ints, copy);
+    ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(ints, copy);
 }
 
 TEST(suiteName, test_forward_iterator_on_empty_array)
@@ -338,26 +338,26 @@ TEST(suiteName, test_forward_iterator_on_empty_array)
     }
 
     ASSERT_EQ(copy.size(), 0);
-    ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(ints, copy);
+    ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(ints, copy);
 }
 
-#ifndef KJUT_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
+#ifndef SILICA_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
 TEST(suiteName, test_list_initializer)
 {
     {
         Kjut::Array<int, 3> array = {};
         std::vector<int> expected = {};
-        ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(array, expected);
+        ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(array, expected);
     }
     {
         Kjut::Array<int, 3> array = {1,2,3};
         std::vector<int> expected = {1,2,3};
-        ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(array, expected);
+        ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(array, expected);
     }
     {
         Kjut::Array<int, 3> array = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
         std::vector<int> expected = {1,2,3};
-        ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(array, expected);
+        ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(array, expected);
     }
 }
 #endif

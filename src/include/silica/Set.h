@@ -1,5 +1,5 @@
-#ifndef KJUT_SET_H
-#define KJUT_SET_H
+#ifndef SILICA_SET_H
+#define SILICA_SET_H
 
 #include <silica/Array.h>
 
@@ -80,7 +80,7 @@ public:
 
     Set() = default;
     virtual ~Set() = default;
-#ifndef KJUT_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
+#ifndef SILICA_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
     Set(const Set<T, 0> &) = delete;
 #else
     This is not implemented yet
@@ -398,7 +398,7 @@ class Set : public Set<T, 0> {
 public:
     Set() = default;
     ~Set() = default;
-#ifndef KJUT_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
+#ifndef SILICA_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
     Set(const Set<T, S> &) = delete;
 #else
     This is not implemented yet
@@ -417,4 +417,4 @@ private:
 
 
 
-#endif // KJUT_SET_H
+#endif // SILICA_SET_H

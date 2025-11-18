@@ -12,8 +12,8 @@
 typedef SSIZE_T ssize_t;
 #endif
 
-#ifndef KJUT_ARRAY_H
-#define KJUT_ARRAY_H
+#ifndef SILICA_ARRAY_H
+#define SILICA_ARRAY_H
 
 
 ///@cond
@@ -47,7 +47,7 @@ The Array<T,S> implements an array with elements stored in adject memory for fas
     <td><code>S = 0</code></td>
     <td>
         The Array has a dynamic capacity and will grow if needed. <br/>
-        With \c S \c = \c 0 , Array<T,S> allocates \ref KJUT_ARRAY_INITIAL_CAPACITY instances of T upon instantiation and may realloc that as required at runtime.<br />
+        With \c S \c = \c 0 , Array<T,S> allocates \ref SILICA_ARRAY_INITIAL_CAPACITY instances of T upon instantiation and may realloc that as required at runtime.<br />
         \see append()
     </td>
 </tr>
@@ -157,10 +157,10 @@ public:
 
     }
 
-#ifndef KJUT_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
+#ifndef SILICA_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
     /** Constructs a new array instance and initializes its content to the list.
      *
-     * \note This constructor may be disabled by define the \ref KJUT_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR macro when including Array.h
+     * \note This constructor may be disabled by define the \ref SILICA_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR macro when including Array.h
      */
     Array(std::initializer_list<T> init) {
         initialize(0, nullptr);
@@ -171,7 +171,7 @@ public:
 #endif
 
 
-#ifdef KJUT_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
+#ifdef SILICA_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
     Array(const Array<T, 0> &) = delete;
 #else
     Array(const Array<T, 0> &);
@@ -540,7 +540,7 @@ protected:
         if(capacity == 0)
         {
             d.mayGrow = true;
-            d.initialDynamicCapacity = KJUT_ARRAY_INITIAL_CAPACITY;
+            d.initialDynamicCapacity = SILICA_ARRAY_INITIAL_CAPACITY;
             d.capacity = d.initialDynamicCapacity;
             d.data = static_cast<T*>(malloc( sizeof(T)*d.initialDynamicCapacity ));
         }
@@ -627,7 +627,7 @@ public:
         this->initialize(S, data);
     }
 
-#ifndef KJUT_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
+#ifndef SILICA_DISABLE_CONTAINERS_INITIALIZER_LIST_CONSTRUCTOR
     Array(std::initializer_list<T> init) {
         this->initialize(S, data);
         for (const T& value : init) {
@@ -647,7 +647,7 @@ public:
     }
 
 
-#ifndef KJUT_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
+#ifndef SILICA_DISABLE_CONTAINERS_COPY_CONSTRUCTOR
     Array(const Array<T, S> &) = delete;
 #endif
 
@@ -657,4 +657,4 @@ public:
 ///@endcond
 }
 
-#endif // KJUT_ARRAY_H
+#endif // SILICA_ARRAY_H

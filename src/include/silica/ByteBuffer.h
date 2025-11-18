@@ -1,5 +1,5 @@
-#ifndef KJUT_BYTE_BUFFER
-#define KJUT_BYTE_BUFFER
+#ifndef SILICA_BYTE_BUFFER
+#define SILICA_BYTE_BUFFER
 
 
 #include <silica/IODevice.h>
@@ -221,4 +221,4 @@ private:
 
 
 
-#endif // KJUT_BYTE_BUFFER
+#endif // SILICA_BYTE_BUFFER

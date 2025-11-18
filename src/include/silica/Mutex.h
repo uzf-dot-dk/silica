@@ -1,9 +1,9 @@
 #include <silica/Macros.h>
 
 #if \
-       defined(KJUT_OS_WINDOWS) \
-    || defined(KJUT_OS_LINUX) \
-    || defined(KJUT_OS_MACOS)
+       defined(SILICA_OS_WINDOWS) \
+    || defined(SILICA_OS_LINUX) \
+    || defined(SILICA_OS_MACOS)
 
         #include <mutex>
 #endif
@@ -46,7 +46,7 @@ private:
 
     struct
     {
-#if defined(KJUT_OS_WINDOWS) || defined(KJUT_OS_LINUX) || defined(KJUT_OS_MACOS)
+#if defined(SILICA_OS_WINDOWS) || defined(SILICA_OS_LINUX) || defined(SILICA_OS_MACOS)
         std::mutex mutex;
 #endif
     } d;

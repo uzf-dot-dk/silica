@@ -1,5 +1,5 @@
-#ifndef KJUT_MAP_H
-#define KJUT_MAP_H
+#ifndef SILICA_MAP_H
+#define SILICA_MAP_H
 
 #include <silica/Array.h>
 
@@ -355,17 +355,17 @@ void Map<K, V, 0>::erase(const K &key)
     {
         return;
     }
-    //KJUT_TRY
+    //SILICA_TRY
         actualValues().remove(indexOfKey);
-   // KJUT_CATCH_ALL
+   // SILICA_CATCH_ALL
         //Nop
-   // KJUT_TRY_CATCH_END
+   // SILICA_TRY_CATCH_END
 
-   // KJUT_TRY
+   // SILICA_TRY
         actualKeys().remove(indexOfKey);
-   // KJUT_CATCH_ALL
+   // SILICA_CATCH_ALL
         //Nop
-   // KJUT_TRY_CATCH_END
+   // SILICA_TRY_CATCH_END
 
 
 }
@@ -393,7 +393,7 @@ class Map : public Map<K, V, 0> {
 public:
     Map() = default;
     ~Map() = default;
-#ifndef KJUT_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
+#ifndef SILICA_ENABLE_CONTAINERS_COPY_CONSTRUCTOR
     Map(const Map<K, V, S> &) = delete;
 #else
     This is not implemented yet
@@ -415,4 +415,4 @@ private:
 
 
 
-#endif // KJUT_SET_H
+#endif // SILICA_SET_H

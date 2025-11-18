@@ -37,7 +37,7 @@ public:
             break;
         }
 
-        fprintf(descriptor, "%s# %c : %4zu : %-*s : %s\n" TEXT_NORMAL, color, indicator, entry.originatingLine(), KJUT_LOGENTRY_FILENAME_MAX_LENGTH, entry.originatingFile(), entry.message());
+        fprintf(descriptor, "%s# %c : %4zu : %-*s : %s\n" TEXT_NORMAL, color, indicator, entry.originatingLine(), SILICA_LOGENTRY_FILENAME_MAX_LENGTH, entry.originatingFile(), entry.message());
         fflush(descriptor);
 
         if(entry.type() == Kjut::LogEntry::Type::Fatal)

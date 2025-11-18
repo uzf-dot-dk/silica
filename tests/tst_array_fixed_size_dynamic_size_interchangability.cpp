@@ -33,7 +33,7 @@ TEST(suiteName, test_static_dynamic_interchangability_function_calls)
         static int invocationCount = 0;
         if(invocationCount == 0)
         {
-            ASSERT_EQ(array.capacity(), KJUT_ARRAY_INITIAL_CAPACITY);
+            ASSERT_EQ(array.capacity(), SILICA_ARRAY_INITIAL_CAPACITY);
         }
         else if(invocationCount == 1)
         {

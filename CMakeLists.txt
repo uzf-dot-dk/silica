@@ -34,11 +34,11 @@ set( silica_sources
     src/SilicaUnitsOfTime.cpp
 )
 
-if( ${KJUT_TARGET_OS} STREQUAL "windows")
+if( ${SILICA_TARGET_OS} STREQUAL "windows")
     include(src/windows_x86/sources.cmake)
 endif()
 
-if( ${KJUT_TARGET_OS} STREQUAL "linux")
+if( ${SILICA_TARGET_OS} STREQUAL "linux")
     message ( INFO " Oncludes for linux")
     include(src/linux/sources.cmake)
 endif()
@@ -48,17 +48,17 @@ add_library( silica
 )
 
 target_include_directories( silica PUBLIC src/include )
-target_compile_definitions( silica PUBLIC KJUT_TARGET_OS=\"${KJUT_TARGET_OS}\")
+target_compile_definitions( silica PUBLIC SILICA_TARGET_OS=\"${SILICA_TARGET_OS}\")
 if(MSVC)
     target_compile_options( silica PRIVATE /Od /RTC1)
 endif()
 
-if( ${KJUT_TARGET_OS} STREQUAL "windows")
-    target_compile_definitions( silica PUBLIC KJUT_OS_WINDOWS=1)
+if( ${SILICA_TARGET_OS} STREQUAL "windows")
+    target_compile_definitions( silica PUBLIC SILICA_OS_WINDOWS=1)
 endif()
 
-if( ${KJUT_TARGET_OS} STREQUAL "linux")
-    target_compile_definitions( silica PUBLIC KJUT_OS_LINUX=1)
+if( ${SILICA_TARGET_OS} STREQUAL "linux")
+    target_compile_definitions( silica PUBLIC SILICA_OS_LINUX=1)
 endif()
 
 add_executable(sandbox main.cpp)
@@ -67,8 +67,8 @@ target_link_libraries(sandbox PUBLIC silica )
 if( ${BUILD_TESTS} )
     message( STATUS "Builds tests")
 
-    target_compile_definitions( silica PUBLIC KJUT_LOGENTRY_MESSAGE_MAX_LENGTH=15)
-    target_compile_definitions( silica PUBLIC KJUT_LOGENTRY_FILENAME_MAX_LENGTH=15)
+    target_compile_definitions( silica PUBLIC SILICA_LOGENTRY_MESSAGE_MAX_LENGTH=15)
+    target_compile_definitions( silica PUBLIC SILICA_LOGENTRY_FILENAME_MAX_LENGTH=15)
 
     add_subdirectory(tests/googletest/)
 

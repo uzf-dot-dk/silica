@@ -1,5 +1,5 @@
-#ifndef KJUT_LOGGING_SYSTEM_H
-#define KJUT_LOGGING_SYSTEM_H
+#ifndef SILICA_LOGGING_SYSTEM_H
+#define SILICA_LOGGING_SYSTEM_H
 
 #include <silica/LogEntry.h>
 
@@ -61,4 +61,4 @@ private:
 }
 
 
-#endif // KJUT_LOGGING_SYSTEM_H
+#endif // SILICA_LOGGING_SYSTEM_H

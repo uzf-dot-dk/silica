@@ -4,8 +4,8 @@
 #include <cstdio>
 #include <charconv>
 
-#ifndef KJUT_TEXT_API_H
-#define KJUT_TEXT_API_H
+#ifndef SILICA_TEXT_API_H
+#define SILICA_TEXT_API_H
 
 #ifndef TEXT_API_MAX_TOKENS
 #define TEXT_API_MAX_TOKENS 50
@@ -575,4 +575,4 @@ public:
 } //namespace Kjut
 
 
-#endif // KJUT_TEXT_API_H
+#endif // SILICA_TEXT_API_H

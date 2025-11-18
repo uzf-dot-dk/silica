@@ -1,16 +1,16 @@
-#ifndef KJUT_LOG_ENTRY_H
-#define KJUT_LOG_ENTRY_H
+#ifndef SILICA_LOG_ENTRY_H
+#define SILICA_LOG_ENTRY_H
 
 #include <stdio.h>
 #include <stdarg.h>
 
 
-#ifndef KJUT_LOGENTRY_MESSAGE_MAX_LENGTH
-#define KJUT_LOGENTRY_MESSAGE_MAX_LENGTH 50
+#ifndef SILICA_LOGENTRY_MESSAGE_MAX_LENGTH
+#define SILICA_LOGENTRY_MESSAGE_MAX_LENGTH 50
 #endif
 
-#ifndef KJUT_LOGENTRY_FILENAME_MAX_LENGTH
-#define KJUT_LOGENTRY_FILENAME_MAX_LENGTH 50
+#ifndef SILICA_LOGENTRY_FILENAME_MAX_LENGTH
+#define SILICA_LOGENTRY_FILENAME_MAX_LENGTH 50
 #endif
 
 
@@ -60,10 +60,10 @@ private:
     struct
     {
         size_t originatingLine;
-        const size_t messageMaxLength = KJUT_LOGENTRY_MESSAGE_MAX_LENGTH;
-        const size_t orignatingFileMaxLength = KJUT_LOGENTRY_FILENAME_MAX_LENGTH;
-        char originatingFile[KJUT_LOGENTRY_FILENAME_MAX_LENGTH + 1];
-        char message[KJUT_LOGENTRY_MESSAGE_MAX_LENGTH
+        const size_t messageMaxLength = SILICA_LOGENTRY_MESSAGE_MAX_LENGTH;
+        const size_t orignatingFileMaxLength = SILICA_LOGENTRY_FILENAME_MAX_LENGTH;
+        char originatingFile[SILICA_LOGENTRY_FILENAME_MAX_LENGTH + 1];
+        char message[SILICA_LOGENTRY_MESSAGE_MAX_LENGTH
                      + 1 // For null
                      + 1 // To help figuring out elision
         ];
@@ -75,4 +75,4 @@ private:
 
 }
 
-#endif // KJUT_LOG_ENTRY_H
+#endif // SILICA_LOG_ENTRY_H

@@ -9,7 +9,7 @@ const auto oldCount = mockLogEntryHandlerInvocationCount(); \
     ASSERT_EQ( (expectedCount) , (newCount - oldCount)); \
 };
 
-#define ASSERT_KJUT_ARRAY_AND_STD_VECTOR_EQ(kjutarray, stdvector) \
+#define ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(kjutarray, stdvector) \
 {\
         const bool areEqual = (kjutarray == stdvector ); \
         if(!areEqual) \

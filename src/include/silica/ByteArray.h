@@ -1,5 +1,5 @@
-#ifndef KJUT_BYTE_ARRAY_H
-#define KJUT_BYTE_ARRAY_H
+#ifndef SILICA_BYTE_ARRAY_H
+#define SILICA_BYTE_ARRAY_H
 
 #include <silica/Array.h>
 

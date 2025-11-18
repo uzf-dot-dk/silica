@@ -1,5 +1,5 @@
-#ifndef KJUT_IO_DEVICE_H
-#define KJUT_IO_DEVICE_H
+#ifndef SILICA_IO_DEVICE_H
+#define SILICA_IO_DEVICE_H
 
 #include <silica/EventGenerator.h>
 #include <silica/ByteArray.h>
@@ -99,4 +99,4 @@ private:
 };
 
 }
-#endif // KJUT_IO_DEVICE_H
+#endif // SILICA_IO_DEVICE_H

@@ -1,11 +1,11 @@
 if(WIN32)
-    set(KJUT_TARGET_OS "windows")
+    set(SILICA_TARGET_OS "windows")
 elseif(UNIX AND NOT APPLE)
-    set(KJUT_TARGET_OS "linux")
+    set(SILICA_TARGET_OS "linux")
 elseif(APPLE)
-    set(KJUT_TARGET_OS "macos")
+    set(SILICA_TARGET_OS "macos")
 else()
-    set(KJUT_TARGET_OS "none")
+    set(SILICA_TARGET_OS "none")
 endif()
 
 

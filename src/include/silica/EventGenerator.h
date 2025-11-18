@@ -1,5 +1,5 @@
-#ifndef KJUT_EVENT_GENERATOR_H
-#define KJUT_EVENT_GENERATOR_H
+#ifndef SILICA_EVENT_GENERATOR_H
+#define SILICA_EVENT_GENERATOR_H
 
 namespace Kjut
 {
@@ -46,5 +46,5 @@ private:
 
 
 
-#endif // KJUT_EVENT_GENERATOR_H
+#endif // SILICA_EVENT_GENERATOR_H
 

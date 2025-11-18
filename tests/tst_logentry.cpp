@@ -5,8 +5,8 @@
 
 #define suiteName tst_logentry
 
-static_assert( KJUT_LOGENTRY_MESSAGE_MAX_LENGTH == 15, "This test is designed for a KJUT_LOGENTRY_MESSAGE_MAX_LENGTH of 15");
-static_assert( KJUT_LOGENTRY_FILENAME_MAX_LENGTH == 15, "This test is designed for a KJUT_LOGENTRY_FILENAME_MAX_LENGTH of 15");
+static_assert( SILICA_LOGENTRY_MESSAGE_MAX_LENGTH == 15, "This test is designed for a SILICA_LOGENTRY_MESSAGE_MAX_LENGTH of 15");
+static_assert( SILICA_LOGENTRY_FILENAME_MAX_LENGTH == 15, "This test is designed for a SILICA_LOGENTRY_FILENAME_MAX_LENGTH of 15");
 
 
 TEST(suiteName, test_format_of_message)

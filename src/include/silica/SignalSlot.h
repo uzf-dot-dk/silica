@@ -10,7 +10,7 @@
 
 #include <functional>
 
-#define KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#define SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
 #define emit
 
 namespace Kjut
@@ -43,7 +43,7 @@ private:
     Connection(Signal<Ts...> *source, Slot<Ts...> *slotDestination, Connection::Type type = Connection::Type::Auto);
     Connection(Signal<Ts...> *source, Signal<Ts...> *signalDestination, Connection::Type type = Connection::Type::Auto);
     Connection(Signal<Ts...> *source, void (*functionPointerDestination)(Ts...), Connection::Type type = Connection::Type::Auto);
-#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
     Connection(Signal<Ts...> *source, std::function<void(Ts...)> functionObjectDestination, Connection::Type type = Connection::Type::Auto);
 #endif
     void distributeInvocation(Ts... parameters);
@@ -55,7 +55,7 @@ private:
         Signal,
         Slot,
         FunctionPointer,
-#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
         FunctionObject
 #endif
     };
@@ -66,7 +66,7 @@ private:
     struct
     {
 
-        #ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+        #ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
         std::function<void(Ts...)> functionObject = [](Ts...){};
         #endif
 
@@ -292,7 +292,7 @@ public:
     bool connectTo(void(*target)(Ts...));
 
 
-#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
     /** \brief Connects this Signal to a matching function object.
      *
      *  Example:
@@ -373,7 +373,7 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(void(*target)(Ts..
     return false;
 }
 
-#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
 template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(std::function<void(Ts...)> target)
 {
     Connection<Ts...> connection(this, target);
@@ -495,7 +495,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, void (*functionPointe
     this->d.destinationType = DestinationType::FunctionPointer;
 }
 
-#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
 template <typename... Ts>
 Kjut::Connection<Ts...>::Connection(Signal<Ts...> *source, std::function<void(Ts...)> functionObjectDestination, Connection::Type type)
     : Connection(type)
@@ -524,7 +524,7 @@ void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
         case DestinationType::FunctionPointer:
             d.destinations.functionPointerDestination(parameters...);
             break;
-#ifdef KJUT_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
+#ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
         case DestinationType::FunctionObject:
         {
             d.functionObject(parameters...);

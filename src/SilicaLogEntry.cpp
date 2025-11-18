@@ -64,10 +64,10 @@ void Kjut::LogEntry::setOriginatingFile(const char *originatingFile)
 
     size_t bytesToCopy = lenght_of_filename - index_first_character_after_last_path_separator  ;
     bool should_elide = false;
-    if(bytesToCopy > KJUT_LOGENTRY_MESSAGE_MAX_LENGTH)
+    if(bytesToCopy > SILICA_LOGENTRY_MESSAGE_MAX_LENGTH)
     {
         should_elide = true;
-        bytesToCopy = KJUT_LOGENTRY_MESSAGE_MAX_LENGTH;
+        bytesToCopy = SILICA_LOGENTRY_MESSAGE_MAX_LENGTH;
     }
 
     if ( ! should_elide )
@@ -80,8 +80,8 @@ void Kjut::LogEntry::setOriginatingFile(const char *originatingFile)
     }
     else
     {
-        const size_t left_part_size = (KJUT_LOGENTRY_FILENAME_MAX_LENGTH-elision_size)/2;
-        const size_t right_part_size = KJUT_LOGENTRY_FILENAME_MAX_LENGTH-elision_size-left_part_size;
+        const size_t left_part_size = (SILICA_LOGENTRY_FILENAME_MAX_LENGTH-elision_size)/2;
+        const size_t right_part_size = SILICA_LOGENTRY_FILENAME_MAX_LENGTH-elision_size-left_part_size;
 
         const char * const source_left_part_start = originatingFile+index_first_character_after_last_path_separator;
         const char * const source_left_part_end = source_left_part_start + left_part_size;
