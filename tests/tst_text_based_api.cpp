@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <kjut/communication/TextAPI.h>
+#include <silica/communication/TextAPI.h>
 
 // START -- Remove this block, when reflection becomes available
 #ifndef REFLECTION_FINALLY_GOT_HERE

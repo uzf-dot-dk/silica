@@ -1,4 +1,4 @@
-#include <kjut/LoggingSystem.h>
+#include <silica/LoggingSystem.h>
 class CountingLogSink : public Kjut::LogSink
 {
 public:

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <kjut/Application.h>
-#include <kjut/CoarseTimer.h>
+#include <silica/Application.h>
+#include <silica/CoarseTimer.h>
 
 #include <chrono>
 

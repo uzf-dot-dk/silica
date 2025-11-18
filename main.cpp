@@ -1,4 +1,4 @@
-#include <kjut/communication/TextAPI.h>
+#include <silica/communication/TextAPI.h>
 
 class MyApi : public Kjut::TextBasedAPI<MyApi>
 {

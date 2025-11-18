@@ -1,7 +1,7 @@
 
 #include <tuple>
 #include <vector>
-#include <kjut/SignalSlot.h>
+#include <silica/SignalSlot.h>
 
 template <typename ...Ts>
 class SignalSpy

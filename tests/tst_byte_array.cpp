@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <kjut/ByteArray.h>
-#include <kjut/ScopeGuard.h>
+#include <silica/ByteArray.h>
+#include <silica/ScopeGuard.h>
 
 #define suiteName tst_byte_array
 

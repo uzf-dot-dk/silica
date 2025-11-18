@@ -23,7 +23,7 @@
 
 
 #ifndef TEXT_API_MAP_TYPE
-#include <kjut/Map.h>
+#include <silica/Map.h>
 #define TEXT_API_MAP_TYPE \
 Kjut::Map< \
            std::string_view, \
@@ -35,7 +35,7 @@ Kjut::Map< \
 #endif // TEXT_API_MAP_TYPE
 
 #ifndef TEXT_API_VECTOR_TYPE
-#include <kjut/Array.h>
+#include <silica/Array.h>
 
 #define TEXT_API_VECTOR_TYPE Kjut::Array<Kjut::Token,TEXT_API_MAX_TOKENS>
 #ifdef TEXT_API_VECTOR_TYPE_APPEND

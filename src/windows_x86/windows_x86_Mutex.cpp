@@ -1,4 +1,4 @@
-#include <kjut/Mutex.h>
+#include <silica/Mutex.h>
 
 namespace Kjut
 {

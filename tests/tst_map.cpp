@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 
-#include <kjut/Map.h>
+#include <silica/Map.h>
 
 #define suiteName tst_map
 

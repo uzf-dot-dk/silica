@@ -1,6 +1,6 @@
-#include "include/kjut/Application.h"
-#include <kjut/EventGenerator.h>
-#include <kjut/LoggingSystem.h>
+#include "include/silica/Application.h"
+#include <silica/EventGenerator.h>
+#include <silica/LoggingSystem.h>
 
 
 static_assert(KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION >= 0, "KJUT_EVENT_GENERATORS_HELD_BY_APPLICATION must be a non negative integer. Use 0 for infinite and growing capacity.");

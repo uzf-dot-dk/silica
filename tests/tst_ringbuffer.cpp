@@ -2,7 +2,7 @@
 
 #define KJUT_ARRAY_INITIAL_CAPACITY 1
 
-#include <kjut/RingBuffer.h>
+#include <silica/RingBuffer.h>
 
 #define suiteName tst_ringBuffer
 

@@ -2,9 +2,9 @@
 #define KJUT_BYTE_BUFFER
 
 
-#include <kjut/IODevice.h>
-#include <kjut/Macros.h>
-#include <kjut/ByteArray.h>
+#include <silica/IODevice.h>
+#include <silica/Macros.h>
+#include <silica/ByteArray.h>
 
 namespace Kjut
 {

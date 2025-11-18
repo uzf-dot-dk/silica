@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <kjut/LoggingSystem.h>
-#include <kjut/Application.h>
+#include <silica/LoggingSystem.h>
+#include <silica/Application.h>
 
 #define suiteName tst_logentry
 

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <kjut/SignalSlot.h>
+#include <silica/SignalSlot.h>
 
 #define suiteName tst_signal_and_slots
 

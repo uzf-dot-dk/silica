@@ -2,8 +2,8 @@
 
 #define KJUT_ARRAY_INITIAL_CAPACITY 1
 
-#include <kjut/Array.h>
-#include <kjut/LoggingSystem.h>
+#include <silica/Array.h>
+#include <silica/LoggingSystem.h>
 #include "array_helpers.h"
 #include "test_helpers.h"
 #include <algorithm>

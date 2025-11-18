@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <kjut/Array.h>
+#include <silica/Array.h>
 #include "array_helpers.h"
 
 #include <sstream>

@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
-#include <kjut/Application.h>
-#include <kjut/ByteBuffer.h>
+#include <silica/Application.h>
+#include <silica/ByteBuffer.h>
 
 #include "SignalSpy.h"
 

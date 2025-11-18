@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <kjut/Array.h>
+#include <silica/Array.h>
 
 #define suiteName tst_array_different_types
 

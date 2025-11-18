@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(KjutContainers LANGUAGES CXX)
+project(Silica LANGUAGES CXX)
 
 include(target_detection.cmake)
 
@@ -19,19 +19,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set( kjut_container_sources
-    src/KjutApplication.cpp
-    src/KjutByteArray.cpp
-    src/KjutByteBuffer.cpp
-    src/KjutCoarseTimer.cpp
-    src/KjutContainers.cpp
-    src/KjutCore.cpp
-    src/KjutEventGenerator.cpp
-    src/KjutIODevice.cpp
-    src/KjutLogEntry.cpp
-    src/KjutLoggingSystem.cpp
-    src/KjutMutex.cpp
-    src/KjutUnitsOfTime.cpp
+set( silica_sources
+    src/SilicaApplication.cpp
+    src/SilicaByteArray.cpp
+    src/SilicaByteBuffer.cpp
+    src/SilicaCoarseTimer.cpp
+    src/SilicaContainers.cpp
+    src/SilicaCore.cpp
+    src/SilicaEventGenerator.cpp
+    src/SilicaIODevice.cpp
+    src/SilicaLogEntry.cpp
+    src/SilicaLoggingSystem.cpp
+    src/SilicaMutex.cpp
+    src/SilicaUnitsOfTime.cpp
 )
 
 if( ${KJUT_TARGET_OS} STREQUAL "windows")
@@ -39,35 +39,36 @@ if( ${KJUT_TARGET_OS} STREQUAL "windows")
 endif()
 
 if( ${KJUT_TARGET_OS} STREQUAL "linux")
+    message ( INFO " Oncludes for linux")
     include(src/linux/sources.cmake)
 endif()
 
-add_library( kjutContainers
-    ${kjut_container_sources}
+add_library( silica
+    ${silica_sources}
 )
 
-target_include_directories( kjutContainers PUBLIC src/include )
-target_compile_definitions(kjutContainers PUBLIC KJUT_TARGET_OS=\"${KJUT_TARGET_OS}\")
+target_include_directories( silica PUBLIC src/include )
+target_compile_definitions( silica PUBLIC KJUT_TARGET_OS=\"${KJUT_TARGET_OS}\")
 if(MSVC)
-    target_compile_options(kjutContainers PRIVATE /Od /RTC1)
+    target_compile_options( silica PRIVATE /Od /RTC1)
 endif()
 
 if( ${KJUT_TARGET_OS} STREQUAL "windows")
-    target_compile_definitions(kjutContainers PUBLIC KJUT_OS_WINDOWS=1)
+    target_compile_definitions( silica PUBLIC KJUT_OS_WINDOWS=1)
 endif()
 
 if( ${KJUT_TARGET_OS} STREQUAL "linux")
-    target_compile_definitions(kjutContainers PUBLIC KJUT_OS_LINUX=1)
+    target_compile_definitions( silica PUBLIC KJUT_OS_LINUX=1)
 endif()
 
 add_executable(sandbox main.cpp)
-target_link_libraries(sandbox PUBLIC kjutContainers )
+target_link_libraries(sandbox PUBLIC silica )
 
 if( ${BUILD_TESTS} )
     message( STATUS "Builds tests")
 
-    target_compile_definitions(kjutContainers PUBLIC KJUT_LOGENTRY_MESSAGE_MAX_LENGTH=15)
-    target_compile_definitions(kjutContainers PUBLIC KJUT_LOGENTRY_FILENAME_MAX_LENGTH=15)
+    target_compile_definitions( silica PUBLIC KJUT_LOGENTRY_MESSAGE_MAX_LENGTH=15)
+    target_compile_definitions( silica PUBLIC KJUT_LOGENTRY_FILENAME_MAX_LENGTH=15)
 
     add_subdirectory(tests/googletest/)
 
@@ -75,7 +76,7 @@ if( ${BUILD_TESTS} )
 
     macro( create_test FILENAME)
         add_executable( ${FILENAME} tests/${FILENAME}.cpp)
-        target_link_libraries(${FILENAME} kjutContainers gtest_main )
+        target_link_libraries(${FILENAME} silica gtest_main )
         add_test( ${FILENAME} ${FILENAME})
         if(MSVC)
             target_compile_options(${FILENAME} PRIVATE /Od /RTC1)
@@ -98,9 +99,4 @@ if( ${BUILD_TESTS} )
     create_test( tst_text_based_api )
 
 endif()
-# CXX=clang++ cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build
-#  docker run --platform linux/x86_64 --mount type=bind,source="$(pwd)",target=/mnt/host     --tty --interactive     -v `pwd`:`pwd` -w `pwd` ghcr.io/adobe/hyde:latest bash
-#
-# hyde  -p compile_commands.json --hyde-update --hyde-yaml-dir=docs/api
-# hyde --hyde-validate --hyde-yaml-dir=docs/api  -p build/compile_commands.json `pwd`/src/include/kjut/Array.hpp  --  -I`pwd`/src/include
-#
+	

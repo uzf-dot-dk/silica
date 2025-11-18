@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <kjut/Application.h>
+#include <silica/Application.h>
 
 #define suiteName tst_application
 

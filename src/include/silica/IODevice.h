@@ -1,9 +1,9 @@
 #ifndef KJUT_IO_DEVICE_H
 #define KJUT_IO_DEVICE_H
 
-#include <kjut/EventGenerator.h>
-#include <kjut/ByteArray.h>
-#include <kjut/SignalSlot.h>
+#include <silica/EventGenerator.h>
+#include <silica/ByteArray.h>
+#include <silica/SignalSlot.h>
 
 namespace Kjut
 {

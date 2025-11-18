@@ -1,7 +1,7 @@
 #ifndef KJUT_BYTE_ARRAY_H
 #define KJUT_BYTE_ARRAY_H
 
-#include <kjut/Array.h>
+#include <silica/Array.h>
 
 namespace Kjut
 {

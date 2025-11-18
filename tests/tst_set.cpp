@@ -2,7 +2,7 @@
 
 #define KJUT_ARRAY_INITIAL_CAPACITY 1
 #include <set>
-#include <kjut/Set.h>
+#include <silica/Set.h>
 
 #define suiteName tst_set
 

@@ -1,4 +1,4 @@
-#include "include/kjut/LogEntry.h"
+#include "include/silica/LogEntry.h"
 #include <stdio.h>
 #include <string.h>
 

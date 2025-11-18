@@ -1,4 +1,4 @@
-#include <kjut/LoggingSystem.h>
+#include <silica/LoggingSystem.h>
 #include <stdlib.h>
 
 #define TEXT_NORMAL  "\x1B[0m"

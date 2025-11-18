@@ -1,4 +1,4 @@
-#include <kjut/LoggingSystem.h>
+#include <silica/LoggingSystem.h>
 #ifndef DOXYGEN
     #define ContainerWarning(message, ...) WARN(message, ##__VA_ARGS__)
 #endif
