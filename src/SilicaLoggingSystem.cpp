@@ -3,12 +3,12 @@
 #include <cstddef>
 #include <stdio.h>
 
-void registerDefaultLogSink(Kjut::LoggingSystem *);
+void registerDefaultLogSink(Silica::LoggingSystem *);
 
-alignas(Kjut::LoggingSystem) char theInstanceData[sizeof(Kjut::LoggingSystem)] = {};
-Kjut::LoggingSystem * theInstance = nullptr;
+alignas(Silica::LoggingSystem) char theInstanceData[sizeof(Silica::LoggingSystem)] = {};
+Silica::LoggingSystem * theInstance = nullptr;
 
-namespace Kjut
+namespace Silica
 {
 
 LoggingSystem::LoggingSystem()

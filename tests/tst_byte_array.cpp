@@ -4,7 +4,7 @@
 
 #define suiteName tst_byte_array
 
-using namespace Kjut;
+using namespace Silica;
 
 class MyLogSink : public LogSink
 {

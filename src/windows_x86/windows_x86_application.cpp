@@ -7,7 +7,7 @@
 
 
 
-namespace Kjut
+namespace Silica
 {
 
     void Application::platformSpecificInitialization()

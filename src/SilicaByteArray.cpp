@@ -1,6 +1,6 @@
 #include <silica/ByteArray.h>
 
-namespace Kjut
+namespace Silica
 {
 
 

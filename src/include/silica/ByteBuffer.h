@@ -6,15 +6,15 @@
 #include <silica/Macros.h>
 #include <silica/ByteArray.h>
 
-namespace Kjut
+namespace Silica
 {
 
-class ByteBuffer : public Kjut::IODevice
+class ByteBuffer : public Silica::IODevice
 {
 
 public:
 
-    ByteBuffer() : Kjut::IODevice()
+    ByteBuffer() : Silica::IODevice()
     {
         d.toReadFrom = nullptr;
         d.toWriteTo = nullptr;

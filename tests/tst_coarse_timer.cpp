@@ -14,8 +14,8 @@ TEST(suiteName, test_simple_timer)
 {
 
 
-    Kjut::Application app;
-    Kjut::CoarseTimer everySecond;
+    Silica::Application app;
+    Silica::CoarseTimer everySecond;
     everySecond.triggered.connectTo([&](){
         app.exit(27);
     });
@@ -39,20 +39,20 @@ TEST(suiteName, test_simple_timer)
 
 TEST(suiteName, test_single_shot_timer)
 {
-    Kjut::Application app;
+    Silica::Application app;
 
     int counter = 0;
-    Kjut::CoarseTimer singleShotTimer;
+    Silica::CoarseTimer singleShotTimer;
     singleShotTimer.triggered.connectTo([&](){
         counter++;
     });
     singleShotTimer.setTimeout(100'000_us);
-    singleShotTimer.setType(Kjut::CoarseTimer::Type::SingleShot);
+    singleShotTimer.setType(Silica::CoarseTimer::Type::SingleShot);
     singleShotTimer.start();
 
 
 
-    Kjut::CoarseTimer exitTimer;
+    Silica::CoarseTimer exitTimer;
     exitTimer.triggered.connectTo([&]()
     {
         app.exit(27);
@@ -75,20 +75,20 @@ TEST(suiteName, test_single_shot_timer)
 
 TEST(suiteName, test_repeated_timer)
 {
-    Kjut::Application app;
+    Silica::Application app;
 
     int counter = 0;
-    Kjut::CoarseTimer singleShotTimer;
+    Silica::CoarseTimer singleShotTimer;
     singleShotTimer.triggered.connectTo([&](){
         counter++;
     });
     singleShotTimer.setTimeout(100'000_us);
-    singleShotTimer.setType(Kjut::CoarseTimer::Type::Repeated);
+    singleShotTimer.setType(Silica::CoarseTimer::Type::Repeated);
     singleShotTimer.start();
 
 
 
-    Kjut::CoarseTimer exitTimer;
+    Silica::CoarseTimer exitTimer;
     exitTimer.triggered.connectTo([&]()
                                   {
                                       app.exit(27);

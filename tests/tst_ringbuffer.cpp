@@ -9,7 +9,7 @@
 
 TEST(suiteName, test_pushes_and_pops_within_capacity)
 {
-    Kjut::RingBuffer<int, 4> rb;
+    Silica::RingBuffer<int, 4> rb;
 
     rb.push(1);
     rb.push(2);
@@ -34,9 +34,9 @@ TEST(suiteName, test_pushes_and_pops_within_capacity)
 
 TEST(suiteName, test_pushes_and_pops_with_overwrite_policy)
 {
-    Kjut::RingBuffer<int, 4> rb;
+    Silica::RingBuffer<int, 4> rb;
 
-    rb.setOverflowPolicy(Kjut::OverflowPolicy::OverwriteOldestData);
+    rb.setOverflowPolicy(Silica::OverflowPolicy::OverwriteOldestData);
     rb.push(1);
     rb.push(2);
     rb.push(3);
@@ -69,9 +69,9 @@ TEST(suiteName, test_pushes_and_pops_with_overwrite_policy)
 
 TEST(suiteName, test_pushes_and_pops_with_skip_new_data_policy)
 {
-    Kjut::RingBuffer<int, 4> rb;
+    Silica::RingBuffer<int, 4> rb;
 
-    rb.setOverflowPolicy(Kjut::OverflowPolicy::SkipNewData);
+    rb.setOverflowPolicy(Silica::OverflowPolicy::SkipNewData);
     rb.push(1);
     rb.push(2);
     rb.push(3);
@@ -106,7 +106,7 @@ TEST(suiteName, test_pushes_and_pops_with_skip_new_data_policy)
 
 std::vector<std::vector<int>> invocations;
 
-void test_callbacks_with_skip_new_data_policy_callback(const Kjut::RingBuffer<int, 4> &, size_t currentHeadIndex, size_t currentTailIndex, const int& element)
+void test_callbacks_with_skip_new_data_policy_callback(const Silica::RingBuffer<int, 4> &, size_t currentHeadIndex, size_t currentTailIndex, const int& element)
 {
     invocations.push_back({(int(currentHeadIndex)), int(currentTailIndex), element});
 }
@@ -114,10 +114,10 @@ void test_callbacks_with_skip_new_data_policy_callback(const Kjut::RingBuffer<in
 
 TEST(suiteName, test_callbacks_with_skip_new_data_policy)
 {
-    Kjut::RingBuffer<int, 4> rb;
+    Silica::RingBuffer<int, 4> rb;
     invocations.clear();
     rb.setOverRunCallBack(test_callbacks_with_skip_new_data_policy_callback);
-    rb.setOverflowPolicy(Kjut::OverflowPolicy::SkipNewData);
+    rb.setOverflowPolicy(Silica::OverflowPolicy::SkipNewData);
     rb.push(1);
     rb.push(2);
     rb.push(3);
@@ -137,10 +137,10 @@ TEST(suiteName, test_callbacks_with_skip_new_data_policy)
 
 TEST(suiteName, test_callbacks_with_overwrite_old_data_policy)
 {
-    Kjut::RingBuffer<int, 4> rb;
+    Silica::RingBuffer<int, 4> rb;
     invocations.clear();
     rb.setOverRunCallBack(test_callbacks_with_skip_new_data_policy_callback);
-    rb.setOverflowPolicy(Kjut::OverflowPolicy::OverwriteOldestData);
+    rb.setOverflowPolicy(Silica::OverflowPolicy::OverwriteOldestData);
     rb.push(1);
     rb.push(2);
     rb.push(3);
@@ -161,8 +161,8 @@ TEST(suiteName, test_callbacks_with_overwrite_old_data_policy)
 
 TEST(suiteName, test_lots_of_pushes_and_pops_with_overwrite_policy)
 {
-    Kjut::RingBuffer<int, 4> rb;
-    rb.setOverflowPolicy(Kjut::OverflowPolicy::OverwriteOldestData);
+    Silica::RingBuffer<int, 4> rb;
+    rb.setOverflowPolicy(Silica::OverflowPolicy::OverwriteOldestData);
 
     rb.push(1);
     rb.push(2);
@@ -247,8 +247,8 @@ std::ostream &operator<<(std::ostream &os, const ThrowingAssignmentOperator &e) 
 
 TEST(suiteName, test_set_integrity_maintained_when_T_destructor_throws_exceptions_during_push)
 {
-    Kjut::RingBuffer<ThrowingAssignmentOperator, 4> rb ;
-    rb.setOverflowPolicy(Kjut::OverflowPolicy::OverwriteOldestData);
+    Silica::RingBuffer<ThrowingAssignmentOperator, 4> rb ;
+    rb.setOverflowPolicy(Silica::OverflowPolicy::OverwriteOldestData);
     rb.push( 10 );
     rb.push( 20 );
     rb.push( 30);
@@ -270,8 +270,8 @@ TEST(suiteName, test_set_integrity_maintained_when_T_destructor_throws_exception
 
 TEST(suiteName, test_set_integrity_maintained_when_T_assignment_operator_throws_exceptions_during_pop)
 {
-    Kjut::RingBuffer<ThrowingAssignmentOperator, 4> rb;
-    rb.setOverflowPolicy(Kjut::OverflowPolicy::OverwriteOldestData);
+    Silica::RingBuffer<ThrowingAssignmentOperator, 4> rb;
+    rb.setOverflowPolicy(Silica::OverflowPolicy::OverwriteOldestData);
     rb.push( 10 );
     rb.push( 20 );
     rb.push( 30 );

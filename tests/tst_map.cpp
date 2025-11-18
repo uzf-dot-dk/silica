@@ -5,9 +5,9 @@
 
 #define suiteName tst_map
 
-std::ostream &operator<<(std::ostream &os,  Kjut::Map<std::string, int> & map) {
+std::ostream &operator<<(std::ostream &os,  Silica::Map<std::string, int> & map) {
     os << "{";
-    const Kjut::Array<std::string> &keys = map.keys();
+    const Silica::Array<std::string> &keys = map.keys();
     for(size_t i = 0; i < keys.size(); i++)
     {
         if(i > 0)
@@ -23,7 +23,7 @@ std::ostream &operator<<(std::ostream &os,  Kjut::Map<std::string, int> & map) {
 
 TEST(suiteName, test_insert_of_complex_K_type)
 {
-    Kjut::Map<std::string, int, 10> map;
+    Silica::Map<std::string, int, 10> map;
     ASSERT_NE(117, map["foo"]);
     map.insert("foo", 117);
     ASSERT_EQ(117, map["foo"]);
@@ -31,7 +31,7 @@ TEST(suiteName, test_insert_of_complex_K_type)
 
 TEST(suiteName, test_insert_of_complex_K_type_and_complex_V_type)
 {
-    Kjut::Map<std::string, std::string, 10> map;
+    Silica::Map<std::string, std::string, 10> map;
     ASSERT_NE("Chewbacca", map["wookie"]);
     map.insert("wookie", "Chewbacca");
     ASSERT_EQ("Chewbacca", map["wookie"]);
@@ -40,7 +40,7 @@ TEST(suiteName, test_insert_of_complex_K_type_and_complex_V_type)
 
 TEST(suiteName,  test_range_based_for_loop_with_structured_bindings)
 {
-    Kjut::Map<std::string, int, 10> mapUnderTest;
+    Silica::Map<std::string, int, 10> mapUnderTest;
     const std::map<std::string, int> inputMap =
         {
          {"foo" , 4 },
@@ -66,7 +66,7 @@ TEST(suiteName,  test_range_based_for_loop_with_structured_bindings)
 
 TEST(suiteName,  test_range_based_for_loop_with_structured_bindings_on_empty_map)
 {
-    Kjut::Map<std::string, int, 10> mapUnderTest;
+    Silica::Map<std::string, int, 10> mapUnderTest;
     const std::map<std::string, int> inputMap;
     std::map<std::string, int> outputMap;
 
@@ -101,7 +101,7 @@ TEST(suiteName,  test_erase_on_existing_keys)
 
     std::map<std::string, int> result;
 
-    Kjut::Map<std::string, int> beverages;
+    Silica::Map<std::string, int> beverages;
     for (const auto & [key, value] : input)
     {
         beverages.insert(key, value);

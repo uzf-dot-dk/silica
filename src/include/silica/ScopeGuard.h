@@ -2,7 +2,7 @@
 #define SILICA_SCOPE_GUARD_H
 
 #include <functional>
-namespace Kjut
+namespace Silica
 {
 
 class ScopeGuard

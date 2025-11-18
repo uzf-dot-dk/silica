@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include <silica/Macros.h>
-namespace Kjut
+namespace Silica
 {
 
 class MicroSeconds
@@ -81,8 +81,8 @@ public:
 
 
 
-Kjut::MilliSeconds operator ""_ms(unsigned long long);
-Kjut::MicroSeconds operator ""_us(unsigned long long);
+Silica::MilliSeconds operator ""_ms(unsigned long long);
+Silica::MicroSeconds operator ""_us(unsigned long long);
 
 
 

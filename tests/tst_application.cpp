@@ -8,10 +8,10 @@ TEST(suiteName, asdf)
 {
 
 /*
-    Kjut::Application appFive;
+    Silica::Application appFive;
 
 
-    ASSERT_EQ(Kjut::Application<>::instance()->size(), 5);
+    ASSERT_EQ(Silica::Application<>::instance()->size(), 5);
 */
 }
 

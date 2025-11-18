@@ -5,30 +5,30 @@
 
 #define LOG(formatString, ...) \
 { \
-        Kjut::LogEntry le(__LINE__, __FILE__);          \
+        Silica::LogEntry le(__LINE__, __FILE__);          \
         le.format(formatString, ##__VA_ARGS__);           \
-        le.setType(Kjut::LogEntry::Type::Log); \
-        Kjut::LoggingSystem::instance()->sinkEntry(le); \
+        le.setType(Silica::LogEntry::Type::Log); \
+        Silica::LoggingSystem::instance()->sinkEntry(le); \
 }
 
 
 #define WARN(formatString, ...) \
 { \
-        Kjut::LogEntry le(__LINE__, __FILE__);          \
+        Silica::LogEntry le(__LINE__, __FILE__);          \
         le.format(formatString, ##__VA_ARGS__);           \
-        le.setType(Kjut::LogEntry::Type::Warning); \
-        Kjut::LoggingSystem::instance()->sinkEntry(le); \
+        le.setType(Silica::LogEntry::Type::Warning); \
+        Silica::LoggingSystem::instance()->sinkEntry(le); \
 }
 
 #define FATAL(formatString, ...) \
 { \
-        Kjut::LogEntry le(__LINE__, __FILE__);          \
+        Silica::LogEntry le(__LINE__, __FILE__);          \
         le.format(formatString, ##__VA_ARGS__);           \
-        le.setType(Kjut::LogEntry::Type::Fatal); \
-        Kjut::LoggingSystem::instance()->sinkEntry(le); \
+        le.setType(Silica::LogEntry::Type::Fatal); \
+        Silica::LoggingSystem::instance()->sinkEntry(le); \
 }
 
-namespace Kjut
+namespace Silica
 {
 
 class LogSink

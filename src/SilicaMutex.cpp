@@ -1,6 +1,6 @@
 #include <silica/Mutex.h>
 
-namespace Kjut
+namespace Silica
 {
 MutexLocker::MutexLocker(Mutex &target)
     : target(target)

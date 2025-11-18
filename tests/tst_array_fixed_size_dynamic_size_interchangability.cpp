@@ -20,14 +20,14 @@ size_t mockLogEntryHandlerInvocationCount()
 
 void registerMockLogEntryHandler()
 {
-    //Kjut::registerLoghandler(mockLogEntryHandler);
+    //Silica::registerLoghandler(mockLogEntryHandler);
     mockCount = 0;
 }
 
 
 TEST(suiteName, test_static_dynamic_interchangability_function_calls)
 {
-    auto assertCapacity  = []( Kjut::Array<int> &array)
+    auto assertCapacity  = []( Silica::Array<int> &array)
     {
 
         static int invocationCount = 0;
@@ -46,8 +46,8 @@ TEST(suiteName, test_static_dynamic_interchangability_function_calls)
         invocationCount ++;
     };
 
-    Kjut::Array<int> dynamicSized;
-    Kjut::Array<int, 55> staticSized;
+    Silica::Array<int> dynamicSized;
+    Silica::Array<int, 55> staticSized;
 
     assertCapacity(dynamicSized);
     assertCapacity(staticSized);
@@ -57,7 +57,7 @@ TEST(suiteName, test_static_dynamic_interchangability_ostream)
 {
 
     {
-        Kjut::Array<int> dynamicSized;
+        Silica::Array<int> dynamicSized;
         std::ostringstream stringBulder;
 
         dynamicSized.append(1);
@@ -77,7 +77,7 @@ TEST(suiteName, test_static_dynamic_interchangability_ostream)
     }
 
     {
-        Kjut::Array<int, 10> staticSized;
+        Silica::Array<int, 10> staticSized;
         std::ostringstream stringBulder;
 
         staticSized.append(1);
@@ -101,8 +101,8 @@ TEST(suiteName, test_static_dynamic_interchangability_ostream)
 
 TEST(suiteName, test_static_dynamic_interchangability_equals_operator)
 {
-    Kjut::Array<int, 10> staticSized;
-    Kjut::Array<int> dynamicSized;
+    Silica::Array<int, 10> staticSized;
+    Silica::Array<int> dynamicSized;
 
     {
         [[maybe_unused]] const bool doesThisCompile = staticSized == dynamicSized;

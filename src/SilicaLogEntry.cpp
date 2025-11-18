@@ -13,32 +13,32 @@ typedef SSIZE_T ssize_t;
 
 static const int elision_size = 3;
 
-Kjut::LogEntry::LogEntry(size_t line, const char *originatingFile, const char *message)
-    : Kjut::LogEntry(line, originatingFile)
+Silica::LogEntry::LogEntry(size_t line, const char *originatingFile, const char *message)
+    : Silica::LogEntry(line, originatingFile)
 {
     setMessage(message);
 }
 
-Kjut::LogEntry::~LogEntry()
+Silica::LogEntry::~LogEntry()
 {}
 
-Kjut::LogEntry::LogEntry()
+Silica::LogEntry::LogEntry()
 {
     setType(Type::Log);
 }
 
-Kjut::LogEntry::Type Kjut::LogEntry::type() const
+Silica::LogEntry::Type Silica::LogEntry::type() const
 {
     return d.type;
 }
 
-void Kjut::LogEntry::setType(Type type)
+void Silica::LogEntry::setType(Type type)
 {
     d.type = type;
 }
 
 
-Kjut::LogEntry::LogEntry(size_t line, const char *originatingFile)
+Silica::LogEntry::LogEntry(size_t line, const char *originatingFile)
     : LogEntry()
 {
     d.originatingLine = line;
@@ -46,7 +46,7 @@ Kjut::LogEntry::LogEntry(size_t line, const char *originatingFile)
 
 }
 
-void Kjut::LogEntry::setOriginatingFile(const char *originatingFile)
+void Silica::LogEntry::setOriginatingFile(const char *originatingFile)
 {
     ssize_t lenght_of_filename = strlen(originatingFile);
     ssize_t index_first_character_after_last_path_separator = lenght_of_filename-1;
@@ -109,12 +109,12 @@ void Kjut::LogEntry::setOriginatingFile(const char *originatingFile)
 
 }
 
-const char *Kjut::LogEntry::originatingFile() const
+const char *Silica::LogEntry::originatingFile() const
 {
     return d.originatingFile;
 }
 
-size_t Kjut::LogEntry::format(const char *str, ...)
+size_t Silica::LogEntry::format(const char *str, ...)
 {
     va_list args;
     va_start(args, str);
@@ -131,7 +131,7 @@ size_t Kjut::LogEntry::format(const char *str, ...)
     return 0;
 }
 
-void Kjut::LogEntry::setMessage(const char *message, size_t length)
+void Silica::LogEntry::setMessage(const char *message, size_t length)
 {
     int bytesToCopy = length;
     if(bytesToCopy == 0)
@@ -156,7 +156,7 @@ void Kjut::LogEntry::setMessage(const char *message, size_t length)
     }
 }
 
-const char * const Kjut::LogEntry::message() const
+const char * const Silica::LogEntry::message() const
 {
     return d.message;
 }

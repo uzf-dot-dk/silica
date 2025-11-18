@@ -15,12 +15,12 @@
 
 
 #ifndef DOXYGEN
-namespace Kjut {  template <typename K, typename V, size_t S = 0> class Map; }
-template <typename K, typename V> std::ostream &operator<<(std::ostream &os, const Kjut::Map<K, V> &a) ;
+namespace Silica {  template <typename K, typename V, size_t S = 0> class Map; }
+template <typename K, typename V> std::ostream &operator<<(std::ostream &os, const Silica::Map<K, V> &a) ;
 #endif // DOXYGEN
 
 
-namespace Kjut
+namespace Silica
 {
 
 /** \brief Map<K,V,S> provides an associative array.
@@ -80,11 +80,11 @@ Map implements [Dual Capacity Policies](\ref Dual_Capacity_Policies).
 To create a new map holding an association from strings to integers, simply do
 
 ```cpp
-Kjut::Map<std::string, int> beverages;
+Silica::Map<std::string, int> beverages;
 // or
-Kjut::Map<std::string, int, 0> beverages;   //being identiucal to above
+Silica::Map<std::string, int, 0> beverages;   //being identiucal to above
 // or
-Kjut::Map<std::string, int, 10> beverages;  //which can hold ten key value pairs
+Silica::Map<std::string, int, 10> beverages;  //which can hold ten key value pairs
 ```
 
 To insert a new value in either, use insert():

@@ -17,11 +17,11 @@ typedef SSIZE_T ssize_t;
 
 
 ///@cond
-namespace Kjut {  template <typename T, size_t S = 0> class Array; }
-template <typename T> std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) ;
+namespace Silica {  template <typename T, size_t S = 0> class Array; }
+template <typename T> std::ostream &operator<<(std::ostream &os, Silica::Array<T> &a) ;
 ///@endcond
 
-namespace Kjut
+namespace Silica
 {
 
 
@@ -91,7 +91,7 @@ will all work as expected and print the integers in each array. This works becau
 ### Examples
 
 ```cpp
-#include <kjut/Array.h>
+#include <silica/Array.h>
 
 Array<int> integers = {6,2,4,5,3};
 integers.append(1);

@@ -1,5 +1,5 @@
 #include <silica/LoggingSystem.h>
-class CountingLogSink : public Kjut::LogSink
+class CountingLogSink : public Silica::LogSink
 {
 public:
 
@@ -8,7 +8,7 @@ public:
         reset();
     }
 
-    void sinkEntry(const Kjut::LogEntry &entry)
+    void sinkEntry(const Silica::LogEntry &entry)
     {
         d.invocations++;
     }

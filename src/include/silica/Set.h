@@ -16,12 +16,12 @@
 
 
 #ifndef DOXYGEN
-namespace Kjut {  template <typename T, size_t S = 0> class Set; }
-template <typename T> std::ostream &operator<<(std::ostream &os, const Kjut::Set<T> &a) ;
+namespace Silica {  template <typename T, size_t S = 0> class Set; }
+template <typename T> std::ostream &operator<<(std::ostream &os, const Silica::Set<T> &a) ;
 #endif // DOXYGEN
 
 
-namespace Kjut
+namespace Silica
 {
 
 /**

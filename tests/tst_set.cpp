@@ -21,7 +21,7 @@ size_t mockLogEntryHandlerInvocationCount()
 
 void registerMockLogEntryHandler()
 {
-    //Kjut::registerLoghandler(mockLogEntryHandler);
+    //Silica::registerLoghandler(mockLogEntryHandler);
     mockCount = 0;
 }
 
@@ -33,7 +33,7 @@ void resetMockLogEntryCount()
 
 #include <set>
 
-namespace Kjut
+namespace Silica
 {
 
 template <typename T>
@@ -91,7 +91,7 @@ std::ostream &operator<<(std::ostream &os, const std::set<T> &a) {
 }
 
 
-std::ostream &operator<<(std::ostream &os, const Kjut::Set<int> &a) {
+std::ostream &operator<<(std::ostream &os, const Silica::Set<int> &a) {
     os << "(";
     bool first = true;
     for(const auto &element: a.values())
@@ -116,7 +116,7 @@ TEST(suiteName, test_default_constructor)
 {
     registerMockLogEntryHandler();
 
-    Kjut::Set<int> s;
+    Silica::Set<int> s;
     ASSERT_EQ(s.size(), 0);
     for(int candidate = -100; candidate < 100; candidate++)
     {
@@ -130,7 +130,7 @@ TEST(suiteName, test_simple_insert)
 {
     registerMockLogEntryHandler();
 
-    Kjut::Set<int> s;
+    Silica::Set<int> s;
     s.insert(1);
     s.insert(1);
     s.insert(1);
@@ -165,7 +165,7 @@ TEST(suiteName, test_insert)
 
     for(const auto &[inputs, expected] : cases)
     {
-        Kjut::Set<int> set;
+        Silica::Set<int> set;
         for(auto input : inputs) {
             set.insert(input);
         }
@@ -177,9 +177,9 @@ TEST(suiteName, test_insert)
 TEST(suiteName, test_equality_operator)
 {
     {
-        Kjut::Set<int> s;
+        Silica::Set<int> s;
         s.insert(1);
-        Kjut::Set<int> s2;
+        Silica::Set<int> s2;
         s2.insert(1);
 
         ASSERT_TRUE(s == s2);
@@ -187,9 +187,9 @@ TEST(suiteName, test_equality_operator)
 
 
     {
-        Kjut::Set<int> s;
+        Silica::Set<int> s;
         s.insert(1);
-        Kjut::Set<int> s2;
+        Silica::Set<int> s2;
         s2.insert(2);
 
         ASSERT_FALSE(s == s2);
@@ -200,7 +200,7 @@ TEST(suiteName, test_equality_operator)
 
 TEST(suiteName, test_clear)
 {
-    Kjut::Set<int> s;
+    Silica::Set<int> s;
     s.insert(1);
     s.insert(2);
     s.insert(3);
@@ -217,7 +217,7 @@ TEST(suiteName, test_clear)
 
 #include <vector>
 
-#define CREATE_SET(name, index) Kjut::Set<int> name; { std::vector<int> stdv = std::get<index>(testCase); for(auto e: stdv) { name.insert(e); } }
+#define CREATE_SET(name, index) Silica::Set<int> name; { std::vector<int> stdv = std::get<index>(testCase); for(auto e: stdv) { name.insert(e); } }
 
 TEST(suiteName, test_set_operations)
 {
@@ -266,7 +266,7 @@ TEST(suiteName, test_set_operations)
         CREATE_SET(B, 2);
         CREATE_SET(expected, 4);
         std::string operation = std::get<1>(testCase);
-        Kjut::Set<int> result;
+        Silica::Set<int> result;
         bool wasOperationSuccessful = false;
         if(operation == "union")
         {
@@ -306,7 +306,7 @@ TEST(suiteName, test_set_operations)
 
 #undef CREATE_SET
 
-#define CREATE_SET(name, index) Kjut::Set<int> name; { std::vector<int> stdv = std::get<index>(testCase); for(auto e: stdv) { name.insert(e); } }
+#define CREATE_SET(name, index) Silica::Set<int> name; { std::vector<int> stdv = std::get<index>(testCase); for(auto e: stdv) { name.insert(e); } }
 
 TEST(suiteName, test_set_deductors)
 {
@@ -390,7 +390,7 @@ TEST(suiteName, test_erase)
 {
     registerMockLogEntryHandler();
 
-    Kjut::Set<int> s;
+    Silica::Set<int> s;
     s.insert(1);
     s.erase(1);
     ASSERT_FALSE(s.contains(1));

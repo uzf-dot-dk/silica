@@ -1,6 +1,6 @@
 #include <silica/EventGenerator.h>
 #include <silica/Application.h>
-namespace Kjut
+namespace Silica
 {
 
 EventGenerator::EventGenerator()

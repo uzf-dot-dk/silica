@@ -1,6 +1,6 @@
 #include <silica/IODevice.h>
 
-namespace Kjut
+namespace Silica
 {
 
 IODevice::IODevice()

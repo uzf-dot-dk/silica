@@ -25,9 +25,9 @@
 #ifndef TEXT_API_MAP_TYPE
 #include <silica/Map.h>
 #define TEXT_API_MAP_TYPE \
-Kjut::Map< \
+Silica::Map< \
            std::string_view, \
-           std::function<Kjut::APICallResult<MaximumStringlengthOfTextResponse>(C*, const VectorOfTokens &)>, \
+           std::function<Silica::APICallResult<MaximumStringlengthOfTextResponse>(C*, const VectorOfTokens &)>, \
            TEXT_API_STRING_MAX_EXPOSED_METHODS \
            >
 
@@ -37,7 +37,7 @@ Kjut::Map< \
 #ifndef TEXT_API_VECTOR_TYPE
 #include <silica/Array.h>
 
-#define TEXT_API_VECTOR_TYPE Kjut::Array<Kjut::Token,TEXT_API_MAX_TOKENS>
+#define TEXT_API_VECTOR_TYPE Silica::Array<Silica::Token,TEXT_API_MAX_TOKENS>
 #ifdef TEXT_API_VECTOR_TYPE_APPEND
 #undef TEXT_API_VECTOR_TYPE_APPEND
 #endif
@@ -52,7 +52,7 @@ Kjut::Map< \
 #endif // TEXT_API_VECTOR_TYPE
 
 
-namespace Kjut
+namespace Silica
 {
 
 typedef struct  {
@@ -345,12 +345,12 @@ constexpr void constexpr_for(F&& f) {
 An example is
 
 ```c++
-class MyApi: public Kjut::TextBasedAPI<MyApi>
+class MyApi: public Silica::TextBasedAPI<MyApi>
 {
 
 public:
 
-    MyApi() : Kjut::TextBasedAPI<MyApi>()
+    MyApi() : Silica::TextBasedAPI<MyApi>()
     {
         registerCommand("addNumbers", &MyApi::addNumbers)
     }
@@ -380,7 +380,7 @@ std::map< \
 #define TEXT_API_MAP_INSERT(map, key, value) map[key] = value;
 
 #include <vector>
-#define TEXT_API_VECTOR_TYPE std::vector<Kjut::Token>
+#define TEXT_API_VECTOR_TYPE std::vector<Silica::Token>
 #define TEXT_API_VECTOR_TYPE_APPEND push_back
 #define TEXT_API_VECTOR_TYPE_REMOVE_FIRST(tokens) tokens.erase(tokens.begin(), tokens.begin()+1);
 
@@ -572,7 +572,7 @@ public:
 
 };
 
-} //namespace Kjut
+} //namespace Silica
 
 
 #endif // SILICA_TEXT_API_H

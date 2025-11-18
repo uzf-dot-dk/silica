@@ -1,7 +1,7 @@
 #include <silica/CoarseTimer.h>
 #include <silica/Application.h>
 #include <silica/LoggingSystem.h>
-namespace Kjut
+namespace Silica
 {
 
 CoarseTimer::CoarseTimer()

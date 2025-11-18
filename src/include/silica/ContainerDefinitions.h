@@ -4,7 +4,7 @@
 #endif
 
 #ifndef SILICA_ARRAY_INITIAL_CAPACITY
-    /*! This  define specifies the default capacity of dynamic Kjut::Array<T,S> (where S == 0). You may spacify any non zero capacity as pre processor directive when buildling.
+    /*! This  define specifies the default capacity of dynamic Silica::Array<T,S> (where S == 0). You may spacify any non zero capacity as pre processor directive when buildling.
     E.g.:
 
     <code>
@@ -37,15 +37,15 @@
 
 #ifdef DOXYGEN
     /*!
-    Disables exceptions in any and all Kjut code.
-    By default, exceptions are supported. This does not disable exception as a compilation feature, but only the parts in the Kjut code that handles exceptions.
+    Disables exceptions in any and all Silica code.
+    By default, exceptions are supported. This does not disable exception as a compilation feature, but only the parts in the Silica code that handles exceptions.
     \note Should both \c SILICA_DISABLE_EXCEPTIONS and \ref SILICA_ENABLE_EXCEPTIONS be defined, \ref SILICA_ENABLE_EXCEPTIONS takes precedence.
     */
 #define SILICA_DISABLE_EXCEPTIONS
 
 
     /*!
-    Disables exceptions in any and all Kjut code.
+    Disables exceptions in any and all Silica code.
     By default, exceptions are supported.
     \note Should both \ref SILICA_DISABLE_EXCEPTIONS and \c SILICA_ENABLE_EXCEPTIONS be defined, \c SILICA_ENABLE_EXCEPTIONS takes precedence.
 

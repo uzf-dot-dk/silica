@@ -18,7 +18,7 @@ size_t mockLogEntryHandlerInvocationCount()
 
 void registerMockLogEntryHandler()
 {
-    Kjut::LoggingSystem::instance()->setSink(&logSink);
+    Silica::LoggingSystem::instance()->setSink(&logSink);
     logSink.reset();
 }
 
@@ -31,7 +31,7 @@ TEST(suiteName, test_default_constructor)
 {
     registerMockLogEntryHandler();
     constexpr size_t CAPACITY= 10;
-    Kjut::Array<int, CAPACITY> array;
+    Silica::Array<int, CAPACITY> array;
 
     ASSERT_EQ(array.size(), 0);
     ASSERT_EQ(array.capacity(), CAPACITY);
@@ -43,7 +43,7 @@ TEST(suiteName, test_appending_and_reading_back_within_bounds)
 {
     registerMockLogEntryHandler();
     constexpr size_t CAPACITY = 8;
-    Kjut::Array<int, CAPACITY> array;
+    Silica::Array<int, CAPACITY> array;
 
     for(size_t i = 0; i < CAPACITY; i++)
     {
@@ -68,7 +68,7 @@ TEST(suiteName, test_appending_and_reading_back_beoynd_bounds)
     registerMockLogEntryHandler();
 
     constexpr size_t CAPACITY = 8;
-    Kjut::Array<int, CAPACITY> array;
+    Silica::Array<int, CAPACITY> array;
 
     for(size_t i = 0; i < CAPACITY; i++)
     {
@@ -98,7 +98,7 @@ TEST(suiteName, test_index_operator_within_bounds)
     registerMockLogEntryHandler();
 
     constexpr size_t CAPACITY = 8;
-    Kjut::Array<int, CAPACITY> array;
+    Silica::Array<int, CAPACITY> array;
 
     for(size_t i = 0; i < CAPACITY; i++)
     {
@@ -129,7 +129,7 @@ TEST(suiteName, test_index_operator_out_of_bounds)
     registerMockLogEntryHandler();
 
     constexpr size_t CAPACITY = 8;
-    Kjut::Array<int, CAPACITY> array;
+    Silica::Array<int, CAPACITY> array;
 
     for(size_t i = 0; i < CAPACITY; i++)
     {
@@ -153,7 +153,7 @@ TEST(suiteName, test_insertion)
 
     #define CREATE_ARRAY(name) \
     constexpr size_t CAPACITY = 8; \
-        Kjut::Array<int, CAPACITY> name; \
+        Silica::Array<int, CAPACITY> name; \
         for(size_t i = 0; i < CAPACITY-1; i++) \
     { \
             name.append( 1+i ); \
@@ -202,7 +202,7 @@ TEST(suiteName, test_removal)
 
 #define CREATE_ARRAY(name) \
     constexpr size_t CAPACITY = 8; \
-        Kjut::Array<int, CAPACITY> name; \
+        Silica::Array<int, CAPACITY> name; \
         for(size_t i = 0; i < CAPACITY; i++) \
     { \
             name.append( 1+i ); \
@@ -275,7 +275,7 @@ TEST(suiteName, test_removal_of_pointers_works)
     DeletableInteger::deletedIntvalues.clear();
 
     DeletableInteger *one, *two, *three;
-    Kjut::Array<DeletableInteger*> ints = {
+    Silica::Array<DeletableInteger*> ints = {
         one = new DeletableInteger(1),
         two = new DeletableInteger(2),
         three = new DeletableInteger(3)
@@ -295,7 +295,7 @@ TEST(suiteName, test_deletion_deletes_content)
 {
     {
 
-        Kjut::Array<DeletableInteger> ints = {1,2,3};
+        Silica::Array<DeletableInteger> ints = {1,2,3};
         DeletableInteger::deletedIntvalues.clear();
     }
     const int expectedDeletions = 3 // the three elements in the array
@@ -306,7 +306,7 @@ TEST(suiteName, test_deletion_deletes_content)
 
 TEST(suiteName, test_iterator_builds_with_stdlib)
 {
-    Kjut::Array<int> ints;
+    Silica::Array<int> ints;
 
     std::sort(ints.begin(), ints.end());
 
@@ -317,7 +317,7 @@ TEST(suiteName, test_iterator_builds_with_stdlib)
 
 TEST(suiteName, test_forward_iterator)
 {
-    Kjut::Array<int> ints = {11,22,33,44};
+    Silica::Array<int> ints = {11,22,33,44};
 
     std::vector<int> copy;
     for(const int &i: ints)
@@ -329,7 +329,7 @@ TEST(suiteName, test_forward_iterator)
 
 TEST(suiteName, test_forward_iterator_on_empty_array)
 {
-    Kjut::Array<int, 6> ints;
+    Silica::Array<int, 6> ints;
 
     std::vector<int> copy;
     for(const int &i: ints)
@@ -345,17 +345,17 @@ TEST(suiteName, test_forward_iterator_on_empty_array)
 TEST(suiteName, test_list_initializer)
 {
     {
-        Kjut::Array<int, 3> array = {};
+        Silica::Array<int, 3> array = {};
         std::vector<int> expected = {};
         ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(array, expected);
     }
     {
-        Kjut::Array<int, 3> array = {1,2,3};
+        Silica::Array<int, 3> array = {1,2,3};
         std::vector<int> expected = {1,2,3};
         ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(array, expected);
     }
     {
-        Kjut::Array<int, 3> array = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+        Silica::Array<int, 3> array = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
         std::vector<int> expected = {1,2,3};
         ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(array, expected);
     }
@@ -369,25 +369,25 @@ TEST(suiteName, test_list_initializer)
 TEST(suiteName, test_equals_operator_simple_same_capacity)
 {
     {
-        Kjut::Array<int, 3> a = {};
-        Kjut::Array<int, 3> b = {};
+        Silica::Array<int, 3> a = {};
+        Silica::Array<int, 3> b = {};
         ASSERT_EQ(a,b);
     }
 
     {
-        Kjut::Array<int, 3> a = {1};
-        Kjut::Array<int, 3> b = {1};
+        Silica::Array<int, 3> a = {1};
+        Silica::Array<int, 3> b = {1};
         ASSERT_EQ(a,b);
     }
 
     {
-        Kjut::Array<int, 3> a = {1,2};
-        Kjut::Array<int, 3> b = {1,2};
+        Silica::Array<int, 3> a = {1,2};
+        Silica::Array<int, 3> b = {1,2};
         ASSERT_EQ(a,b);
     }
     {
-        Kjut::Array<int, 3> a = {1,2,3};
-        Kjut::Array<int, 3> b = {1,2,3};
+        Silica::Array<int, 3> a = {1,2,3};
+        Silica::Array<int, 3> b = {1,2,3};
         ASSERT_EQ(a,b);
     }
 }
@@ -397,25 +397,25 @@ TEST(suiteName, test_equals_operator_simple_same_capacity)
 TEST(suiteName, test_equals_operator_simple_different_capacity)
 {
     {
-        Kjut::Array<int, 7> a = {};
-        Kjut::Array<int, 3> b = {};
+        Silica::Array<int, 7> a = {};
+        Silica::Array<int, 3> b = {};
         ASSERT_EQ(a,b);
     }
 
     {
-        Kjut::Array<int, 7> a = {1};
-        Kjut::Array<int, 3> b = {1};
+        Silica::Array<int, 7> a = {1};
+        Silica::Array<int, 3> b = {1};
         ASSERT_EQ(a,b);
     }
 
     {
-        Kjut::Array<int, 7> a = {1,2};
-        Kjut::Array<int, 3> b = {1,2};
+        Silica::Array<int, 7> a = {1,2};
+        Silica::Array<int, 3> b = {1,2};
         ASSERT_EQ(a,b);
     }
     {
-        Kjut::Array<int, 7> a = {1,2,3};
-        Kjut::Array<int, 3> b = {1,2,3};
+        Silica::Array<int, 7> a = {1,2,3};
+        Silica::Array<int, 3> b = {1,2,3};
         ASSERT_EQ(a,b);
     }
 }
@@ -423,25 +423,25 @@ TEST(suiteName, test_equals_operator_simple_different_capacity)
 TEST(suiteName, test_equals_operator_simple_different_capacity_different_content)
 {
     {
-        Kjut::Array<int, 7> a = {};
-        Kjut::Array<int, 3> b = {1};
+        Silica::Array<int, 7> a = {};
+        Silica::Array<int, 3> b = {1};
         ASSERT_NE(a,b);
     }
 
     {
-        Kjut::Array<int, 7> a = {1};
-        Kjut::Array<int, 3> b = {};
+        Silica::Array<int, 7> a = {1};
+        Silica::Array<int, 3> b = {};
         ASSERT_NE(a,b);
     }
 
     {
-        Kjut::Array<int, 7> a = {1,0};
-        Kjut::Array<int, 3> b = {1,2};
+        Silica::Array<int, 7> a = {1,0};
+        Silica::Array<int, 3> b = {1,2};
         ASSERT_NE(a,b);
     }
     {
-        Kjut::Array<int, 7> a = {1,2};
-        Kjut::Array<int, 3> b = {1,0};
+        Silica::Array<int, 7> a = {1,2};
+        Silica::Array<int, 3> b = {1,0};
         ASSERT_NE(a,b);
     }
 }
@@ -449,25 +449,25 @@ TEST(suiteName, test_equals_operator_simple_different_capacity_different_content
 TEST(suiteName, test_equals_operator_simple_same_capacity_different_content)
 {
     {
-        Kjut::Array<int, 7> a = {};
-        Kjut::Array<int, 7> b = {1};
+        Silica::Array<int, 7> a = {};
+        Silica::Array<int, 7> b = {1};
         ASSERT_NE(a,b);
     }
 
     {
-        Kjut::Array<int, 7> a = {1};
-        Kjut::Array<int, 7> b = {};
+        Silica::Array<int, 7> a = {1};
+        Silica::Array<int, 7> b = {};
         ASSERT_NE(a,b);
     }
 
     {
-        Kjut::Array<int, 7> a = {1,0};
-        Kjut::Array<int, 7> b = {1,2};
+        Silica::Array<int, 7> a = {1,0};
+        Silica::Array<int, 7> b = {1,2};
         ASSERT_NE(a,b);
     }
     {
-        Kjut::Array<int, 7> a = {1,2};
-        Kjut::Array<int, 7> b = {1,0};
+        Silica::Array<int, 7> a = {1,2};
+        Silica::Array<int, 7> b = {1,0};
         ASSERT_NE(a,b);
     }
 }
@@ -507,7 +507,7 @@ std::set<int> AssignableInteger::assignedIntvalues;
 
 TEST(suiteName, test_removal_causes_assignment)
 {
-    Kjut::Array<AssignableInteger, 7> ints = {1,2,3};
+    Silica::Array<AssignableInteger, 7> ints = {1,2,3};
 
     AssignableInteger::assignedIntvalues.clear();
     ints.remove(1);
@@ -519,7 +519,7 @@ TEST(suiteName, test_removal_causes_assignment)
 TEST(suiteName, test_fill_method)
 {
     registerMockLogEntryHandler();
-    Kjut::Array<int, 9> array;
+    Silica::Array<int, 9> array;
     array.fill(27);
     ASSERT_EQ(array.size(), 9);
     for(size_t i = 0; i < array.size(); i++)
@@ -533,7 +533,7 @@ TEST(suiteName, test_fill_method)
 
 TEST(suiteName, test_method_clear)
 {
-    Kjut::Array<DeletableInteger, 9> array = {11,22,33,44,55,66,77,88,99};
+    Silica::Array<DeletableInteger, 9> array = {11,22,33,44,55,66,77,88,99};
     ASSERT_EQ(array.size(), 9);
     DeletableInteger::deletedIntvalues.clear();
     ASSERT_EQ(DeletableInteger::deletedIntvalues.size(), 0);
@@ -544,7 +544,7 @@ TEST(suiteName, test_method_clear)
 }
 
 
-bool operator==(const std::vector<int> &lhs, const Kjut::Array<DeletableInteger> &rhs)
+bool operator==(const std::vector<int> &lhs, const Silica::Array<DeletableInteger> &rhs)
 {
     if(rhs.size() != lhs.size())
     {
@@ -560,14 +560,14 @@ bool operator==(const std::vector<int> &lhs, const Kjut::Array<DeletableInteger>
     return true;
 }
 
-bool operator==(const Kjut::Array<DeletableInteger> &lhs, const std::vector<int> &rhs)
+bool operator==(const Silica::Array<DeletableInteger> &lhs, const std::vector<int> &rhs)
 {
     return rhs == lhs;
 }
 
 TEST(suiteName, test_method_remove_element_at_end_calls_destructor)
 {
-    Kjut::Array<DeletableInteger, 9> array = {11,22,33,44,55,66,77,88,99};
+    Silica::Array<DeletableInteger, 9> array = {11,22,33,44,55,66,77,88,99};
     DeletableInteger::deletedIntvalues.clear();
     array.remove(8);
     {

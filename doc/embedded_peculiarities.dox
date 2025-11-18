@@ -1,6 +1,6 @@
 /** \page embedded_concers Embedded Concerns
 
-Running applications in headless embedded devices, has a unique set of challenges, which the Kjut project tries to address. This section lists what areas of embedded concern are addressed and how that may impact appplications developers implementation decisions.
+Running applications in headless embedded devices, has a unique set of challenges, which the Silica project tries to address. This section lists what areas of embedded concern are addressed and how that may impact appplications developers implementation decisions.
 
 \anchor Container_elaboration
 # Containers
@@ -10,7 +10,7 @@ Running applications in headless embedded devices, has a unique set of challenge
 
 In embedded development it is often desireable to know at compile time how much space is going to be used at runtime, and in some settings dynamic allocations are forbidden. However, container classes as known from the standard library are still desireable.
 
-Kjut offers a set of container classes, where most can be configured to a static capcacity that will never grow and where ths size is known at compilie time. At the same time, the container classes can be configured for dynamic capacity. Container classes with dynamic capacity will allocate new space as the need for more capacity occurs and will have as much capacity as allowed by available memory.
+Silica offers a set of container classes, where most can be configured to a static capcacity that will never grow and where ths size is known at compilie time. At the same time, the container classes can be configured for dynamic capacity. Container classes with dynamic capacity will allocate new space as the need for more capacity occurs and will have as much capacity as allowed by available memory.
 Whether a container instance has dynamic or static capacity is specified as the template parameter, \c S. Omitting \c S from the template parameters or specifying it as 0, will result in an instance that has dynamic capacity, where a \c S present and non zero, will return in a fixed capacity that can be depleted by addint elements.
 
 When passed by reference or as pointer, most container classes can subsittute \c ContainerClass<T,S> with \c ContinerClass<T> and as such be used interchangibly, as in this example:
@@ -18,7 +18,7 @@ When passed by reference or as pointer, most container classes can subsittute \c
 
 ```cpp
 
-#include <Kjut/Array.h.>
+#include <Silica/Array.h.>
 
 void printCapacity(Array<int> &array)
 {
@@ -39,7 +39,7 @@ printCapacity(staticCapacivy);  // prints "Capacity: 7"
 
 In several other container collections, indexing out of a collections range can throw exceptions or terminating application execution.
 
-It is a core design decision in the Kjut collection Classes, that indexing out of range shall not terminate execution.
+It is a core design decision in the Silica collection Classes, that indexing out of range shall not terminate execution.
 Instead a reference to a default element is returned and the container is not modified.
 
   - Assigning to the garbage element is always successful and execution proceeds.

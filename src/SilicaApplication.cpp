@@ -5,7 +5,7 @@
 
 static_assert(SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION >= 0, "SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION must be a non negative integer. Use 0 for infinite and growing capacity.");
 
-namespace Kjut {
+namespace Silica {
 
 Application* Application::theApplicationInstance = nullptr;
 

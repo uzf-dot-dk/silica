@@ -3,7 +3,7 @@
 
 #include <silica/Array.h>
 
-namespace Kjut
+namespace Silica
 {
 
 
@@ -54,6 +54,6 @@ public:
 
 };
 
-} // namespace Kjut
+} // namespace Silica
 
 #endif

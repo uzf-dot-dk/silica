@@ -11,12 +11,12 @@
 
 #define suiteName test_text_based_api
 
-class ClassUnderTest: public Kjut::TextBasedAPI<ClassUnderTest>
+class ClassUnderTest: public Silica::TextBasedAPI<ClassUnderTest>
 {
 
 public:
 
-    ClassUnderTest() : Kjut::TextBasedAPI<ClassUnderTest>()
+    ClassUnderTest() : Silica::TextBasedAPI<ClassUnderTest>()
     {
         REGISTER_METHOD(voidNoParams);
         REGISTER_METHOD(intWithIntInt);

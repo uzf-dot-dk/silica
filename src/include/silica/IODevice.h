@@ -5,7 +5,7 @@
 #include <silica/ByteArray.h>
 #include <silica/SignalSlot.h>
 
-namespace Kjut
+namespace Silica
 {
 
 typedef unsigned char Byte;

@@ -2,13 +2,13 @@
 
 
 
-Kjut::MilliSeconds operator ""_ms(unsigned long long value)
+Silica::MilliSeconds operator ""_ms(unsigned long long value)
 {
-    return Kjut::MilliSeconds(value);
+    return Silica::MilliSeconds(value);
 }
 
-Kjut::MicroSeconds operator ""_us(unsigned long long value)
+Silica::MicroSeconds operator ""_us(unsigned long long value)
 {
-    return Kjut::MicroSeconds(value);
+    return Silica::MicroSeconds(value);
 }
 

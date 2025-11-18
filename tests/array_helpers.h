@@ -9,12 +9,12 @@ const auto oldCount = mockLogEntryHandlerInvocationCount(); \
     ASSERT_EQ( (expectedCount) , (newCount - oldCount)); \
 };
 
-#define ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(kjutarray, stdvector) \
+#define ASSERT_SILICA_ARRAY_AND_STD_VECTOR_EQ(silicaarray, stdvector) \
 {\
-        const bool areEqual = (kjutarray == stdvector ); \
+        const bool areEqual = (silicaarray == stdvector ); \
         if(!areEqual) \
     { \
-            std::cout << "Arrays \n\tKjut::Array: " << kjutarray << "\n\tstd::vector: " << stdvector << "\nDiffers." << std::endl; \
+            std::cout << "Arrays \n\tSilica::Array: " << silicaarray << "\n\tstd::vector: " << stdvector << "\nDiffers." << std::endl; \
             FAIL(); \
     }\
 }
@@ -38,7 +38,7 @@ std::ostream &operator<<(std::ostream &os, std::vector<T> &a) {
 
 
 template <typename T>
-std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) {
+std::ostream &operator<<(std::ostream &os, Silica::Array<T> &a) {
     os << "[";
     for(size_t i = 0; i < a.size(); i++)
     {
@@ -58,7 +58,7 @@ std::ostream &operator<<(std::ostream &os, Kjut::Array<T> &a) {
 
 #include <vector>
 template <typename T>
-bool operator==(const Kjut::Array<T> &lhs, const std::vector<T> &rhs)
+bool operator==(const Silica::Array<T> &lhs, const std::vector<T> &rhs)
 {
     if(lhs.size() != rhs.size())
     {

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <silica/Array.h>
 
-namespace Kjut
+namespace Silica
 {
 
 /**
@@ -35,13 +35,13 @@ enum class OverflowPolicy
 ### Examples
 
 ```cpp
-#include <kjut/RingBuffer.h?>
+#include <silica/RingBuffer.h?>
 
 int main(int argc, char *argv[])
 {
-    Kjut::RingBuffer<int, 4> rb;
+    Silica::RingBuffer<int, 4> rb;
 
-    rb.setOverflowPolicy(Kjut::OverflowPolicy::OverwriteOldestData);
+    rb.setOverflowPolicy(Silica::OverflowPolicy::OverwriteOldestData);
     rb.push(1);
     rb.push(2);
     rb.push(3);
@@ -320,7 +320,7 @@ void RingBuffer<T,S>::setOverRunCallBack(void (*overRunCallback)(const RingBuffe
 
 
 template <typename T, size_t S>
-std::ostream &operator<<(std::ostream &os, const Kjut::RingBuffer<T, S> &b) {
+std::ostream &operator<<(std::ostream &os, const Silica::RingBuffer<T, S> &b) {
     os << "[";
     for(size_t i = 0; i < S; i++)
     {

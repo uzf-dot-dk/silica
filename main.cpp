@@ -1,11 +1,11 @@
 #include <silica/communication/TextAPI.h>
 
-class MyApi : public Kjut::TextBasedAPI<MyApi>
+class MyApi : public Silica::TextBasedAPI<MyApi>
 {
 
 public:
 
-    MyApi() : Kjut::TextBasedAPI<MyApi>()
+    MyApi() : Silica::TextBasedAPI<MyApi>()
     {
 
 // START -- Remove this block, when reflection becomes available
@@ -71,8 +71,8 @@ int main(int argc, char *argv[])
 
     fflush(stdout);
     /*
-    Kjut::Application app;
-    Kjut::CoarseTimer everySecond;
+    Silica::Application app;
+    Silica::CoarseTimer everySecond;
     everySecond.triggered.connectTo([&](){
         printf("Ping...\n");
         fflush(stdout);

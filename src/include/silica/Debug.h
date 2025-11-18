@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-namespace Kjut
+namespace Silica
 {
 
 }

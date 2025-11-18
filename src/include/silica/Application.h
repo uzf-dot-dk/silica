@@ -11,13 +11,13 @@
 #define SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION 50
 #endif
 
-namespace Kjut
+namespace Silica
 {
 
-/** \brief The Application class is the runtime engine that makes a Kjut application run and ensures that events are handled and propagated.
+/** \brief The Application class is the runtime engine that makes a Silica application run and ensures that events are handled and propagated.
 
 \ingroup Core
-\note There must exist a single Application instance, and the instance is retuired to exist for several Kjut classes to allow instantanion.
+\note There must exist a single Application instance, and the instance is retuired to exist for several Silica classes to allow instantanion.
 
 */
 class Application
@@ -65,7 +65,7 @@ private:
     {
         bool exitRequested = false;
         int providedExitCode = 0;
-        Kjut::Array<class EventGenerator *, SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION> eventGenerators;
+        Silica::Array<class EventGenerator *, SILICA_EVENT_GENERATORS_HELD_BY_APPLICATION> eventGenerators;
 
     } d;
 

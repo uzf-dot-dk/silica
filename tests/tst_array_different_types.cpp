@@ -6,7 +6,7 @@
 
 TEST(suiteName, test_placement_new)
 {
-    Kjut::Array<std::string> countsDynamic;
+    Silica::Array<std::string> countsDynamic;
     ASSERT_TRUE( countsDynamic.append("foo"));
     ASSERT_TRUE( countsDynamic.append("bar"));
     ASSERT_TRUE( countsDynamic.append("fubar"));
@@ -21,7 +21,7 @@ TEST(suiteName, test_placement_new)
 
 TEST(suiteName, test_erase_new)
 {
-    Kjut::Array<std::string> a;
+    Silica::Array<std::string> a;
     a.append("foo");
     a.append("bar");
     a.append("fubar");
@@ -112,7 +112,7 @@ std::ostream& operator<<(std::ostream& os, const String& str)
     return os;
 }
 
-std::ostream& operator<<(std::ostream & os, Kjut::Array<String>& array)
+std::ostream& operator<<(std::ostream & os, Silica::Array<String>& array)
 {
     os << "[";
     std::string glue = "";
@@ -127,7 +127,7 @@ std::ostream& operator<<(std::ostream & os, Kjut::Array<String>& array)
 
 TEST(suiteName, test_insertion_of_strings_in_the_middle)
 {
-    Kjut::Array<String> array = {"Ant", "Bee", "Dog"};
+    Silica::Array<String> array = {"Ant", "Bee", "Dog"};
     //array.insert(2, "Cat");
     std::cout << array << std::endl;
 

@@ -3,7 +3,7 @@
 
 #define suiteName tst_signal_and_slots
 
-using namespace Kjut;
+using namespace Silica;
 
 
 int test_simple_connection_free_floating_marker;

@@ -13,7 +13,7 @@
 #define SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
 #define emit
 
-namespace Kjut
+namespace Silica
 {
 
 template <typename ...Ts> class Signal;
@@ -88,7 +88,7 @@ private:
 };
     /// \endcond
 
-/** \brief Class Slot implements the observer in Kjut's implementation of the Observer pattern.
+/** \brief Class Slot implements the observer in Silica's implementation of the Observer pattern.
  *
  *  \see [Signal and Slots](\ref signal_and_slots)
  *
@@ -185,7 +185,7 @@ private:
 
 
 
-/** \brief Class Signal implements the subject in Kjut's implementation of the Observer pattern.
+/** \brief Class Signal implements the subject in Silica's implementation of the Observer pattern.
  *
  *  Signal's have to be bound to a suitable reciever for any thing to happen.
  *
@@ -343,7 +343,7 @@ private:
 /// Signal method definitions
 /// ------------------------------------------------------------------------------------------
 
-template <typename ...Ts>  void Kjut::Signal<Ts...>::operator()(Ts... parameters)
+template <typename ...Ts>  void Silica::Signal<Ts...>::operator()(Ts... parameters)
 {
     for(auto &connection : d.connections)
     {
@@ -351,7 +351,7 @@ template <typename ...Ts>  void Kjut::Signal<Ts...>::operator()(Ts... parameters
     }
 }
 
-template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Slot<Ts...> *target)
+template <typename ...Ts> bool Silica::Signal<Ts...>::connectTo(Slot<Ts...> *target)
 {
     Connection<Ts...> connection(this, target);
     this->d.connections.append(connection);
@@ -359,14 +359,14 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Slot<Ts...> *targe
     return false;
 }
 
-template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(Signal<Ts...> *target)
+template <typename ...Ts> bool Silica::Signal<Ts...>::connectTo(Signal<Ts...> *target)
 {
     Connection<Ts...> connection(this, target);
     this->d.connections.append(connection);
     return false;
 }
 
-template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(void(*target)(Ts...))
+template <typename ...Ts> bool Silica::Signal<Ts...>::connectTo(void(*target)(Ts...))
 {
     Connection<Ts...> connection(this, target);
     this->d.connections.append(connection);
@@ -374,7 +374,7 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(void(*target)(Ts..
 }
 
 #ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
-template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(std::function<void(Ts...)> target)
+template <typename ...Ts> bool Silica::Signal<Ts...>::connectTo(std::function<void(Ts...)> target)
 {
     Connection<Ts...> connection(this, target);
     this->d.connections.append(connection);
@@ -383,7 +383,7 @@ template <typename ...Ts> bool Kjut::Signal<Ts...>::connectTo(std::function<void
 #endif
 
 
-template <typename ...Ts> void Kjut::Signal<Ts...>::removeTarget(Slot<Ts...> *target)
+template <typename ...Ts> void Silica::Signal<Ts...>::removeTarget(Slot<Ts...> *target)
 {
     for(size_t i = 0 ; i < d.connections.size(); i++)
     {
@@ -401,13 +401,13 @@ template <typename ...Ts> void Kjut::Signal<Ts...>::removeTarget(Slot<Ts...> *ta
 /// Slot method definitions
 /// ------------------------------------------------------------------------------------------
 
-template <typename ...Ts> Kjut::Slot<Ts...>::Slot()
+template <typename ...Ts> Silica::Slot<Ts...>::Slot()
 {
     d.freeFloatingFunction = nullptr;
     d.functionObject  = nullptr;
 }
 
-template <typename ...Ts> Kjut::Slot<Ts...>::~Slot()
+template <typename ...Ts> Silica::Slot<Ts...>::~Slot()
 {
     for(auto source : d.sources.values())
     {
@@ -416,26 +416,26 @@ template <typename ...Ts> Kjut::Slot<Ts...>::~Slot()
 
 }
 
-template <typename ...Ts> Kjut::Slot<Ts...>::Slot(void (*freeFloatingFunction)(Ts...))
+template <typename ...Ts> Silica::Slot<Ts...>::Slot(void (*freeFloatingFunction)(Ts...))
 {
     this->d.freeFloatingFunction = freeFloatingFunction;
     this->d.functionObject  = nullptr;
 }
 
 
-template <typename ...Ts> Kjut::Slot<Ts...>::Slot(std::function<void(Ts...)> functor)
+template <typename ...Ts> Silica::Slot<Ts...>::Slot(std::function<void(Ts...)> functor)
 {
     this->d.freeFloatingFunction = nullptr;
     this->d.functionObject  = functor;
 
 }
 
-template <typename ...Ts> void Kjut::Slot<Ts...>::operator()(Ts... parameters)
+template <typename ...Ts> void Silica::Slot<Ts...>::operator()(Ts... parameters)
 {
     this->invoke(parameters...);
 }
 
-template <typename ...Ts> void Kjut::Slot<Ts...>::invoke(Ts... parameters)
+template <typename ...Ts> void Silica::Slot<Ts...>::invoke(Ts... parameters)
 {
     if(d.freeFloatingFunction)
     {
@@ -452,7 +452,7 @@ template <typename ...Ts> void Kjut::Slot<Ts...>::invoke(Ts... parameters)
 /// ------------------------------------------------------------------------------------------
 
 template <typename... Ts>
-Kjut::Connection<Ts...>::Connection(Connection::Type connectionType)
+Silica::Connection<Ts...>::Connection(Connection::Type connectionType)
 {
     if(connectionType == Connection::Type::Auto)
     {
@@ -468,7 +468,7 @@ Kjut::Connection<Ts...>::Connection(Connection::Type connectionType)
 }
 
 template <typename... Ts>
-Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Slot<Ts...>* slotDestination, Connection::Type type)
+Silica::Connection<Ts...>::Connection(Signal<Ts...>* source, Slot<Ts...>* slotDestination, Connection::Type type)
     : Connection(type)
 {
     this->d.source = source;
@@ -477,7 +477,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Slot<Ts...>* slotDest
 }
 
 template <typename... Ts>
-Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signalDestination, Connection::Type type)
+Silica::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signalDestination, Connection::Type type)
     : Connection(type)
 {
     this->d.source = source;
@@ -487,7 +487,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, Signal<Ts...>* signal
 
 
 template <typename... Ts>
-Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, void (*functionPointerDestination)(Ts...), Connection::Type type)
+Silica::Connection<Ts...>::Connection(Signal<Ts...>* source, void (*functionPointerDestination)(Ts...), Connection::Type type)
     : Connection(type)
 {
     this->d.source = source;
@@ -497,7 +497,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...>* source, void (*functionPointe
 
 #ifdef SILICA_ENABLE_LAMBDAS_IN_SIGNAL_SLOTS
 template <typename... Ts>
-Kjut::Connection<Ts...>::Connection(Signal<Ts...> *source, std::function<void(Ts...)> functionObjectDestination, Connection::Type type)
+Silica::Connection<Ts...>::Connection(Signal<Ts...> *source, std::function<void(Ts...)> functionObjectDestination, Connection::Type type)
     : Connection(type)
 {
     this->d.source = source;
@@ -508,7 +508,7 @@ Kjut::Connection<Ts...>::Connection(Signal<Ts...> *source, std::function<void(Ts
 
 
 template <typename... Ts>
-void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
+void Silica::Connection<Ts...>::distributeInvocation(Ts... parameters)
 {
     if(d.connectionType == Connection::Type::Direct)
     {
@@ -558,7 +558,7 @@ void Kjut::Connection<Ts...>::distributeInvocation(Ts... parameters)
 }
 
 template <typename ...Ts>
-bool Kjut::Connection<Ts...>::isTarget(const Slot<Ts...> *slotDestination) const
+bool Silica::Connection<Ts...>::isTarget(const Slot<Ts...> *slotDestination) const
 {
     if(d.destinationType != DestinationType::Slot)
     {

@@ -5,7 +5,7 @@
 #include <silica/UnitsOfTime.h>
 #include <silica/SignalSlot.h>
 
-namespace Kjut
+namespace Silica
 {
 
 /** \brief Implements a coarse timer that is normally good enough for humans, but not for machine control.
@@ -22,9 +22,9 @@ void doStuff()
 
 int main(int argc, char *argv[])
 {
-    Kjut::Application app;
+    Silica::Application app;
 
-    Kjut::CoarseTimer everySecond;
+    Silica::CoarseTimer everySecond;
     everySecond.triggered.connectTo(doStuff);
     everySecond.setTimeout(1000);
     everySecond.start();

@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-namespace Kjut
+namespace Silica
 {
 
 

@@ -1,6 +1,6 @@
 #include <silica/ByteBuffer.h>
 /*
-namespace Kjut
+namespace Silica
 {
 
 

@@ -1,12 +1,12 @@
 #ifndef SILICA_EVENT_GENERATOR_H
 #define SILICA_EVENT_GENERATOR_H
 
-namespace Kjut
+namespace Silica
 {
 
 /**
 
-\brief The EventGenerator is one of the basic building blocks in the event driven implementation of the Kjut framework.
+\brief The EventGenerator is one of the basic building blocks in the event driven implementation of the Silica framework.
 
 An EventGenerator is meant to be subclassed to classes that respond to external events such as clock, serial ports, input devices, e.t.c.
 

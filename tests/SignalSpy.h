@@ -7,9 +7,9 @@ template <typename ...Ts>
 class SignalSpy
 {
 public:
-    void spyOn(Kjut::Signal<Ts...> *signal)
+    void spyOn(Silica::Signal<Ts...> *signal)
     {
-        signal->connectTo([=](Ts... args){
+        signal->connectTo([this](Ts... args){
             d.invocations.push_back(std::tuple<Ts...>(args...));
         });
     }
