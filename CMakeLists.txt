@@ -61,10 +61,12 @@ if( ${SILICA_TARGET_OS} STREQUAL "linux")
     target_compile_definitions( silica PUBLIC SILICA_OS_LINUX=1)
 endif()
 
-add_executable(sandbox main.cpp)
-target_link_libraries(sandbox PUBLIC silica )
+if ( ${SILICA_BUILD_SANDBOX} )
+    add_executable(sandbox main.cpp)
+    target_link_libraries(sandbox PUBLIC silica )
+endif()
 
-if( ${BUILD_TESTS} )
+if( ${SILICA_BUILD_TESTS} )
     message( STATUS "Builds tests")
 
     target_compile_definitions( silica PUBLIC SILICA_LOGENTRY_MESSAGE_MAX_LENGTH=15)
