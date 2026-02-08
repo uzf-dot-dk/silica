@@ -72,6 +72,10 @@ public:
     /** \brief Signal emitted, when a timeout occurs. */
     Signal<> triggered;
 
+    /** \brief Can be used to check if this timer is running or not.
+    \returns True if this timer instance is running, false if not.  */
+    bool isRunning() const;
+
     /// \cond DEVELOPER_DOC
     void visit() override;
 private:

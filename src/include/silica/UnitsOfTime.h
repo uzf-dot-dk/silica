@@ -30,6 +30,18 @@ public:
         return MicroSeconds(this->d.value + rhs.d.value);
     }
 
+    bool operator==(const Silica::MicroSeconds & other) const
+    {
+        return other.d.value == this->d.value;;
+    }
+
+    bool operator==(uint64_t other) const
+    {
+        return other == this->d.value;;
+    }
+
+
+
 //private:
     friend class MilliSeconds;
 
@@ -62,6 +74,12 @@ public:
         return MicroSeconds(d.value * 1000);
     }
 
+    bool operator==(uint64_t other) const
+    {
+        return other == this->d.value;;
+    }
+
+
     //private:
     friend class MicroSeconds;
     struct
@@ -76,7 +94,6 @@ public:
 
 
 }
-
 
 
 

@@ -52,4 +52,9 @@ void CoarseTimer::stop()
     d.isRunning = false;
 }
 
+bool CoarseTimer::isRunning() const
+{
+    return d.isRunning;
+}
+
 }
