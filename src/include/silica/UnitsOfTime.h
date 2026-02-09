@@ -40,6 +40,9 @@ public:
         return other == this->d.value;;
     }
 
+    operator uint64_t() const {
+        return d.value;
+    }
 
 
 //private:
