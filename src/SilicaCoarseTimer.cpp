@@ -20,9 +20,11 @@ void CoarseTimer::visit()
     if( now >= d.nextTimeOut )
     {
         emit this->triggered();
-        restart();
+        if(d.type == Silica::CoarseTimer::Type::Repeated)
+        {
+            restart();
+        }
     }
-
 }
 
 
