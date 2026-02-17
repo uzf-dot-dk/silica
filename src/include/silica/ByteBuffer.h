@@ -118,6 +118,12 @@ public:
         return this->d.canWriteToDevice(this->currentOpenMode());
     }
 
+    size_t readLine(Silica::Array<Silica::Byte> *destination) override
+    {
+        return 0;
+    }
+
+
 protected:
     void closeImplementation() override
     {

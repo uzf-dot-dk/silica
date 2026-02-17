@@ -47,6 +47,8 @@ public:
 
 
     virtual bool canReadLine() const = 0;
+    virtual size_t readLine(Silica::Array<Silica::Byte> *destination) = 0;
+
     virtual bool isWritable() const = 0;
 
     /** Returns true if this device can be read from.
@@ -65,7 +67,7 @@ public:
 
     Signal<IODevice*, Array<Byte>*> dataReady;
     Signal<IODevice*, size_t> writeComplete;
-
+    Signal<IODevice*, size_t> newLinesReady;
     Signal<IODevice*, CloseReason> closed;
     Signal<IODevice*> opened;
 

@@ -6,7 +6,7 @@ include(target_detection.cmake)
 
 
 option(BUILD_DOCUMENTATION "builds the project for documentation" OFF)
-option(BUILD_TESTS         "builds the project for documentation" ON )
+option(SILICA_BUILD_TESTS  "builds the project for documentation" ON )
 
 if ( ${BUILD_DOCUMENTATION} )
     set(  CMAKE_EXPORT_COMPILE_COMMANDS ON )
