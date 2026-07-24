@@ -35,11 +35,9 @@ TEST(suiteName, test_simple_timer)
     ASSERT_EQ(exitCode, 27);
 }
 
-
-
 TEST(suiteName, test_single_shot_timer)
 {
-    /*
+
     Silica::Application app;
 
     int counter = 0;
@@ -56,6 +54,7 @@ TEST(suiteName, test_single_shot_timer)
     Silica::CoarseTimer exitTimer;
     exitTimer.triggered.connectTo([&]()
     {
+        printf("Exits...\n"); fflush(stdout);
         app.exit(27);
     });
     exitTimer.setTimeout(1'050'000_us);
@@ -69,9 +68,9 @@ TEST(suiteName, test_single_shot_timer)
     EXPECT_GT(elapsed.count() , 1000);
     EXPECT_LT(elapsed.count(),  1200);
 
-    ASSERT_EQ(counter, 10);
     ASSERT_EQ(exitCode, 27);
-*/
+    ASSERT_EQ(counter, 1);
+
 }
 
 
@@ -109,5 +108,4 @@ TEST(suiteName, test_repeated_timer)
     ASSERT_EQ(counter, 10);
     ASSERT_EQ(exitCode, 27);
 }
-
 

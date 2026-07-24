@@ -35,6 +35,11 @@ set( silica_sources
     src/SilicaUnitsOfTime.cpp
 )
 
+set(silica_library_type STATIC)
+if( ${SILICA_BUILD_TESTS} )
+    set(silica_library_type SHARED)
+endif()
+
 if( ${SILICA_TARGET_OS} STREQUAL "windows")
     include(src/windows_x86/sources.cmake)
 endif()
@@ -44,7 +49,7 @@ if( ${SILICA_TARGET_OS} STREQUAL "linux")
     include(src/linux/sources.cmake)
 endif()
 
-add_library( silica
+add_library( silica ${silica_library_type}
     ${silica_sources}
 )
 

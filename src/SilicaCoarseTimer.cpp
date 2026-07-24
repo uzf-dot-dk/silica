@@ -24,6 +24,11 @@ void CoarseTimer::visit()
         {
             restart();
         }
+
+        else if(d.type == Silica::CoarseTimer::Type::SingleShot)
+        {
+            stop();
+        }
     }
 }
 
