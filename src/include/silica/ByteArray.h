@@ -6,7 +6,17 @@
 namespace Silica
 {
 
-
+/** \brief ByteArray is a byte-oriented Array<unsigned char, S>.
+ *
+ * ByteArray provides the implemented byte-storage behavior used throughout Silica:
+ * - `constData()` for direct read access to the internal buffer
+ * - `setData()` to replace the current contents from a raw byte pointer
+ * - `appendData()` to append raw bytes to the existing contents
+ *
+ * The capacity behavior comes from Array<unsigned char, S>:
+ * - `S == 0` gives a dynamically growing byte array
+ * - `S > 0` gives a fixed-capacity byte array
+ */
 template <size_t S = 0>
 class ByteArray : public Array<unsigned char, S> {
 public:

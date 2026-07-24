@@ -9,6 +9,39 @@
 namespace Silica
 {
 
+/** \brief ByteBuffer is a simple in-memory IODevice backed by ByteArray storage.
+ *
+ * ByteBuffer can be used as:
+ * - a read-only source backed by a `const ByteArray<>`
+ * - a read-write buffer backed by two `ByteArray<>` instances
+ *
+ * Implemented behavior:
+ * - `read()` returns the next byte from the source buffer and advances the read index
+ * - `writeByte()` appends a single byte to the destination buffer
+ * - `writeArray()` appends all bytes from the provided ByteArray to the destination buffer
+ * - `bytesAvailable()`, `atEnd()`, `canReadLine()`, and `isWritable()` reflect the current buffer state
+ * - `open()` and `close()` only update the open mode
+ *
+ * Not yet implemented:
+ * - `read(ByteArray<> *)`
+ * - `readLine(ByteArray<> *)`
+ *
+ * Suggested usage:
+ * ```cpp
+ * Silica::ByteArray<> input = {'H', 'i', '\n'};
+ * Silica::ByteBuffer reader(&input);
+ *
+ * while (reader.canReadMore()) {
+ *     auto byte = reader.read();
+ *     // process byte
+ * }
+ *
+ * Silica::ByteArray<> output;
+ * Silica::ByteBuffer writer(&input, &output);
+ * writer.writeByte('X');
+ * writer.writeArray(&input);
+ * ```
+ */
 class ByteBuffer : public Silica::IODevice
 {
 
