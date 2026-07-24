@@ -31,6 +31,7 @@ set( silica_sources
     src/SilicaLogEntry.cpp
     src/SilicaLoggingSystem.cpp
     src/SilicaMutex.cpp
+    src/SilicaAbstractSerialPort.cpp
     src/SilicaUnitsOfTime.cpp
 )
 
@@ -97,6 +98,7 @@ if( ${SILICA_BUILD_TESTS} )
     create_test( tst_logentry )
     create_test( tst_map )
     create_test( tst_ringbuffer )
+    create_test( tst_abstract_serial_port )
     create_test( tst_set )
     create_test( tst_signals_and_slots )
     create_test( tst_text_based_api )
