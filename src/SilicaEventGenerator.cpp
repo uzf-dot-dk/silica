@@ -13,6 +13,4 @@ EventGenerator::~EventGenerator()
 //    Application::instance()->d.eventGenerators.remove(this);
 }
 
-
 }
-

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <silica/Application.h>
+#include <silica/ByteArray.h>
 #include <silica/IODevice.h>
 
 #include "SignalSpy.h"
@@ -37,7 +38,7 @@ public:
         return d.canReadLine;
     }
 
-    size_t readLine(Silica::Array<Silica::Byte> *destination) override
+    size_t readLine(Silica::ByteArray<> *destination) override
     {
         d.readLineCalls++;
         if(destination)
@@ -59,7 +60,7 @@ public:
         return d.nextByte++;
     }
 
-    size_t read(Silica::Array<Silica::Byte> *destination) override
+    size_t read(Silica::ByteArray<> *destination) override
     {
         d.readArrayCalls++;
         if(destination)
@@ -114,7 +115,7 @@ protected:
         emit opened(this);
     }
 
-    void writeArrayImplementation(Silica::Array<Silica::Byte> *data) override
+    void writeArrayImplementation(Silica::ByteArray<> *data) override
     {
         d.writeArrayCalls++;
         const size_t bytesWritten = data ? data->size() : 0;
@@ -166,7 +167,7 @@ TEST(suiteName, constructor_initializes_closed_and_slots_dispatch)
     ASSERT_EQ(device.openCalls(), 1);
     ASSERT_EQ(openedSpy.invocationCount(), 1);
 
-    Silica::Array<Silica::Byte> destination;
+    Silica::ByteArray<> destination;
     device.writeByte(7);
     device.writeArray(&destination);
     ASSERT_EQ(device.writeByteCalls(), 1);
@@ -200,7 +201,7 @@ TEST(suiteName, read_helpers_delegate_to_implementation)
     TestIODevice device;
     device.setReadableState(true, false);
 
-    Silica::Array<Silica::Byte> destination;
+    Silica::ByteArray<> destination;
 
     ASSERT_EQ(device.read(), 0);
     ASSERT_EQ(device.readCalls(), 1);
@@ -212,4 +213,36 @@ TEST(suiteName, read_helpers_delegate_to_implementation)
     ASSERT_EQ(device.readLine(&destination), 2u);
     ASSERT_EQ(device.readLineCalls(), 1);
     ASSERT_EQ(destination.size(), 5u);
+}
+
+template <size_t S>
+void storeSize(size_t *destination, Silica::ByteArray<S> &ba)
+{
+    (*destination) = ba.size();
+}
+
+TEST(suiteName, test_substitution_of_implicit_0_explicit_0_and_explicit_S)
+{
+    Silica::ByteArray<10> fixedTenLong;
+    Silica::ByteArray<0> explicitlyGrowing;
+    Silica::ByteArray<> implicitlyGrowing;
+
+    for(size_t i = 0 ; i < 10; i++)
+    {
+        unsigned char value = 0x30 + i;
+        fixedTenLong.append(value);
+        explicitlyGrowing.append(value);
+        implicitlyGrowing.append(value);
+    }
+
+    size_t size;
+
+    storeSize(&size, fixedTenLong);
+    ASSERT_EQ(size, 10);
+
+    storeSize(&size, explicitlyGrowing);
+    ASSERT_EQ(size, 10);
+
+    storeSize(&size, implicitlyGrowing);
+    ASSERT_EQ(size, 10);
 }

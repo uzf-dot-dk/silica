@@ -21,14 +21,14 @@ public:
         this->setCurrentOpenMode(IODevice::OpenMode::Closed);
     }
 
-    ByteBuffer(const Array<Byte> *toReadFrom) : ByteBuffer()
+    ByteBuffer(const ByteArray<> *toReadFrom) : ByteBuffer()
     {
         d.toReadFrom = toReadFrom;
         d.nextReadIndex = 0;
         this->setCurrentOpenMode(IODevice::OpenMode::ReadOnly);
     }
 
-    ByteBuffer(Array<Byte> *toReadFrom, Array<Byte> *toWriteTo)  : ByteBuffer()
+    ByteBuffer(ByteArray<> *toReadFrom, ByteArray<> *toWriteTo)  : ByteBuffer()
     {
         d.toReadFrom = toReadFrom;
         d.toWriteTo = toWriteTo;
@@ -57,7 +57,7 @@ public:
         return result;
     }
 
-    size_t read(Array<Byte> *destination) override
+    size_t read(ByteArray<> *destination) override
     {
         return 0;
     }
@@ -118,7 +118,7 @@ public:
         return this->d.canWriteToDevice(this->currentOpenMode());
     }
 
-    size_t readLine(Silica::Array<Silica::Byte> *destination) override
+    size_t readLine(Silica::ByteArray<> *destination) override
     {
         return 0;
     }
@@ -154,7 +154,7 @@ protected:
     }
 
 
-    void writeArrayImplementation(Array<Byte> *data) override
+    void writeArrayImplementation(ByteArray<> *data) override
     {
         if( ! d.canWriteToDevice(this->currentOpenMode()))
         {
@@ -178,9 +178,9 @@ private:
     struct
     {
     public:
-        const Array<Byte> *toReadFrom;
+        const ByteArray<> *toReadFrom;
         size_t nextReadIndex;
-        Array<Byte> *toWriteTo;
+        ByteArray<> *toWriteTo;
 
 
         bool canWriteToDevice(IODevice::OpenMode currentMode) const

@@ -47,7 +47,7 @@ public:
 
 
     virtual bool canReadLine() const = 0;
-    virtual size_t readLine(Silica::Array<Silica::Byte> *destination) = 0;
+    virtual size_t readLine(Silica::ByteArray<> *destination) = 0;
 
     virtual bool isWritable() const = 0;
 
@@ -57,15 +57,15 @@ public:
      *  @see canReadmore() */
     virtual bool isReadable() const { return ((int)currentOpenMode() & (int)OpenMode::ReadOnly); }
     virtual Byte read() = 0;
-    virtual size_t read(Array<Byte> *destination) = 0;
+    virtual size_t read(ByteArray<> *destination) = 0;
 
     Slot<> close;
     Slot<OpenMode> open;
-    Slot<Array<Byte> *> writeArray;
+    Slot<ByteArray<> *> writeArray;
     Slot<Byte> writeByte;
 
 
-    Signal<IODevice*, Array<Byte>*> dataReady;
+    Signal<IODevice*, ByteArray<>*> dataReady;
     Signal<IODevice*, size_t> writeComplete;
     Signal<IODevice*, size_t> newLinesReady;
     Signal<IODevice*, CloseReason> closed;
@@ -81,7 +81,7 @@ protected:
 
     virtual void closeImplementation() = 0;
     virtual void openImplementation(OpenMode) = 0;
-    virtual void writeArrayImplementation(Array<Byte> *data) = 0;
+    virtual void writeArrayImplementation(ByteArray<> *data) = 0;
     virtual void writeByteImplementation(Byte data) = 0;
 
     void setCurrentOpenMode(OpenMode newOpenMode)

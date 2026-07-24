@@ -10,12 +10,12 @@ Silica::Application app;
 
 TEST(suiteName, test_basic_reading_with_dynamic_array_as_source)
 {
-    Silica::Array<Silica::Byte> readSource = {'W', 'a', 's', 's', 'u', 'p'};
+    Silica::ByteArray<> readSource = {'W', 'a', 's', 's', 'u', 'p'};
     Silica::ByteBuffer theBuffer(&readSource);
     Silica::IODevice* iod = &theBuffer;
 
 
-    Silica::Array<Silica::Byte> actuallyRead;
+    Silica::ByteArray<> actuallyRead;
     while(iod->canReadMore())
     {
         actuallyRead.append(iod->read());
@@ -26,15 +26,15 @@ TEST(suiteName, test_basic_reading_with_dynamic_array_as_source)
 
 TEST(suiteName, test_basic_writing_one_byte_at_a_time_with_dynamic_array_as_source)
 {
-    Silica::Array<Silica::Byte> notUsed;
-    Silica::Array<Silica::Byte> destination;
+    Silica::ByteArray<> notUsed;
+    Silica::ByteArray<> destination;
 
     Silica::ByteBuffer theBuffer(&notUsed, &destination);
     Silica::IODevice* iod = &theBuffer;
     SignalSpy<Silica::IODevice*, size_t> writeWatcher;
     writeWatcher.spyOn(&(iod->writeComplete));
 
-    Silica::Array<Silica::Byte> expected = {'S', 'o', 'm', 'e', ' ', 'd', 'a', 't','a'};
+    Silica::ByteArray<> expected = {'S', 'o', 'm', 'e', ' ', 'd', 'a', 't','a'};
     for(unsigned char c: expected)
     {
         iod->writeByte(c);
@@ -53,15 +53,15 @@ TEST(suiteName, test_basic_writing_one_byte_at_a_time_with_dynamic_array_as_sour
 
 TEST(suiteName, test_basic_writing_an_array_with_dynamic_array_as_source)
 {
-    Silica::Array<Silica::Byte> notUsed;
-    Silica::Array<Silica::Byte> destination;
+    Silica::ByteArray<> notUsed;
+    Silica::ByteArray<> destination;
 
     Silica::ByteBuffer theBuffer(&notUsed, &destination);
     Silica::IODevice* iod = &theBuffer;
     SignalSpy<Silica::IODevice*, size_t> writeWatcher;
     writeWatcher.spyOn(&(iod->writeComplete));
 
-    Silica::Array<Silica::Byte> expected = {'S', 'o', 'm', 'e', ' ', 'd', 'a', 't','a'};
+    Silica::ByteArray<> expected = {'S', 'o', 'm', 'e', ' ', 'd', 'a', 't','a'};
     iod->writeArray(&expected);
 
     ASSERT_EQ(destination,  expected);
@@ -79,12 +79,12 @@ TEST(suiteName, test_basic_writing_an_array_with_dynamic_array_as_source)
 
 TEST(suiteName, test_basic_reading_with_static_array_as_source)
 {
-    Silica::Array<Silica::Byte, 6> readSource = {'W', 'a', 's', 's', 'u', 'p'};
+    Silica::ByteArray<> readSource = {'W', 'a', 's', 's', 'u', 'p'};
     Silica::ByteBuffer theBuffer(&readSource);
     Silica::IODevice* iod = &theBuffer;
 
 
-    Silica::Array<Silica::Byte, 6> actuallyRead;
+    Silica::ByteArray<> actuallyRead;
     while(iod->canReadMore())
     {
         actuallyRead.append(iod->read());
@@ -95,15 +95,15 @@ TEST(suiteName, test_basic_reading_with_static_array_as_source)
 
 TEST(suiteName, test_basic_writing_one_byte_at_a_time_with_static_array_as_source)
 {
-    Silica::Array<Silica::Byte, 20> notUsed;
-    Silica::Array<Silica::Byte, 20> destination;
+    Silica::ByteArray<> notUsed;
+    Silica::ByteArray<> destination;
 
     Silica::ByteBuffer theBuffer(&notUsed, &destination);
     Silica::IODevice* iod = &theBuffer;
     SignalSpy<Silica::IODevice*, size_t> writeWatcher;
     writeWatcher.spyOn(&(iod->writeComplete));
 
-    Silica::Array<Silica::Byte, 20> expected = {'S', 'o', 'm', 'e', ' ', 'd', 'a', 't','a'};
+    Silica::ByteArray<> expected = {'S', 'o', 'm', 'e', ' ', 'd', 'a', 't','a'};
     for(unsigned char c: expected)
     {
         iod->writeByte(c);
@@ -119,4 +119,3 @@ TEST(suiteName, test_basic_writing_one_byte_at_a_time_with_static_array_as_sourc
         ASSERT_EQ(emitter, iod);
     }
 }
-
