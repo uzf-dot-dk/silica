@@ -13,6 +13,7 @@ namespace Silica
  *
  * ByteBuffer can be used as:
  * - a read-only source backed by a `const ByteArray<>`
+ * - a read-only source backed by a raw byte array and length
  * - a read-write buffer backed by two `ByteArray<>` instances
  *
  * Implemented behavior:
@@ -40,6 +41,9 @@ namespace Silica
  * Silica::ByteBuffer writer(&input, &output);
  * writer.writeByte('X');
  * writer.writeArray(&input);
+ *
+ * const unsigned char raw[] = {'O', 'K'};
+ * Silica::ByteBuffer rawReader(raw, sizeof(raw));
  * ```
  */
 class ByteBuffer : public Silica::IODevice
@@ -49,13 +53,19 @@ public:
 
     ByteBuffer() : Silica::IODevice()
     {
+        d.sourceKind = SourceKind::None;
         d.toReadFrom = nullptr;
         d.toWriteTo = nullptr;
+        d.nextReadIndex = 0;
+        d.rawReadOnly.data = nullptr;
+        d.rawReadOnly.readIndex = 0;
+        d.rawReadOnly.length = 0;
         this->setCurrentOpenMode(IODevice::OpenMode::Closed);
     }
 
     ByteBuffer(const ByteArray<> *toReadFrom) : ByteBuffer()
     {
+        d.sourceKind = SourceKind::ByteArray;
         d.toReadFrom = toReadFrom;
         d.nextReadIndex = 0;
         this->setCurrentOpenMode(IODevice::OpenMode::ReadOnly);
@@ -63,9 +73,19 @@ public:
 
     ByteBuffer(ByteArray<> *toReadFrom, ByteArray<> *toWriteTo)  : ByteBuffer()
     {
+        d.sourceKind = SourceKind::ByteArray;
         d.toReadFrom = toReadFrom;
         d.toWriteTo = toWriteTo;
         this->setCurrentOpenMode(IODevice::OpenMode::ReadWrite);
+    }
+
+    ByteBuffer(const unsigned char *toReadFrom, size_t length) : ByteBuffer()
+    {
+        d.sourceKind = SourceKind::RawBytes;
+        d.rawReadOnly.data = toReadFrom;
+        d.rawReadOnly.length = length;
+        d.rawReadOnly.readIndex = 0;
+        this->setCurrentOpenMode(IODevice::OpenMode::ReadOnly);
     }
 
     ~ByteBuffer()
@@ -81,18 +101,46 @@ public:
         {
             return result;
         }
-        if(d.toReadFrom->size() == 0)
+        if(d.sourceKind == SourceKind::ByteArray)
         {
-            return result;
+            if(d.nextReadIndex >= d.toReadFrom->size())
+            {
+                return result;
+            }
+            result = d.toReadFrom->at(d.nextReadIndex);
+            d.nextReadIndex++;
         }
-        result = d.toReadFrom->at(d.nextReadIndex);
-        d.nextReadIndex++;
+        else if(d.sourceKind == SourceKind::RawBytes)
+        {
+            if(d.rawReadOnly.readIndex >= d.rawReadOnly.length)
+            {
+                return result;
+            }
+            result = d.rawReadOnly.data[d.rawReadOnly.readIndex];
+            d.rawReadOnly.readIndex++;
+        }
         return result;
     }
 
     size_t read(ByteArray<> *destination) override
     {
-        return 0;
+        if( ! destination )
+        {
+            return 0;
+        }
+
+        if( ! d.canReadFromDevice(this->currentOpenMode()) )
+        {
+            return 0;
+        }
+
+        size_t bytesRead = 0;
+        while(!this->atEnd())
+        {
+            destination->append(this->read());
+            bytesRead++;
+        }
+        return bytesRead;
     }
 
 
@@ -107,10 +155,15 @@ public:
         {
             return true;
         }
-        else
+        else if(d.sourceKind == SourceKind::ByteArray)
         {
             return d.nextReadIndex >= d.toReadFrom->size();
         }
+        else if(d.sourceKind == SourceKind::RawBytes)
+        {
+            return d.rawReadOnly.readIndex >= d.rawReadOnly.length;
+        }
+        return true;
     }
 
     size_t bytesAvailable() const override
@@ -119,10 +172,15 @@ public:
         {
             return 0;
         }
-        else
+        else if(d.sourceKind == SourceKind::ByteArray)
         {
             return d.toReadFrom->size();
         }
+        else if(d.sourceKind == SourceKind::RawBytes)
+        {
+            return d.rawReadOnly.length;
+        }
+        return 0;
     }
 
     size_t bytesToWrite() const
@@ -136,11 +194,25 @@ public:
         {
             return false;
         }
-        for(size_t i = 0; i < d.toReadFrom->size(); i++)
+        if(d.sourceKind == SourceKind::ByteArray)
         {
-            if(d.toReadFrom->at(i) == '\n')
+            for(size_t i = 0; i < d.toReadFrom->size(); i++)
             {
-                return true;
+                if(d.toReadFrom->at(i) == '\n')
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if(d.sourceKind == SourceKind::RawBytes)
+        {
+            for(size_t i = 0; i < d.rawReadOnly.length; i++)
+            {
+                if(d.rawReadOnly.data[i] == '\n')
+                {
+                    return true;
+                }
             }
         }
         return false;
@@ -153,7 +225,28 @@ public:
 
     size_t readLine(Silica::ByteArray<> *destination) override
     {
-        return 0;
+        if( ! destination )
+        {
+            return 0;
+        }
+
+        if( ! d.canReadFromDevice(this->currentOpenMode()) )
+        {
+            return 0;
+        }
+
+        size_t bytesRead = 0;
+        while(!this->atEnd())
+        {
+            const Byte next = this->read();
+            destination->append(next);
+            bytesRead++;
+            if(next == '\n')
+            {
+                break;
+            }
+        }
+        return bytesRead;
     }
 
 
@@ -208,10 +301,24 @@ protected:
 
 private:
 
+    enum class SourceKind
+    {
+        None,
+        ByteArray,
+        RawBytes
+    };
+
     struct
     {
     public:
+        SourceKind sourceKind = SourceKind::None;
         const ByteArray<> *toReadFrom;
+        struct
+        {
+            const unsigned char *data = nullptr;
+            size_t length = 0;
+            size_t readIndex = 0;
+        } rawReadOnly;
         size_t nextReadIndex;
         ByteArray<> *toWriteTo;
 
@@ -237,20 +344,42 @@ private:
 
         bool canReadFromDevice(IODevice::OpenMode currentMode) const
         {
-            if(!toReadFrom)
+            if(sourceKind == SourceKind::ByteArray)
             {
+                if(!toReadFrom)
+                {
+                    return false;
+                }
+                switch(currentMode)
+                {
+                case IODevice::OpenMode::ReadOnly:
+                case IODevice::OpenMode::ReadWrite:
+                    return true;
+                case IODevice::OpenMode::Append:
+                case IODevice::OpenMode::WriteOnly:
+                case IODevice::OpenMode::Closed:
+                    return false;
+                };
                 return false;
             }
-            switch(currentMode)
+            if(sourceKind == SourceKind::RawBytes)
             {
-            case IODevice::OpenMode::ReadOnly:
-            case IODevice::OpenMode::ReadWrite:
-                return true;
-            case IODevice::OpenMode::Append:
-            case IODevice::OpenMode::WriteOnly:
-            case IODevice::OpenMode::Closed:
+                if(!rawReadOnly.data)
+                {
+                    return false;
+                }
+                switch(currentMode)
+                {
+                case IODevice::OpenMode::ReadOnly:
+                case IODevice::OpenMode::ReadWrite:
+                    return true;
+                case IODevice::OpenMode::Append:
+                case IODevice::OpenMode::WriteOnly:
+                case IODevice::OpenMode::Closed:
+                    return false;
+                };
                 return false;
-            };
+            }
             return false;
         }
     } d;
