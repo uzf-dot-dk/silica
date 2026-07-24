@@ -89,7 +89,7 @@ protected:
         d.currentOpenMode = newOpenMode;
     }
 
-private:
+protected:
 
     void visit() override {}
 

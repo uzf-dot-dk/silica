@@ -44,6 +44,13 @@ public:
         return bytes_appended;
     }
 
+
+    size_t setData( const char *data, size_t count)
+    {
+        return setData(reinterpret_cast<const unsigned char*>(data), count);
+    }
+
+
     size_t appendData( const unsigned char *data, size_t count)
     {
         size_t bytes_appended = 0;

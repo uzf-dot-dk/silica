@@ -24,7 +24,7 @@ public:
 
     virtual ~EventGenerator();
 
-private:
+protected:
     /// \cond DEVELOPER_DOC
     friend class Application;
     /// \endcond
