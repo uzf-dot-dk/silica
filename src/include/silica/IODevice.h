@@ -1,8 +1,9 @@
 #ifndef SILICA_IO_DEVICE_H
 #define SILICA_IO_DEVICE_H
 
-#include <silica/EventGenerator.h>
 #include <silica/ByteArray.h>
+#include <silica/EventGenerator.h>
+#include <silica/Macros.h>
 #include <silica/SignalSlot.h>
 
 namespace Silica
@@ -26,6 +27,9 @@ public:
         Append     = 0x10,
         Closed
     };
+
+    DISABLE_COPY(IODevice);
+    DISABLE_MOVE(IODevice);
 
     IODevice();
     virtual ~IODevice();
